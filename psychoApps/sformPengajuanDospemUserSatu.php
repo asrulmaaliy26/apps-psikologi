@@ -1,0 +1,32 @@
+<?php include( "contentsConAdm.php" );
+  $nim = mysqli_real_escape_string($con, $_POST['nim']);
+  $nama = mysqli_real_escape_string($con, $_POST['nama']);
+  $angkatan = mysqli_real_escape_string($con, $_POST['angkatan']);
+  $digit_ipk1 = mysqli_real_escape_string($con, $_POST['digit_ipk1']);
+  $digit_ipk2 = mysqli_real_escape_string($con, $_POST['digit_ipk2']);
+  $ipk = $digit_ipk1.','.$digit_ipk2;
+  $sks_ditempuh = mysqli_real_escape_string($con, $_POST['sks_ditempuh']);
+  $judul_skripsi = mysqli_real_escape_string($con, $_POST['judul_skripsi']);
+  $jenis_skripsi = mysqli_real_escape_string($con, $_POST['jenis_skripsi']);
+  $bidang_skripsi = mysqli_real_escape_string($con, $_POST['bidang_skripsi']);
+  $metode_riset = mysqli_real_escape_string($con, $_POST['metode_riset']);
+  $var_1 = mysqli_real_escape_string($con, $_POST['var_1']);
+  $var_2 = mysqli_real_escape_string($con, $_POST['var_2']);
+  $var_3 = mysqli_real_escape_string($con, $_POST['var_3']);
+  $tgl_pengajuan = mysqli_real_escape_string($con, $_POST['tgl_pengajuan']);
+  $split = explode('-', $tgl_pengajuan);
+  $thn_pengajuan= mysqli_real_escape_string($con, $split['2']);
+  $id_periode = mysqli_real_escape_string($con, $_POST['id_periode']);
+  $cek1 = mysqli_real_escape_string($con, $_POST['cek1']);
+  $cek2 = mysqli_real_escape_string($con, $_POST['cek2']);
+  $cekberkas1 = mysqli_real_escape_string($con, $_POST['cekberkas1']);
+  $cekberkas2 = mysqli_real_escape_string($con, $_POST['cekberkas2']);
+  $cekberkas3 = mysqli_real_escape_string($con, $_POST['cekberkas3']);
+  $cekberkas4 = mysqli_real_escape_string($con, $_POST['cekberkas4']);
+  $cekberkas5 = mysqli_real_escape_string($con, $_POST['cekberkas5']);
+  $cekjudul = mysqli_real_escape_string($con, $_POST['cekjudul']);
+  $status = mysqli_real_escape_string($con, $_POST['status']);
+
+mysqli_query($con, "INSERT INTO pengelompokan_dospem_skripsi(nim,angkatan,ipk,digit_ipk1,digit_ipk2,sks_ditempuh,judul_skripsi,jenis_skripsi,bidang_skripsi,metode_riset,var_1,var_2,var_3,tgl_pengajuan,thn_pengajuan,id_periode,cek1,cek2,cekberkas1,cekberkas2,cekberkas3,cekberkas4,cekberkas5,cekjudul,status)" . "VALUES('$nim','$angkatan','$ipk','$digit_ipk1','$digit_ipk2','$sks_ditempuh','$judul_skripsi','$jenis_skripsi','$bidang_skripsi','$metode_riset','$var_1','$var_2','$var_3','$tgl_pengajuan','$thn_pengajuan','$id_periode','$cek1','$cek2','$cekberkas1','$cekberkas2','$cekberkas3','$cekberkas4','$cekberkas5','$cekjudul','$status')") or die(mysqli_error($con));
+header("location:prePengajuanDospemUser.php?message=notifInput");
+?>

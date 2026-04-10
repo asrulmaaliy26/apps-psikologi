@@ -1,0 +1,160 @@
+<?php
+  include("koneksiUser.php");
+  $nim = $_SESSION['nim'];
+  
+  $myquery = "SELECT * FROM mag_dt_mhssw_pasca WHERE nim='$nim'";
+  $dmhssw = mysqli_query($GLOBALS["___mysqli_ston"], $myquery)or die( mysqli_error($GLOBALS["___mysqli_ston"]));
+  $dataku = mysqli_fetch_assoc($dmhssw);
+  ?>
+<html lang="en">
+  <head>
+    <?php include 'headUser.php';?>
+  </head>
+  <body>
+    <?php include "navPendUser.php";?>
+    <div class="container">
+      <div class="row">
+        <?php
+          if (!empty($_GET['message']) && $_GET['message'] == 'notifGagal') {
+                 echo '
+          <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+          <div class="modal-content">
+          <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">×</button>
+          <h4 class="modal-title">Submit gagal</h4>
+          </div>
+          <div class="modal-body">
+          <p>Salah satu atau semua file yang diupload bukan berbentuk PDF (berekstensi .pdf).</p>
+          <p><strong>Note:</strong> Konversikan file ke PDF terlebih dahulu...</p>
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+          </div>
+          </div>
+          </div>';} 
+          if (!empty($_GET['message']) && $_GET['message'] == 'notifInput') {
+                 echo '<div class="alert alert-warning custom-alert" role="alert">
+                 <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>Submit berhasil...</div>';}
+           
+          if (!empty($_GET['message']) && $_GET['message'] == 'notifEdit') {
+                 echo '<div class="alert alert-success custom-alert" role="alert">
+                 <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>Data berhasil diupdate...</div>';}
+          
+          if (!empty($_GET['message']) && $_GET['message'] == 'notifDelete') {
+                 echo '<div class="alert alert-danger custom-alert" role="alert">
+                 <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>Data berhasil dihapus...</div>';}         
+                 ?>
+        <h3 class="text-center text-info">Upload Revisi Tesis</h3>
+        <div class="panel panel-info">
+          <div class="panel-heading">
+            <ul class="list">
+              <li>Berikut adalah data pendaftaran Ujian Tesis Anda.</li>
+              <li>Form diisi paling lambat 30 hari setelah pelaksanaan Ujian Tesis, dan secara otomatis setelah batas waktu berakhir, maka form tidak dapat diisi lagi.</li>
+              <li>Silahkan pilih pendaftaran Ujian Tesis yang Anda maksud untuk pengisian form.</li>
+              <li>Form dapat diedit selama belum terverifikasi oleh admin.</li>
+              <li>Silahkan download format A1 dan A2 (ikon print di tabel), setelah form terverifikasi oleh admin.</li>
+            </ul>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-condensed table-bordered custom" style="margin-bottom:0px;">
+                <thead>
+                  <tr class="success">
+                    <th width="2%" class="text-center">No.</th>
+                    <th width="46%" class="text-center">Periode ujian tesis</th>
+                    <th width="14%" class="text-center">Tgl. ujian</th>
+                    <th width="18%" class="text-center">Tgl. akhir revisi</th>
+                    <th width="20%" class="text-center">Opsi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php
+                    $no=0;
+                    $qry = "SELECT * FROM mag_peserta_ujtes WHERE nim='$dataku[nim]'";
+                    $has = mysqli_query($GLOBALS["___mysqli_ston"],  $qry )or die( mysqli_error($GLOBALS["___mysqli_ston"]) );
+                    while($md = mysqli_fetch_assoc( $has )) {
+                    $id=$md['id'];
+                    $id_ujtes=$md['id_ujtes'];
+                    $no++;
+                    
+                    $qry_jadwal = "SELECT * FROM mag_jadwal_ujtes WHERE id_ujtes='$md[id_ujtes]' AND nim='$md[nim]'";
+                    $res = mysqli_query($GLOBALS["___mysqli_ston"], $qry_jadwal);
+                    $djadwal = mysqli_fetch_assoc($res);
+                    $batas_revisi = $djadwal['batas_revisi'];
+                    $timestamp = strtotime($batas_revisi);
+                    $tgl_bts_rev_konv = date("d-m-Y", $timestamp);
+                    
+                    $qry_moment = "SELECT * FROM mag_periode_pendaftaran_ujtes WHERE id='$md[id_ujtes]'";
+                    $hasil = mysqli_query($GLOBALS["___mysqli_ston"], $qry_moment);
+                    $data = mysqli_fetch_assoc($hasil);
+                    $id_ujtes=$data['id'];
+                    $thp=$data['tahap'];
+                    $ta=$data['ta'];
+                    
+                    $qry_nm_thp = "SELECT * FROM mag_opsi_tahap_ujprop_ujtes WHERE id='$thp'";
+                    $hasil = mysqli_query($GLOBALS["___mysqli_ston"], $qry_nm_thp);
+                    $dthp = mysqli_fetch_assoc($hasil);
+                    
+                    $qry_nm_ta = "SELECT * FROM mag_dt_ta WHERE id='$ta'";
+                    $hasil = mysqli_query($GLOBALS["___mysqli_ston"], $qry_nm_ta);
+                    $dnta = mysqli_fetch_assoc($hasil);
+                    
+                    $qry_nm_smt = "SELECT * FROM opsi_nama_semester WHERE id='$dnta[semester]'";
+                    $h = mysqli_query($GLOBALS["___mysqli_ston"], $qry_nm_smt);
+                    $dsemester = mysqli_fetch_assoc($h);
+
+                    $qry_nilai = "SELECT * FROM mag_nilai_ujtes WHERE id_pendaftaran='$id' AND id_ujtes='$id_ujtes'";
+                    $rnilai = mysqli_query($GLOBALS["___mysqli_ston"], $qry_nilai);
+                    $dnilai = mysqli_fetch_assoc($rnilai);
+                    $dvalnilai=$dnilai['validasi'];
+                    ?>
+                  <tr>
+                    <td class="text-center"><?php echo $no;?></td>
+                    <td class="text-center"><?php echo "Tahap ".$dthp['tahap']." Semester ".$dsemester['nama'].' TA. '.$dnta['ta']."";?></td>
+                    <td class="text-center"><?php echo $djadwal['tgl_ujian'];?></td>
+                    <td class="text-center"><?php echo $tgl_bts_rev_konv;?></td>
+                    <td class="text-center">
+                      <?php
+                      $qry_cek_daftar = "SELECT COUNT(id) AS jum FROM mag_revisi_tesis WHERE id_peserta='$id' AND id_ujtes='$id_ujtes' AND nim='$dataku[nim]'";
+                    $res = mysqli_query($GLOBALS["___mysqli_ston"], $qry_cek_daftar);
+                    $dcek = mysqli_fetch_assoc($res);
+                    $jum=$dcek['jum'];
+                       if(date('Y-m-d') > $djadwal['batas_revisi']) {
+                        echo '<span class="btn btn-danger btn-sm btn-block disabled" title="Kadaluarsa"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Kadaluarsa</span>';
+                        }
+                        else if(empty($djadwal['tgl_ujian'])) { echo '<a role="button" class="btn btn-warning btn-block btn-sm" title="Belum terjadwal" disabled><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Belum terjadwal</a>';}
+
+                        else if($dvalnilai==1) { echo '<a role="button" class="btn btn-warning btn-block btn-sm" title="Nilai belum lengkap" disabled><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Nilai belum lengkap</a>';}                        
+                        else if($jum>0) { 
+                        $qry_val = "SELECT * FROM mag_revisi_tesis WHERE id_peserta='$id' AND id_ujtes='$id_ujtes' AND nim='$dataku[nim]'";
+                        $resval = mysqli_query($GLOBALS["___mysqli_ston"], $qry_val);
+                        $dval = mysqli_fetch_assoc($resval);
+                        if($dval['cek']==2) {
+                        echo '<a role="button" href="cetakFormA1A2User.php?id='.$dval['id'].'&id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <a role="button" class="btn btn-primary btn-sm" title="Telah diverifikasi" disabled><span class="glyphicon glyphicon-check" aria-hidden="true"></span> Telah diverifikasi</a>';}
+                        else if($dval['cek']==1) {
+                        echo '<a role="button" class="btn btn-default" title="Belum dapat dicetak karena belum disetujui" disabled><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <a role="button" href="includeEditFormRevisiUjtes.php?id='.$dval['id'].'&id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-success btn-sm" title="Edit upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Edit upload revisi</a>';}
+                        else if($dval['cek']==3) {
+                        echo '<a role="button" class="btn btn-default" title="Tidak dapat dicetak karena ditolak" disabled><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <a role="button" href="includeEditFormRevisiUjtes.php?id='.$dval['id'].'&id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-success btn-sm" title="Edit upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Edit upload revisi</a>';}
+                        }
+                        else {
+                        echo '<a role="button" href="includeFormRevisiUjtes.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-primary btn-sm btn-block" title="Upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload revisi</a>';}
+                        ?>
+                    </td>
+                  </tr>
+                  <?php }?>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <?php include "footerUser.php";?>
+    <?php include "jsSourceUser.php";?>
+  </body>
+</html>

@@ -1,0 +1,77 @@
+# Composer dependencies
+/vendor/
+/psychoApps/vendor/
+/simagis/vendor/
+composer.lock
+
+# Environment variables
+*.env
+.env
+.env.backup
+.env.testing
+
+# Local development files
+/.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.log
+
+# Windows specific
+desktop.ini
+Thumbs.db
+ehthumbs.db
+$RECYCLE.BIN/
+
+# macOS specific
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Uploaded files in psychoApps (ignore contents but keep folders)
+/psychoApps/file_*/*
+!/psychoApps/file_*/index.php
+!/psychoApps/file_*/.htaccess
+!/psychoApps/file_*/.gitkeep
+
+/psychoApps/photo_*/*
+!/psychoApps/photo_*/index.php
+!/psychoApps/photo_*/.htaccess
+!/psychoApps/photo_*/.gitkeep
+
+/psychoApps/transkrip_kompre/*
+!/psychoApps/transkrip_kompre/index.php
+!/psychoApps/transkrip_kompre/.htaccess
+!/psychoApps/transkrip_kompre/.gitkeep
+
+/psychoApps/surat_keluar/*
+!/psychoApps/surat_keluar/index.php
+!/psychoApps/surat_keluar/.htaccess
+!/psychoApps/surat_keluar/.gitkeep
+
+/psychoApps/surat_masuk/*
+!/psychoApps/surat_masuk/index.php
+!/psychoApps/surat_masuk/.htaccess
+!/psychoApps/surat_masuk/.gitkeep
+
+/psychoApps/image_barang/*
+!/psychoApps/image_barang/index.php
+!/psychoApps/image_barang/.htaccess
+!/psychoApps/image_barang/.gitkeep
+
+# Uploaded files in simagis (ignore contents but keep folders)
+/simagis/file_*/*
+!/simagis/file_*/index.php
+!/simagis/file_*/.htaccess
+!/simagis/file_*/.gitkeep
+
+/simagis/photo_*/*
+!/simagis/photo_*/index.php
+!/simagis/photo_*/.htaccess
+!/simagis/photo_*/.gitkeep
+
+/simagis/upload_berkas/*
+!/simagis/upload_berkas/index.php
+!/simagis/upload_berkas/.htaccess
+!/simagis/upload_berkas/.gitkeep
