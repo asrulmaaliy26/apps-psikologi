@@ -33,6 +33,10 @@
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="8" && $_SESSION['status']=="1"){
         header("location:dashboardAdmBakS2.php");
           }
+      if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="3" && $_SESSION['status']=="1"){
+        $_SESSION['nim'] = $c['username'];
+        header("location:../simagis/dashboardUser.php");
+          }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="2" && $_SESSION['status']=="1"){
         header("location:dashboardUserS1.php");
           }

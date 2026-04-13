@@ -5,7 +5,7 @@ $dmhssw = mysqli_query($con, $myquery) or die(mysqli_error($con));
 $dataku = mysqli_fetch_assoc($dmhssw);
 $nim = $dataku['nim'];
 
-$qry_moment = "SELECT * FROM pendaftaran_kompre WHERE status='1'";
+$qry_moment = "SELECT * FROM pendaftaran_kompre ORDER BY status ASC, id DESC LIMIT 1";
 $hasil = mysqli_query($con, $qry_moment);
 $data = mysqli_fetch_assoc($hasil);
 $id_kompre = $data['id'];
@@ -30,8 +30,12 @@ $h = mysqli_query($con, $qry_nm_smt);
 $dsemester = mysqli_fetch_assoc($h);
 
 $now = new DateTime('now', new DateTimeZone('Asia/Jakarta'));
-$start = new DateTime($data['start_datetime'], new DateTimeZone('Asia/Jakarta'));
-$end = new DateTime($data['end_datetime'], new DateTimeZone('Asia/Jakarta'));
+$start = new DateTime($data['start_datetime'] ?? 'now', new DateTimeZone('Asia/Jakarta'));
+$end = new DateTime($data['end_datetime'] ?? 'now', new DateTimeZone('Asia/Jakarta'));
+
+$DATE_NOW = $now->format('Y-m-d H:i:s');
+$START_DATE = $start->format('Y-m-d H:i:s');
+$END_DATE = $end->format('Y-m-d H:i:s');
 
 $dateStart = $start->format('d-m-Y');
 $dateEnd = $end->format('d-m-Y');
@@ -79,15 +83,15 @@ $timeEnd = $end->format('H:i');
                     </li>
                   </ul>
                 </div>
-                <?php if ($END_DATE < $DATE_NOW) {
+                <?php if (!$data || $data['status'] == '2' || $end < $now) {
                   echo
                   '<div class="card-body">
-                       <h5>Pendaftaran Ujian Komprehensif Tahap ' . $dthp['tahap'] . ' ' . $djp['nm'] . ' Semester ' . $dsemester['nama'] . ' ' . $dnta['ta'] . ' telah ditutup.</h5>
+                       <h5>Pendaftaran Ujian Komprehensif Tahap ' . ($dthp['tahap'] ?? '') . ' ' . ($djp['nm'] ?? '') . ' Semester ' . ($dsemester['nama'] ?? '') . ' ' . ($dnta['ta'] ?? '') . ' telah ditutup.</h5>
                       </div>';
-                } else if ($START_DATE > $DATE_NOW) {
+                } else if ($start > $now) {
                   echo
                   '<div class="card-body">
-                       <h5>Pendaftaran Ujian Komprehensif Tahap ' . $dthp['tahap'] . ' ' . $djp['nm'] . ' Semester ' . $dsemester['nama'] . ' ' . $dnta['ta'] . ' belum dibuka. <br>Pendaftaran dibuka mulai tanggal ' . $dateStart . ' pukul ' . $timeStart . ' sampai dengan tanggal ' . $dateEnd . ' pukul ' . $timeEnd . '.</h5>
+                       <h5>Pendaftaran Ujian Komprehensif Tahap ' . ($dthp['tahap'] ?? '') . ' ' . ($djp['nm'] ?? '') . ' Semester ' . ($dsemester['nama'] ?? '') . ' ' . ($dnta['ta'] ?? '') . ' belum dibuka. <br>Pendaftaran dibuka mulai tanggal ' . $dateStart . ' pukul ' . $timeStart . ' sampai dengan tanggal ' . $dateEnd . ' pukul ' . $timeEnd . '.</h5>
                       </div>';
                 } else {
                   $cek_dospem = "SELECT COUNT(nim) AS jumData FROM pengelompokan_dospem_skripsi WHERE nim='$dataku[nim]' AND status = '2'";
