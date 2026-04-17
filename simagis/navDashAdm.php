@@ -3,6 +3,7 @@
      $myquery = "select * from mag_dt_admin_bak WHERE username='$username'";
      $dmhssw = mysqli_query($GLOBALS["___mysqli_ston"], $myquery)or die( mysqli_error($GLOBALS["___mysqli_ston"]));
      $dataku = mysqli_fetch_assoc($dmhssw);
+     $nama_admin = !empty($dataku['nama']) ? $dataku['nama'] : (isset($_SESSION['nm_person']) ? $_SESSION['nm_person'] : (isset($_SESSION['nama']) ? $_SESSION['nama'] : 'Admin'));
      ?>
 <nav class="navbar navbar-default">
   <div class="container-fluid">
@@ -70,9 +71,10 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        <li><a href="../psychoApps/laporanHarian.php" style="font-weight:bold; color:#28a745;"><span class="glyphicon glyphicon-list-alt"></span> Laporan Harian</a></li>
         <li><a href="logoutAdm.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
       </ul>
-      <p class="navbar-text navbar-right hidden-sm hidden-xs">Admin: <?php echo $dataku['nama']; ?></p>
+      <p class="navbar-text navbar-right hidden-sm hidden-xs">Admin: <?php echo $nama_admin; ?></p>
     </div>
   </div>
 </nav>

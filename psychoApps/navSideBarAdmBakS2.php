@@ -5,6 +5,14 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-legacy nav-compact" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
+          <a href="../simagis/dashboardAdm.php" class="nav-link bg-info">
+            <i class="nav-icon fas fa-arrow-circle-left"></i>
+            <p>
+              Kembali ke SIMAGIS
+            </p>
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="dashboardAdmBakS2.php" class="nav-link active">
             <i class="nav-icon fas fa-house-user"></i>
             <p>

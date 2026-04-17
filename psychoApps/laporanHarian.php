@@ -31,6 +31,7 @@ $is_locked = ($status_absen == 'tutup');
         else if ($_SESSION['level'] == 5) include("navSideBarAdmBmn.php");
         else if ($_SESSION['level'] == 7) include("navSideBarAdmBakS1.php");
         else if ($_SESSION['level'] == 8) include("navSideBarAdmBakS2.php");
+        else if ($_SESSION['level'] == 11) include("navSideBarKaryawan.php");
         else include("navSideBarAdmTaper.php");
         ?>
 

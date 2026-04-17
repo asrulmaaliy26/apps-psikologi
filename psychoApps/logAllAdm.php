@@ -31,7 +31,7 @@
         header("location:dashboardAdmBakS1.php");
           }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="8" && $_SESSION['status']=="1"){
-        header("location:dashboardAdmBakS2.php");
+        header("location:../simagis/dashboardAdm.php");
           }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="3" && $_SESSION['status']=="1"){
         $_SESSION['nim'] = $c['username'];
@@ -39,6 +39,9 @@
           }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="2" && $_SESSION['status']=="1"){
         header("location:dashboardUserS1.php");
+          }
+      if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="11" && $_SESSION['status']=="1"){
+        header("location:laporanHarian.php");
           }
       }else{
         header("location:/index.php?message=notifLogin");
