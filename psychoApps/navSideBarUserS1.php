@@ -67,9 +67,13 @@
             <li class="nav-item menu-open">
               <a href="prePendaftaranPklUser.php" class="nav-link active">
                 <i class="far fa-circle nav-icon"></i>
-                <p>
-                  Praktik Kerja Lapangan (PKL)
-                </p>
+                <p>Mendaftar PKL (Reguler)</p>
+              </a>
+            </li>
+            <li class="nav-item menu-open">
+              <a href="plotLembagaPklUser.php" class="nav-link text-warning active">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Pilih Lembaga PKL</p>
               </a>
             </li>
             <li class="nav-item menu-open">

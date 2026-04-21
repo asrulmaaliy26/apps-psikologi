@@ -77,6 +77,12 @@
                   </a>
                 </li>
                 <li class="nav-item">
+                  <a href="plotLembagaPklAdm.php" class="nav-link text-warning">
+                    <i class="fas fa-ellipsis-v nav-icon"></i>
+                    <p>Plotting Lembaga</p>
+                  </a>
+                </li>
+                <li class="nav-item">
                   <a href="rekapNilaiPklAdm.php" class="nav-link">
                     <i class="fas fa-ellipsis-v nav-icon"></i>
                     <p>Rekap Nilai</p>

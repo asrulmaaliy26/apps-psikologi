@@ -1,0 +1,44 @@
+CATATAN DEPLOYMENT FITUR TAMBAHAN PKL
+======================================
+
+Berikut adalah langkah-langkah yang harus dilakukan saat melakukan deployment fitur tambahan slot manajemen PKL (plot lembaga) ke VPS:
+
+1. Upload File PHP
+------------------
+Pastikan semua file yang telah ditambahkan atau dimodifikasi di-upload ke server (VPS) pada direktori `psychoApps`. File-file tersebut termasuk:
+- cetakSuratLembagaPklUser.php
+- inputPlotLembagaPklUser.php
+- inputPlotPklAdm.php
+- plotLembagaPklAdm.php
+- plotLembagaPklUser.php
+- updatePlotLembagaPklUser.php
+- updatePlotPklAdm.php
+
+File yang dimodifikasi:
+- psychoApps/contentsConAdm.php
+- psychoApps/navSideBarAdmBakS1.php
+- psychoApps/navSideBarUserS1.php
+- (dan file PHP lainnya yang mungkin ikut berubah bersangkutan dengan pendaftaran PKL)
+
+2. Eksekusi Query Database
+--------------------------
+Terdapat perubahan struktur tabel untuk mendukung fitur plot / kuota lembaga PKL. Silakan jalankan file SQL `deploy_pkl.sql` di database server (misal melalui PHPMyAdmin, Adminer, atau command line MySQL di VPS) menggunakan perintah:
+`mysql -u username -p database_name < deploy_pkl.sql`
+
+Jika Anda mengeksekusinya secara manual (via GUI), Anda cukup copy-paste seluruh query yang ada dalam file `deploy_pkl.sql` dan tekan Go / Eksekusi.
+
+Tabel yang akan dibuat oleh file SQL tersebut adalah:
+- pkl_plot_periode (Untuk manajemen buka/tutup periode khusus plot PKL)
+- pkl_penjurusan (Data peminatan/penjurusan PKL, misal: PIO, Klinis)
+- pkl_lembaga (Data lembaga/instansi tujuan beserta sisa kuota dan detailnya)
+- pkl_plot_pendaftar (Log pendaftaran/plot mahasiswa yang memperebutkan kuota di suatu lembaga)
+
+3. Cek Permisi Direktori Upload (Opsional)
+------------------------------------------
+Pada fitur lembaga, ada field untuk mengunggah `file_surat`. Pastikan direktori tempat Anda menyimpan upload file surat ini memiliki hak akses (permissions / chmod) yang sesuai di VPS sehingga user dapat mengunggah file tanpa error (biasanya chmod 755 atau 775, dan pastikan ownernya adalah user web server, seperti `www-data`).
+
+4. Tes Fungsi Pada Lingkungan Production
+----------------------------------------
+Setelah deployment, disarankan untuk masuk menggunakan akun Admin (BAK) dan mencoba menambahkan minimal 1 periode dan 1 penjurusan untuk mengecek apakah tabel database sudah terhubung dengan baik.
+
+Semoga berhasil! Jika menemui kendala, silakan baca kembali log error web server.
