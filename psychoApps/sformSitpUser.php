@@ -1,4 +1,8 @@
-<?php include( "contentsConAdm.php" );
+<?php 
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include( "contentsConAdm.php" );
    $anggota1=mysqli_real_escape_string($con, $_POST['anggota1']);
    $anggota2=mysqli_real_escape_string($con, $_POST['anggota2']);
    $anggota3=mysqli_real_escape_string($con, $_POST['anggota3']);
@@ -37,8 +41,56 @@
    $wd1=mysqli_real_escape_string($con, $_POST['wd1']);   
    $statusform=mysqli_real_escape_string($con, $_POST['statusform']);
    
-   $query=mysqli_query($con, "INSERT INTO sitp(nim,lembaga_tujuan_surat,alamat_lengkap_lts,kota_lts,sebutan_pimpinan,tgl_pengajuan,bln_pengajuan,jenis_pkl,thn_pengajuan,wd1,statusform)".
-   "VALUES('$nim','$lembaga_tujuan_surat','$alamat_lengkap_lts','$kota_lts','$sebutan_pimpinan','$tgl_pengajuan','$bln_pengajuan','$jenis_pkl','$thn_pengajuan','$wd1','$statusform')")  or die(mysqli_error($con));
+   $namafolder = "file_persetujuan_pkl/";
+   
+   // Pastikan folder ada atau buat baru jika tidak ada
+   if (!is_dir($namafolder)) {
+       if (!mkdir($namafolder, 0755, true)) {
+           die("Error: Gagal membuat folder penyimpanan '$namafolder'. Silakan buat folder tersebut secara manual di server atau cek permission.");
+       }
+   }
+
+   // Pastikan folder bisa ditulisi (writable)
+   if (!is_writable($namafolder)) {
+       die("Error: Folder '$namafolder' tidak memiliki izin tulis (not writable). Silakan lakukan chmod 755 atau 777 pada folder tersebut di VPS.");
+   }
+
+   if (!isset($_FILES['file_persetujuan'])) {
+       die("Error: Form tidak mengirimkan file_persetujuan_pkl. Cek post_max_size di php.ini atau pastikan form menggunakan enctype='multipart/form-data'.");
+   }
+
+   $file_error = $_FILES['file_persetujuan']['error'];
+   if ($file_error !== UPLOAD_ERR_OK) {
+       $error_msg = "Gagal upload (Error Code: $file_error). ";
+       switch($file_error) {
+           case 1: $error_msg .= "Ukuran file melampaui 'upload_max_filesize' di php.ini server."; break;
+           case 2: $error_msg .= "Ukuran file melampaui batas MAX_FILE_SIZE yang ditentukan di form HTML."; break;
+           case 3: $error_msg .= "File hanya terupload sebagian."; break;
+           case 4: $error_msg .= "Tidak ada file yang dipilih untuk diupload."; break;
+           case 6: $error_msg .= "Folder penyimpanan sementara (tmp) tidak ditemukan di server."; break;
+           case 7: $error_msg .= "Gagal menulis file ke disk server."; break;
+           case 8: $error_msg .= "Upload dihentikan oleh ekstensi PHP."; break;
+           default: $error_msg .= "Terjadi error yang tidak diketahui."; break;
+       }
+       die($error_msg);
+   }
+
+   $jenis_berkas = $_FILES['file_persetujuan']['type'];
+
+   if ($jenis_berkas != "application/pdf") {
+       die("Gagal upload: Jenis file harus PDF. File yang Anda kirim bertipe: " . htmlspecialchars($jenis_berkas));
+   } 
+   else {
+   $temp = explode(".", $_FILES["file_persetujuan"]["name"]);
+   $nama_baru = $nim . '_persetujuan_kriscen_' . time() . '.' . end($temp);
+   $berkas = $namafolder . $nama_baru;
+   
+   if (!move_uploaded_file($_FILES['file_persetujuan']['tmp_name'], $namafolder . $nama_baru)) {
+       die("Gagal memindahkan file dari folder sementara ke '$namafolder$nama_baru'. Cek permission folder atau kuota disk VPS.");
+   }
+
+   $query=mysqli_query($con, "INSERT INTO sitp(no_agenda_surat,nim,lembaga_tujuan_surat,alamat_lengkap_lts,kota_lts,sebutan_pimpinan,tgl_pengajuan,bln_pengajuan,jenis_pkl,thn_pengajuan,wd1,statusform,tgl_proses,tgl_selesai,tgl_dikeluarkan,tembusan,catatan,executor,editor,file_persetujuan)".
+   "VALUES('','$nim','$lembaga_tujuan_surat','$alamat_lengkap_lts','$kota_lts','$sebutan_pimpinan','$tgl_pengajuan','$bln_pengajuan','$jenis_pkl','$thn_pengajuan','$wd1','$statusform','','',NULL,'','','','','$berkas')")  or die(mysqli_error($con));
 
    $qry=mysqli_query($con, "SELECT id FROM sitp ORDER BY id DESC");
    $ambil=mysqli_fetch_assoc($qry);
@@ -70,4 +122,5 @@
    "VALUES('$idAnggota','$urutan12','$anggota12')")  or die(mysqli_error($con));
 
    header("location:riwayatSitpUser.php?message=notifInput");
+   }
    ?>

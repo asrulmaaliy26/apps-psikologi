@@ -260,6 +260,11 @@ $tahun=mysqli_real_escape_string($con, $_GET['tahun']);
                                         <td>:</td>
                                         <td><?php if($data['executor']=='') { echo '-';} else { echo $dEksekutor['nm_person'];}?></td>
                                       </tr>
+                                      <tr>
+                                        <th scope="col">File Persetujuan Crisis Center</th>
+                                        <td>:</td>
+                                        <td><?php if(!empty($data['file_persetujuan'])) { echo "<a href='".$data['file_persetujuan']."' target='_blank' class='btn btn-sm btn-outline-success'><i class='fas fa-file-pdf'></i> Lihat File</a>";} else { echo "<span class='badge badge-secondary'>Belum ada file</span>";}?></td>
+                                      </tr>
                                     </tbody>
                                   </table>
                                 </div>

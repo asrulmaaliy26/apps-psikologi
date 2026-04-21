@@ -357,6 +357,15 @@
                             ?>
                         </div>
                       </div>
+                      <div class="form-group">
+                        <label for="file_persetujuan">Upload file persetujuan dari Crisis Center (PDF) <span class="text-danger">*</span></label>
+                        <br>
+                        <?php if(!empty($dataku['file_persetujuan'])){ ?>
+                          <a href="<?php echo $dataku['file_persetujuan'];?>" target="_blank" class="badge badge-info mb-2">Lihat File Saat Ini</a>
+                        <?php } ?>
+                        <input type="file" name="file_persetujuan" class="form-control form-control-sm" <?php if(empty($dataku['file_persetujuan'])){ echo "required"; } ?>>
+                        <p class="help-block small"><strong>- Ukuran file yang diupload maksimal 2MB. Biarkan kosong jika tidak ingin merubah file persetujuan.</strong></p>
+                      </div>
                       <input type="text" name="anggota1" class="sr-only" value="<?php echo $nim;?>" required readonly>
                       <input type="text" name="id" class="sr-only" value="<?php echo $id;?>" required readonly>
                       <input type="text" name="anggota1" class="sr-only" value="<?php echo $nim;?>" required readonly>

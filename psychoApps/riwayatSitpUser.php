@@ -55,9 +55,10 @@
                           <tr>
                             <th width="4%" class="pl-1">No.</th>
                             <th width="12%">Tgl. pengajuan</th>
-                            <th width="46%">Tempat PKL</th>
+                            <th width="38%">Tempat PKL</th>
                             <th width="10%">Anggota</th>
-                            <th width="12%">Status surat</th>
+                            <th width="10%">File Persetujuan</th>
+                            <th width="10%">Status surat</th>
                             <th colspan="4" class="pr-1">Opsi</th>
                           </tr>
                         </thead>
@@ -82,6 +83,7 @@
                             <td class="text-center"><?php echo $data['tgl_pengajuan'];?></td>
                             <td class="text-center"><?php echo $data['lembaga_tujuan_surat'].' di '.$dtkota['nm_kota'];?></td>
                             <td class="text-center"><button type="button" class="btn btn-outline-info btn-xs btn-block" data-toggle="modal" data-target="#anggota" data-whatever="<?php echo $id;?>">Lihat</button></td>
+                            <td class="text-center"><?php if(!empty($data['file_persetujuan'])) { echo "<a href='".$data['file_persetujuan']."' target='_blank' class='btn btn-outline-success btn-xs btn-block'><i class='fas fa-file-pdf'></i> Lihat</a>"; } else { echo "<span class='badge badge-secondary'>Belum ada</span>"; } ?></td>
                             <td class="text-center pr-1"><?php echo $dtval['nm'];?></td>
                             <td width="4%" class="text-center pl-1"><?php if($data['statusform']==1 OR $data['statusform']==4) { echo "<a class='btn btn-outline-warning btn-xs btn-block' onclick='return confirm(\"Yakin data ini diedit?\")' title='Yakin data ini diedit?' href='editSitpUser.php?id=".$data['id']."'><i class='far fa-edit'></i></a>";} else { echo "<a class='btn btn-outline-secondary btn-xs btn-block' onclick='return confirm(\"Tidak bisa diedit. Permohonan surat telah diterima/diproses/selesai\")' title='Tidak bisa diedit. Permohonan surat telah diterima/diproses/selesai' disabled><i class='far fa-edit'></i></a>";}?></td>
                             <td width="4%" class="text-center"><?php if($data['statusform']==1 OR $data['statusform']==4) { echo "<a class='btn btn-outline-danger btn-xs btn-block' onclick='return confirm(\"Yakin data ini dihapus?\")' title='Yakin data ini dihapus?' href='deleteSitpUser.php?id=".$data['id']."'><i class='far fa-trash-alt'></i></a>";} else { echo "<a class='btn btn-outline-secondary btn-xs btn-block' onclick='return confirm(\"Tidak bisa dihapus. Permohonan surat telah diterima/diproses/selesai\")' title='Tidak bisa dihapus. Permohonan surat telah diterima/diproses/selesai' disabled><i class='far fa-trash-alt'></i></a>";}?></td>

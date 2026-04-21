@@ -27,8 +27,55 @@
        die("Mohon Lembaga tujuan surat diisi!");
    }
    
-   else
-   {
+    else
+    {
+    if(!empty($_FILES['file_persetujuan']['name'])) {
+        $namafolder = "file_persetujuan_pkl/";
+        
+        // Pastikan folder ada atau buat baru jika tidak ada
+        if (!is_dir($namafolder)) {
+            if (!mkdir($namafolder, 0755, true)) {
+                die("Error: Gagal membuat folder penyimpanan '$namafolder'. Silakan buat folder tersebut secara manual di server atau cek permission.");
+            }
+        }
+
+        // Pastikan folder bisa ditulisi (writable)
+        if (!is_writable($namafolder)) {
+            die("Error: Folder '$namafolder' tidak memiliki izin tulis (not writable). Silakan lakukan chmod 755 atau 777 pada folder tersebut di VPS.");
+        }
+
+        // Cek apakah ada error upload
+        $file_error = $_FILES['file_persetujuan']['error'];
+        if ($file_error !== UPLOAD_ERR_OK) {
+            $error_msg = "Gagal upload pada saat update (Error Code: $file_error). ";
+            switch($file_error) {
+                case 1: $error_msg .= "Ukuran file melampaui 'upload_max_filesize' di php.ini server."; break;
+                case 2: $error_msg .= "Ukuran file melampaui batas MAX_FILE_SIZE yang ditentukan di form HTML."; break;
+                case 3: $error_msg .= "File hanya terupload sebagian."; break;
+                case 4: $error_msg .= "Tidak ada file yang dipilih untuk diupload."; break;
+                case 6: $error_msg .= "Folder penyimpanan sementara (tmp) tidak ditemukan di server."; break;
+                case 7: $error_msg .= "Gagal menulis file ke disk server."; break;
+                case 8: $error_msg .= "Upload dihentikan oleh ekstensi PHP."; break;
+                default: $error_msg .= "Terjadi error yang tidak diketahui."; break;
+            }
+            die($error_msg);
+        }
+
+        $jenis_berkas = $_FILES['file_persetujuan']['type'];
+        if ($jenis_berkas != "application/pdf") {
+            die("Gagal update file: Jenis file harus PDF. File yang Anda kirim bertipe: " . htmlspecialchars($jenis_berkas));
+        } else {
+            $temp = explode(".", $_FILES["file_persetujuan"]["name"]);
+            $nama_baru = $anggota1 . '_persetujuan_kriscen_' . time() . '.' . end($temp);
+            $berkas = $namafolder . $nama_baru;
+            
+            if (!move_uploaded_file($_FILES['file_persetujuan']['tmp_name'], $namafolder . $nama_baru)) {
+                die("Gagal memindahkan file dari folder sementara ke '$namafolder$nama_baru'. Cek permission folder atau kuota disk VPS.");
+            }
+            mysqli_query($con, "UPDATE sitp SET file_persetujuan='$berkas' WHERE id='$id'");
+        }
+    }
+
    $myqry="UPDATE sitp SET lembaga_tujuan_surat='$lembaga_tujuan_surat',alamat_lengkap_lts='$alamat_lengkap_lts',kota_lts='$kota_lts',sebutan_pimpinan='$sebutan_pimpinan',jenis_pkl='$jenis_pkl',tgl_pengajuan='$tgl_pengajuan',bln_pengajuan='$bln_pengajuan',thn_pengajuan='$thn_pengajuan' WHERE id='$id' LIMIT 1";
    mysqli_query($con, $myqry) or die(mysqli_error($con));
 
