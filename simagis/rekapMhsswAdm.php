@@ -27,7 +27,7 @@
             
       include 'pagination.php';                 
       $reload = "rekapMhsswAdm.php?pagination=true";
-      $sql =  "SELECT * FROM mag_dt_mhssw_pasca GROUP BY angkatan ORDER BY angkatan DESC";
+      $sql =  "SELECT angkatan FROM mag_dt_mhssw_pasca GROUP BY angkatan ORDER BY angkatan DESC";
       $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
       
       $rpp = 10;
@@ -583,7 +583,7 @@
               series:    
             [
             <?php
-        $sql   = "SELECT * FROM mag_dt_mhssw_pasca GROUP BY angkatan,smt_daftar";
+        $sql   = "SELECT angkatan, smt_daftar FROM mag_dt_mhssw_pasca GROUP BY angkatan, smt_daftar";
         $query = mysqli_query($GLOBALS["___mysqli_ston"],  $sql )or die( mysqli_error($GLOBALS["___mysqli_ston"]) );
         while( $ret = mysqli_fetch_array( $query ) ){
         $smt_daftar=$ret['smt_daftar'];

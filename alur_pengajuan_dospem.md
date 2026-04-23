@@ -59,3 +59,20 @@ Kamu harus sabar menunggu verifikasi berlapis dari admin BAK S1.
 > Jika semua tahap ini disetujui, maka dosen pembimbingmu di sistem sudah terkunci. Kamu **wajib** lolos di tahap ini sebelum bisa mendaftar Seminar Proposal (Sempro).
 
 Kamu bisa memantau semuanya (apakah masih _pending_, disetujui, atau ditolak) di menu **Riwayat Pengajuan Dospem**. Jika ada yang **Ditolak** (misal judulnya ditolak/dospem tidak disetujui), kamu harus login lagi dan menggantinya.
+
+---
+
+## 👨‍🏫 Panduan Dosen: Mengelola Bimbingan Skripsi/Tesis
+
+Bagi Bapak/Ibu Dosen, berikut adalah cara mengelola mahasiswa bimbingan:
+
+1.  **Dashboard**: Masuk ke menu **Rekap Pembimbingan**.
+2.  **Daftar Mahasiswa**: Bapak/Ibu dapat melihat daftar mahasiswa yang telah resmi dibimbing (Status Tervalidasi Admin).
+3.  **Manajemen Kuota**: 
+    -   Sistem memiliki batas kuota maksimal bimbingan untuk setiap dosen.
+    -   Jika kuota Bapak/Ibu sudah penuh, nama Bapak/Ibu tidak akan muncul di pilihan mahasiswa saat pendaftaran.
+    -   Bapak/Ibu dapat berkoordinasi dengan Admin BAK jika ada perubahan status bimbingan (misalnya mahasiswa mengundurkan diri atau lulus) agar kuota kembali tersedia.
+4.  **Bimbingan**: Gunakan menu **Bimbingan I/II** untuk mencatat progres atau memberikan masukan secara digital jika diperlukan.
+
+---
+*PsychoApps :: Sistem Informasi Terintegrasi Fakultas Psikologi UIN Maliki Malang*

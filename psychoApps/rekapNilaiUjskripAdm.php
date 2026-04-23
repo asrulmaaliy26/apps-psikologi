@@ -175,7 +175,7 @@
               <?php
                 include 'pagination0.php';
                 $reload0 = "rekapNilaiUjskripAdm.php?pagination0=true";
-                $sql0 = "SELECT * FROM nilai_ujskrip INNER JOIN dt_mhssw ON nilai_ujskrip.nim=dt_mhssw.nim GROUP BY nilai_ujskrip.angkatan ORDER BY nilai_ujskrip.angkatan DESC";
+                $sql0 = "SELECT pu.angkatan FROM nilai_ujskrip nu INNER JOIN peserta_ujskrip pu ON nu.id_pendaftaran = pu.id INNER JOIN dt_mhssw ON pu.nim = dt_mhssw.nim GROUP BY pu.angkatan ORDER BY pu.angkatan DESC";
                 $result0 = mysqli_query($con, $sql0);
                 
                 $rpp0 = 10;

@@ -24,12 +24,12 @@
       INNER JOIN mag_dt_mhssw_pasca mdmp
        on mrt.nim = mdmp.nim
       
-      WHERE mrt.nim LIKE '%$keyword%' OR mdmp.nama LIKE '%$keyword%' OR mrt.judul_tesis LIKE '%$keyword%' OR mrt.tgl_upload LIKE '%$keyword%'";
+      WHERE mrt.nim LIKE '%$keyword%' OR mdmp.nama LIKE '%$keyword%' OR mrt.judul_tesis LIKE '%$keyword%' OR mrt.tgl_upload LIKE '%$keyword%' ORDER BY mrt.id DESC";
        
        $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
        }else{
        $reload = "rekapAllRevisiTesAdm.php?pagination=true";
-       $sql = "SELECT * FROM mag_revisi_tesis ORDER BY id_ujtes DESC";
+       $sql = "SELECT * FROM mag_revisi_tesis ORDER BY id DESC";
        $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
        }
        

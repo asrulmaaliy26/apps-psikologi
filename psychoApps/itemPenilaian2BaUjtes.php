@@ -1,24 +1,24 @@
-<?php include( "contentsConAdm.php" );
-  $username = $_SESSION['username'];
-  ?>
-<td rowspan="10" class="pl-1" style="vertical-align: top;">
-  <strong>LATAR PENELITIAN</strong><br>
-  <ol class="mb-2" style="padding-left:1em;">
-    <li>Menggambarkan fakta sosial terkini yang obyektif secara kualitatif dan kuantitatif;</li>
-    <li>Didukung statemen ahli untuk meningkatkan pengakuan fakta sosial sebagai isu penting terbarukan;</li>
-    <li>Mendapatkan argumentasi konseptual menunjukkan dengan jelas kesenjangan <i>das sein</i> dan <i>das sollen</i> sebagai alasan tema penelitian layak diajukan menjawab kebaruan kasus, atau potensi kekinian;</li>
-    <li>Rumusan masalah relevan berfokus pada peluang hasil terbarukan;</li>
-    <li>Kemampuan mengidentifikasi tujuan dan manfaat penelitian terukur dampaknya bagi kesejahteraan manusia.</li>
-  </ol>
-  <p class="mb-0"><strong>Penjelasan Penilaian</strong></p>
-  <dl class="row">
-    <dt class="col-sm-2">91 sd. 100</dt>
-    <dd class="col-sm-10 mb-0">Latar penelitian menunjukkan kejelasan argumentasi ilmiah masalah penelitian yang terbarukan didukung secara eksplisit adanya kesenjangan teoritis dan praktis atas kasus atau potensi, rumusan masalah menawarkan kebaruan, serta manfaat riset dapat menyelesaikan, atau menawarkan manfaat kemanusiaan.</dd>
-    <dt class="col-sm-2">80 sd. 90</dt>
-    <dd class="col-sm-10 mb-0">Latar penelitian menunjukkan kejelasan argumentasi ilmiah masalah penelitian yang terbarukan didukung secara eksplisit adanya kesenjangan teoritis dan praktis atas kasus atau potensi dengan menyertakan manfaat penelitian ala kadarnya.</dd>
-    <dt class="col-sm-2">70 sd. 79</dt>
-    <dd class="col-sm-10 mb-0">Latar penelitian menunjukkan kejelasan argumentasi ilmiah masalah penelitian yang terbarukan didukung secara eksplisit adanya kesenjangan teoritis dan praktis atas kasus atau potensi.</dd>
-    <dt class="col-sm-2">60 sd. 69</dt>
-    <dd class="col-sm-10 mb-0">Argumentasi latar belakang bernilai <i>common sense</i> peneliti.</dd>
-  </dl>
-</td>
+<div class="assessment-item-content">
+  <h5 class="text-primary mb-3"><i class="fas fa-search-location mr-2"></i> LATAR PENELITIAN</h5>
+  <ul class="list-unstyled mb-3 pl-0">
+    <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Menggambarkan fakta sosial terkini yang obyektif secara kualitatif dan kuantitatif;</li>
+    <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Didukung statemen ahli untuk meningkatkan pengakuan fakta sosial sebagai isu penting terbarukan;</li>
+    <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Mendapatkan argumentasi konseptual menunjukkan dengan jelas kesenjangan <i>das sein</i> dan <i>das sollen</i> sebagai alasan tema penelitian layak diajukan menjawab kebaruan kasus, atau potensi kekinian;</li>
+    <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Rumusan masalah relevan berfokus pada peluang hasil terbarukan;</li>
+    <li class="mb-2"><i class="fas fa-check-circle text-success mr-2"></i> Kemampuan mengidentifikasi tujuan dan manfaat penelitian terukur dampaknya bagi kesejahteraan manusia.</li>
+  </ul>
+  
+  <div class="explanation-box p-3 bg-light rounded shadow-sm border-left border-primary">
+    <h6 class="font-weight-bold mb-3"><i class="fas fa-info-circle mr-1"></i> Penjelasan Penilaian</h6>
+    <div class="row small">
+      <div class="col-sm-3 font-weight-bold text-success">91 sd. 100</div>
+      <div class="col-sm-9 mb-2">Latar penelitian menunjukkan kejelasan argumentasi ilmiah masalah penelitian yang terbarukan didukung secara eksplisit adanya kesenjangan teoritis dan praktis atas kasus atau potensi, rumusan masalah menawarkan kebaruan, serta manfaat riset dapat menyelesaikan, atau menawarkan manfaat kemanusiaan.</div>
+      <div class="col-sm-3 font-weight-bold text-primary">80 sd. 90</div>
+      <div class="col-sm-9 mb-2">Latar penelitian menunjukkan kejelasan argumentasi ilmiah masalah penelitian yang terbarukan didukung secara eksplisit adanya kesenjangan teoritis dan praktis atas kasus atau potensi dengan menyertakan manfaat penelitian ala kadarnya.</div>
+      <div class="col-sm-3 font-weight-bold text-info">70 sd. 79</div>
+      <div class="col-sm-9 mb-2">Latar penelitian menunjukkan kejelasan argumentasi ilmiah masalah penelitian yang terbarukan didukung secara eksplisit adanya kesenjangan teoritis dan praktis atas kasus atau potensi.</div>
+      <div class="col-sm-3 font-weight-bold text-warning">60 sd. 69</div>
+      <div class="col-sm-9">Argumentasi latar belakang bernilai <i>common sense</i> peneliti.</div>
+    </div>
+  </div>
+</div>

@@ -72,6 +72,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="../psychoApps/laporanHarian.php" style="font-weight:bold; color:#28a745;"><span class="glyphicon glyphicon-list-alt"></span> Laporan Harian</a></li>
+        <li><a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" style="font-weight:bold; color:#17a2b8;"><span class="glyphicon glyphicon-headset"></span> Layanan / Pengaduan</a></li>
         <li><a href="logoutAdm.php"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
       </ul>
       <p class="navbar-text navbar-right hidden-sm hidden-xs">Admin: <?php echo $nama_admin; ?></p>

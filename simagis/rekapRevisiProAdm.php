@@ -15,7 +15,7 @@
             
     include 'pagination.php';                 
     $reload = "rekapRevisiProAdm.php?pagination=true";
-    $sql =  "SELECT * FROM mag_revisi_sempro GROUP BY id_sempro ORDER BY id_sempro DESC";
+    $sql =  "SELECT mrs.id_sempro FROM mag_revisi_sempro mrs INNER JOIN mag_periode_pendaftaran_sempro mps ON mrs.id_sempro = mps.id INNER JOIN mag_dt_ta mta ON mps.ta = mta.id INNER JOIN mag_opsi_tahap_ujprop_ujtes moth ON mps.tahap = moth.id GROUP BY mrs.id_sempro ORDER BY mta.ta DESC, mta.semester DESC, moth.tahap DESC";
     $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
       
     $rpp = 20;

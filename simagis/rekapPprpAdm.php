@@ -27,7 +27,7 @@
          	  
           include 'pagination.php';                 
        	  $reload = "rekapPprpAdm.php?pagination=true";
-       	  $sql =  "SELECT * FROM mag_pengelompokan_rumpun GROUP BY angkatan ORDER BY angkatan DESC";
+       	  $sql =  "SELECT angkatan FROM mag_pengelompokan_rumpun GROUP BY angkatan ORDER BY angkatan DESC";
        	  $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
       
            $rpp = 50;

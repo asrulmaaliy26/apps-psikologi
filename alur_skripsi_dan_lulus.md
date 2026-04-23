@@ -61,3 +61,27 @@ Saat sidang:
 - Saat kamu buka akunmu di esok hari: Jika di "Riwayat Ujian Skripsi" tertera Nilai dan kata LULUS.
 
 🔥 **SELAMAT! KAMU TELAH MENJADI SARJANA PSIKOLOGI S.Psi!** 🔥
+
+---
+
+## 👨‍🏫 Panduan Dosen: Penilaian Ujian Skripsi & Tesis
+
+Bagi Bapak/Ibu Dosen yang bertugas sebagai Penguji, berikut adalah alur pengisian nilainya:
+
+### A. Penilaian Ujian Skripsi (S1)
+1.  **Akses**: Masuk ke menu **Penilaian > Ujian Skripsi**.
+2.  **Input**: Klik tombol **Isi atau Edit** pada nama mahasiswa.
+3.  **Metode**: Masukkan skor pada komponen penilaian yang tersedia. Sistem akan melakukan kalkulasi otomatis berdasarkan bobot masing-masing komponen.
+4.  **Catatan**: Tuliskan catatan revisi pada kolom yang disediakan untuk membantu mahasiswa dalam tahap perbaikan final.
+
+### B. Penilaian Ujian Tesis (S2) - *Sistem Terbaru*
+1.  **Akses**: Masuk ke menu **Penilaian > Ujian Tesis**.
+2.  **Input Terkonsolidasi**: Klik **Isi atau Edit**. Anda akan diarahkan ke halaman penilaian satu pintu (Consolidated Table).
+3.  **Fokus List**: Masukkan nilai (0-100) pada 7 aspek penilaian yang tersedia. Rata-rata nilai akan muncul secara real-time saat Anda mengetik.
+4.  **Detail & Revisi**:
+    -   Klik pada **Judul Aspek** untuk membuka detail penjelasan penilaian dan kolom catatan.
+    -   Gunakan **Rich Text Editor** untuk memformat catatan revisi agar lebih jelas bagi mahasiswa.
+5.  **Simpan**: Klik tombol **SIMPAN PENILAIAN** di bagian bawah halaman untuk menyimpan seluruh data sekaligus.
+
+---
+*PsychoApps :: Sistem Informasi Terintegrasi Fakultas Psikologi UIN Maliki Malang*

@@ -58,3 +58,18 @@ Di Ruangan Sempro, para Penguji akan mencatat nilai dan masukan pada **Aplikasi 
 
 - **LULUS SEMPRO** = Kamu berhak melanjutkan ke Ujian Skripsi! Silakan revisi proposal sesuai masukan penguji lalu segera ambil data penelitianmu.
 - **SEMINAR ULANG** = Wah, nilaimu rendah sekali. Dosen penguji meminta kamu mendesain ulang model/subyek uji coba dan melakukan presentasi Sempro kembali bulan depan!
+
+---
+
+## 👨‍🏫 Panduan Dosen: Memberikan Penilaian Sempro
+
+Bagi Bapak/Ibu Dosen yang bertugas sebagai Penguji, berikut adalah alur pengisian nilainya:
+
+1.  **Dashboard**: Masuk ke menu **Penilaian > Seminar Proposal**.
+2.  **Input Nilai**: Klik tombol **Isi atau Edit** pada baris mahasiswa yang bersangkutan.
+3.  **Pemberian Skor**: Pilih nilai angka (1-100) pada grid yang tersedia. Sistem akan langsung menyimpan nilai setiap kali Bapak/Ibu mengklik angka.
+4.  **Catatan Revisi**: 
+    -   Scroll ke bagian bawah halaman.
+    -   Tuliskan catatan perbaikan atau revisi pada kotak **Catatan/Revisi**.
+    -   Klik tombol **Kirim Catatan/Revisi** untuk mengirimkan masukan tersebut ke mahasiswa.
+5.  **Selesai**: Klik tombol **Selesai** untuk kembali ke dashboard utama.

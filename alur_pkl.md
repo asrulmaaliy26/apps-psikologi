@@ -51,3 +51,18 @@ Admin BAK S1 akan meng-_entry_ **Nilai PKL**-mu ke sistem (A/B/C) beserta angka 
 
 - Kamu harus cek di **Riwayat Pendaftaran PKL**, jika di sana tertulis keterangan nilai bahwa kamu "LULUS", selamat! Kamu bisa melangkah mendaftar _Sempro Skripsi_.
 - Jika statusmu dapat nilai 'Jelek/Tidak Lulus', maka sistem akan otomatis menolakmu untuk bisa daftar Ujian Skripsi!
+
+---
+
+## 👨‍🏫 Panduan Dosen: Pembimbing Lapangan (DPL) PKL
+
+Bagi Bapak/Ibu Dosen yang ditunjuk sebagai DPL, berikut adalah alur kerjanya:
+
+1.  **Monitoring**: Bapak/Ibu dapat melihat daftar mahasiswa yang dibimbing melalui menu **Dosen Pembimbing Lapangan**.
+2.  **Verifikasi & Penilaian**:
+    -   Setelah mahasiswa menyelesaikan masa PKL, Bapak/Ibu bertugas memverifikasi laporan atau kinerja mereka.
+    -   Bapak/Ibu dapat memberikan masukan atau menyetujui laporan akhir PKL.
+3.  **Pelaporan ke Admin**: Saat ini, nilai akhir PKL akan diinputkan oleh Admin BAK S1 berdasarkan hasil koordinasi dan laporan nilai dari Bapak/Ibu Dosen Pembimbing.
+
+---
+*PsychoApps :: Sistem Informasi Terintegrasi Fakultas Psikologi UIN Maliki Malang*

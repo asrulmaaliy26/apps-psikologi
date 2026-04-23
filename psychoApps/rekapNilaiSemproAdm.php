@@ -159,7 +159,7 @@
               <?php
                 include 'pagination0.php';
                 $reload0 = "rekapNilaiSemproAdm.php?pagination0=true";
-                $sql0 = "SELECT * FROM nilai_sempro INNER JOIN dt_mhssw ON nilai_sempro.nim=dt_mhssw.nim GROUP BY nilai_sempro.angkatan ORDER BY nilai_sempro.angkatan DESC";
+                $sql0 = "SELECT ps.angkatan FROM nilai_sempro ns INNER JOIN peserta_sempro ps ON ns.id_pendaftaran = ps.id INNER JOIN dt_mhssw ON ps.nim = dt_mhssw.nim GROUP BY ps.angkatan ORDER BY ps.angkatan DESC";
                 $result0 = mysqli_query($con, $sql0);
                 
                 $rpp0 = 10;
