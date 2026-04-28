@@ -3,6 +3,19 @@
   $myquery = "SELECT * FROM dt_all_adm WHERE username='$username'";
   $d = mysqli_query($con, $myquery)or die( mysqli_error($con));
   $dtDosen = mysqli_fetch_assoc($d);
+  $currentPage = basename($_SERVER['PHP_SELF']);
+  if (!function_exists('isActive')) {
+    function isActive($page) {
+      global $currentPage;
+      if (is_array($page)) { return in_array($currentPage, $page) ? 'active bg-primary' : ''; }
+      return ($currentPage === $page) ? 'active bg-primary' : '';
+    }
+  }
+  if (!function_exists('isOpen')) {
+    function isOpen($pages) {
+      return 'menu-open';
+    }
+  }
   ?>
 <aside <?php include( "main-sidebar-style.php" )?>>
   <?php include( "brandNavAdm.php" );?>
@@ -10,93 +23,85 @@
     <nav class="mt-2">
       <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-legacy nav-compact" data-widget="treeview" role="menu" data-accordion="false">
         <li class="nav-item">
-          <a href="dashboardAdmBmn.php" class="nav-link">
+          <a href="dashboardAdmBmn.php" class="nav-link <?php echo isActive('dashboardAdmBmn.php'); ?>">
             <i class="fas fa-chart-line nav-icon"></i>
-            <p>
-              Dashboard
-            </p>
+            <p>Dashboard</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="dtBarang.php" class="nav-link">
+          <a href="dtBarang.php" class="nav-link <?php echo isActive('dtBarang.php'); ?>">
             <i class="fas fa-laptop nav-icon"></i>
-            <p>
-              Data Barang
-            </p>
+            <p>Data Barang</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="dtRuang.php" class="nav-link">
+          <a href="dtRuang.php" class="nav-link <?php echo isActive('dtRuang.php'); ?>">
             <i class="fas fa-home nav-icon"></i>
-            <p>
-              Data Ruang
-            </p>
+            <p>Data Ruang</p>
           </a>
         </li>
         <li class="nav-item">
-          <a href="dtDir.php" class="nav-link">
+          <a href="dtDir.php" class="nav-link <?php echo isActive('dtDir.php'); ?>">
             <i class="fas fa-laptop-house nav-icon"></i>
-            <p>
-              Daftar Inventaris Ruangan (DIR)
-            </p>
+            <p>Daftar Inventaris Ruangan (DIR)</p>
           </a>
         </li>
-        <li class="nav-item menu-open">
-          <a href="#" class="nav-link">
+        <li class="nav-item <?php echo isOpen(['dtPinjamBarang.php','dtBarangKembali.php','dtBarangDipinjam.php','dtPinjamRuang.php','dtRuangKembali.php','dtRuangDipinjam.php']); ?>">
+          <a href="#" class="nav-link <?php echo isActive(['dtPinjamBarang.php','dtBarangKembali.php','dtBarangDipinjam.php','dtPinjamRuang.php','dtRuangKembali.php','dtRuangDipinjam.php']); ?>">
             <i class="fas fa-retweet nav-icon"></i>
             <p>
               Data Peminjaman
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" style="display: block;">
             <li class="nav-item">
-              <a href="dtPinjamBarang.php" class="nav-link">
+              <a href="dtPinjamBarang.php" class="nav-link <?php echo isActive('dtPinjamBarang.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Peminjaman Barang</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="dtBarangKembali.php" class="nav-link">
+              <a href="dtBarangKembali.php" class="nav-link <?php echo isActive('dtBarangKembali.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Barang Kembali</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="dtBarangDipinjam.php" class="nav-link">
+              <a href="dtBarangDipinjam.php" class="nav-link <?php echo isActive('dtBarangDipinjam.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Barang Dipinjam</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="dtPinjamRuang.php" class="nav-link">
+              <a href="dtPinjamRuang.php" class="nav-link <?php echo isActive('dtPinjamRuang.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Peminjaman Ruang</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="dtRuangKembali.php" class="nav-link">
+              <a href="dtRuangKembali.php" class="nav-link <?php echo isActive('dtRuangKembali.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Ruang Kembali</p>
               </a>
             </li>
             <li class="nav-item">
-              <a href="dtRuangDipinjam.php" class="nav-link">
+              <a href="dtRuangDipinjam.php" class="nav-link <?php echo isActive('dtRuangDipinjam.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Ruang Dipinjam</p>
               </a>
             </li>
           </ul>
         </li>
-        <li class="nav-item menu-open">
-          <a href="#" class="nav-link">
+        <li class="nav-item <?php echo isOpen(['opsiSumDanaPerBarang.php','opsiKatBarang.php','opsiSubKatBarang.php','opsiMerkBarang.php','opsiKonBarang.php','opsiKatRuang.php','opsiJenRuang.php']); ?>">
+          <a href="#" class="nav-link <?php echo isActive(['opsiSumDanaPerBarang.php','opsiKatBarang.php','opsiSubKatBarang.php','opsiMerkBarang.php','opsiKonBarang.php','opsiKatRuang.php','opsiJenRuang.php']); ?>">
             <i class="fas fa-tools nav-icon"></i>
             <p>
               Konfigurasi
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
-          <ul class="nav nav-treeview">
+          <ul class="nav nav-treeview" style="display: block;">
             <li class="nav-item">
               <a href="opsiSumDanaPerBarang.php" class="nav-link">
                 <i class="text-xs far fa-circle nav-icon"></i>

@@ -80,6 +80,16 @@ $tahun=mysqli_real_escape_string($con, $_GET['tahun']);
           $result = mysqli_query($con, $sql);
           }
           
+          if (!function_exists('bulanIndo')) {
+              function bulanIndo($tanggal)
+              {
+              $bulan = array (1 => 'Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus',
+              'September','Oktober','Nopember','Desember');
+              $split = explode('-', $tanggal);
+              return $split[2] . ' ' . $bulan[ (int)$split[1] ] . ' ' . $split[0];
+              }
+          }
+          
           $rpp = 50;
           $page = isset($_GET["page"]) ? (intval($_GET["page"])) : 1;
           $tcount = mysqli_num_rows($result);

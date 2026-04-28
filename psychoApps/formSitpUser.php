@@ -81,7 +81,7 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                       </div>
                       <div class="form-group col-sm-3">
                         <label for="anggota2">Anggota 2 <span class="text-danger">*</span></label>
-                        <select name="anggota2" class="form-control form-control-sm" required>
+                        <select name="anggota2" class="form-control form-control-sm">
                           <option value="">-Pilih-</option>
                           <?php
                           $q = mysqli_query($con, "SELECT * FROM dt_mhssw WHERE status='1' AND nim!='$nim' ORDER BY nama ASC");
@@ -226,9 +226,11 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                         <input type="text" class="form-control form-control-sm" name="alamat_lengkap_lts" placeholder="Alamat harus ditulis lengkap. Misal: Jalan, Nomor/Blok, RT., RW., Desa/Kelurahan, Kecamatan dan Kabupaten." required>
                       </div>
                     </div>
+                    <hr>
+                    <h5 class="text-success"><i class="fas fa-building mr-1"></i> Detail Instansi & Jenis PKL</h5>
                     <div class="form-row">
-                      <div class="form-group col-sm-5">
-                        <label for="sebutan_pimpinan">Sebutan pimpinan untuk instansi/lembaga tujuan surat <span class="text-danger">*</span></label>
+                      <div class="form-group col-sm-4">
+                        <label for="sebutan_pimpinan">Sebutan Pimpinan <span class="text-danger">*</span></label>
                         <select name="sebutan_pimpinan" class="form-control form-control-sm" required>
                           <option value="">-Pilih-</option>
                           <?php
@@ -240,7 +242,7 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                         </select>
                       </div>
                       <div class="form-group col-sm-4">
-                        <label for="kota_lts">Kota instansi/lembaga tujuan surat <span class="text-danger">*</span></label>
+                        <label for="kota_lts">Kota Instansi <span class="text-danger">*</span></label>
                         <select name="kota_lts" class="form-control form-control-sm" required>
                           <option value="">-Pilih-</option>
                           <?php
@@ -251,8 +253,8 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                           ?>
                         </select>
                       </div>
-                      <div class="form-group col-sm-3">
-                        <label for="jenis_pkl">Jenis PKL yang akan diikuti <span class="text-danger">*</span></label>
+                      <div class="form-group col-sm-4">
+                        <label for="jenis_pkl">Jenis PKL <span class="text-danger">*</span></label>
                         <select name="jenis_pkl" class="form-control form-control-sm" required>
                           <option value="">-Pilih-</option>
                           <?php
@@ -264,6 +266,16 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                         </select>
                       </div>
                     </div>
+                    <!-- <div class="form-row">
+                      <div class="form-group col-sm-6">
+                        <label for="tgl_mulai_pkl">Tanggal Mulai PKL <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control form-control-sm" name="tgl_mulai_pkl" value="2026-06-22" required>
+                      </div>
+                      <div class="form-group col-sm-6">
+                        <label for="tgl_selesai_pkl">Tanggal Selesai PKL <span class="text-danger">*</span></label>
+                        <input type="date" class="form-control form-control-sm" name="tgl_selesai_pkl" value="2026-08-14" required>
+                      </div>
+                    </div> -->
                     <div class="form-group">
                       <label for="file_persetujuan">Upload file persetujuan dari Crisis Center (PDF) <span class="text-danger">*</span></label>
                       <input type="file" name="file_persetujuan" class="form-control form-control-sm" required>

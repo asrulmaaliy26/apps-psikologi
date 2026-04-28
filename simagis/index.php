@@ -11,36 +11,57 @@ include("koneksiExt.php");
 <body>
   <div class="container">
     <div class="row">
-      <div class="col-md-5 col-sm-12 col-xs-12" style="float:none; margin:auto; margin-top:20px;">
-        <h3 class="page-header text-center">LOGIN USER SIMAGIS</h3>
-        <div class="panel panel-default">
-          <div class="panel-body">
+      <div class="col-md-5 col-sm-12 col-xs-12" style="float:none; margin:auto; margin-top:40px;">
+        <div class="text-center" style="margin-bottom: 20px;">
+          <div style="display: flex; justify-content: center; align-items: center; gap: 20px; background: rgba(255,255,255,0.9); padding: 20px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+            <img src="../assets/logo psikologi .png" style="height: 60px; width: auto;" alt="Logo Psikologi">
+            <div style="text-align: center;">
+              <h4 style="color: #1a2a6c; font-weight: 800; margin: 0; letter-spacing: 1px; font-size: 16px;">FAKULTAS PSIKOLOGI</h4>
+              <h5 style="color: #555; font-weight: 600; margin: 5px 0 0 0; font-size: 11px;">UIN MAULANA MALIK IBRAHIM MALANG</h5>
+            </div>
+            <img src="../assets/Logo-UIN-Malang-Format-AI-CDR-PNG-SVG-PSD-EPS.png" style="height: 60px; width: auto;" alt="Logo UIN Malang">
+          </div>
+          <h3 style="color: #1a2a6c; font-weight: 700; margin-top: 15px;">LOGIN USER SIMAGIS</h3>
+        </div>
+        <div class="panel panel-default" style="border-radius: 10px; border: none; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+          <div class="panel-body" style="padding: 30px;">
             <form class="form" role="form" method="post" action="logUser.php?op=in" name="login">
               <div class="form-group">
                 <div class="input-group">
-                  <span class="input-group-addon"><span class="glyphicon glyphicon-user"></span></span>
-                  <input type="text" name="username" class="form-control" id="username" placeholder="Username">
+                  <span class="input-group-addon" style="background: #f8f9fa; border-right: none;"><span class="glyphicon glyphicon-user"></span></span>
+                  <input type="text" name="username" class="form-control" id="username" placeholder="Username" style="height: 45px; border-left: none;">
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-group">
-                  <span class="input-group-addon"><span class="glyphicon glyphicon-lock"></span></span>
-                  <input type="password" name="password" class="form-control" id="password" placeholder="Password">
+                  <span class="input-group-addon" style="background: #f8f9fa; border-right: none;"><span class="glyphicon glyphicon-lock"></span></span>
+                  <input type="password" name="password" class="form-control" id="password" placeholder="Password" style="height: 45px; border-left: none;">
                 </div>
               </div>
-              <hr>
-              <button type="submit" class="btn btn-block btn-primary">Login</button>
-              </a>
-              <div style="margin-top: 15px; text-align: center;">
-                <a href="../docs.php" class="text-muted"><span class="glyphicon glyphicon-book"></span> Baca Dokumentasi Sistem</a>
+              <div style="margin-top: 20px;">
+                <button type="submit" class="btn btn-block btn-primary" style="height: 45px; font-weight: 600; background: #1a2a6c; border: none; border-radius: 5px;">Login</button>
+              </div>
+              <div style="margin-top: 20px; text-align: center;">
+                <a href="../docs.php" class="blink-text small" style="text-decoration: none;"><span class="glyphicon glyphicon-book"></span> Baca Dokumentasi Sistem</a>
               </div>
             </form>
           </div>
         </div>
         <?php
         if (!empty($_GET['message']) && $_GET['message'] == 'notifLogin') {
-          echo '<div class="alert alert-danger custom-alert text-center" role="alert">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close"></a>Username atau password salah!</div>';
+          echo "
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Login Gagal',
+                  text: 'Username atau password salah!',
+                  confirmButtonColor: '#1a2a6c',
+                  timer: 3000,
+                  timerProgressBar: true
+                });
+              });
+            </script>";
         }
         ?>
       </div>

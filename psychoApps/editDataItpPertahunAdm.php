@@ -94,7 +94,7 @@
                             $tampil = mysqli_query($con,  "SELECT * FROM draf_anggota_pkl WHERE id_sitp='$id' AND urutan='2'");
                             $select = mysqli_fetch_array($tampil);
                             $data = $select['nim_anggota'];
-                              echo "<select name='anggota2' class='form-control form-control-sm' required>";
+                              echo "<select name='anggota2' class='form-control form-control-sm'>";
                               echo "<option value=''>-Pilih-</option>";
                             
                             $tampil = mysqli_query($con,  "SELECT * FROM dt_mhssw WHERE status='1' AND nim!='$nim' ORDER BY nama ASC");
@@ -336,11 +336,13 @@
                           <input type="text" name="alamat_lengkap_lts" class="form-control form-control-sm" value="<?php echo $dSurat['alamat_lengkap_lts'];?>" required>
                         </div>
                       </div>
+                      <hr>
+                      <h5 class="text-success"><i class="fas fa-building mr-1"></i> Detail Instansi</h5>
                       <div class="row">
-                        <div class="form-group col-md-5">
-                          <label>Sebutan Pimpinan untuk Instansi/Lembaga Tujuan Surat</label>
+                        <div class="form-group col-md-4">
+                          <label>Sebutan Pimpinan</label>
                           <?php
-                            echo "<select name='sebutan_pimpinan' class='form-control form-control-sm' required>";
+                            echo "<select name='sebutan_pimpinan' class='form-control form-control-sm custom-select' required>";
                             echo "<option value=''>-Pilih-</option>";
                             $tampil = mysqli_query($con,  "SELECT * FROM opsi_sebutan_pimpinan ORDER BY nm ASC" );
                             while ( $w = mysqli_fetch_array( $tampil ) ) {
@@ -354,9 +356,9 @@
                             ?>
                         </div>
                         <div class="form-group col-md-4">
-                          <label>Kota Instansi/Lembaga Tujuan Surat</label>
-                          <?php
-                            echo "<select name='kota_lts' class='form-control form-control-sm' required>";
+                          <label>Kota Instansi</label>
+<?php
+echo "<select name='kota_lts' class='form-control form-control-sm custom-select' required>";
                             echo "<option value=''>-Pilih-</option>";
                             $tampil = mysqli_query($con,  "SELECT * FROM dt_kota ORDER BY nm_kota ASC" );
                             while ( $w = mysqli_fetch_array( $tampil ) ) {
@@ -369,10 +371,10 @@
                             echo "</select>";
                             ?>
                         </div>
-                        <div class="form-group col-md-3">
-                          <label>Jenis PKL yang Akan Diikuti</label>
-                          <?php
-                            echo "<select name='jenis_pkl' class='form-control form-control-sm' required>";
+                        <div class="form-group col-md-4">
+                          <label>Jenis PKL</label>
+<?php
+echo "<select name='jenis_pkl' class='form-control form-control-sm custom-select' required>";
                             echo "<option value=''>-Pilih-</option>";
                             $tampil = mysqli_query($con,  "SELECT * FROM opsi_jenis_pkl ORDER BY nm ASC" );
                             while ( $w = mysqli_fetch_array( $tampil ) ) {
@@ -385,10 +387,43 @@
                             echo "</select>";
                             ?>
                         </div>
+                      <h5 class="text-success"><i class="fas fa-calendar-alt mr-1"></i> Waktu Pelaksanaan</h5>
+                      <div class="row">
+                        <div class="form-group col-sm-4">
+                          <label>Tahun Akademik</label>
+                          <?php
+                            $qta_active = "SELECT * FROM dt_ta WHERE status='1'";
+                            $rta_active = mysqli_query($con, $qta_active);
+                            $dta_active = mysqli_fetch_assoc($rta_active);
+                            $active_ta = $dta_active['id'];
+
+                            echo "<select name='ta' class='form-control form-control-sm custom-select' required>";
+                            echo "<option value=''>-Pilih-</option>";
+                            $tampil = mysqli_query($con,  "SELECT * FROM dt_ta ORDER BY id DESC" );
+                            while ( $w = mysqli_fetch_array( $tampil ) ) {
+                              if ( $dSurat['ta'] == $w[ 'id' ] ) {
+                                 echo "<option value='$w[id]' selected>$w[ta]</option>";
+                              } else if (empty($dSurat['ta']) && $w['id'] == $active_ta) {
+                                 echo "<option value='$w[id]' selected>$w[ta]</option>";
+                              } else {
+                                 echo "<option value='$w[id]'>$w[ta]</option>";
+                              }
+                            }
+                            echo "</select>";
+                            ?>
+                        </div>
+                        <div class="form-group col-sm-4">
+                          <label>Tanggal Mulai PKL</label>
+                          <input type="date" class="form-control form-control-sm" name="tgl_mulai_pkl" value="<?php if($dSurat['tgl_mulai_pkl'] == '0000-00-00' OR empty($dSurat['tgl_mulai_pkl'])) { echo "2026-06-22";} else { echo $dSurat['tgl_mulai_pkl']; }?>" required>
+                        </div>
+                        <div class="form-group col-sm-4">
+                          <label>Tanggal Selesai PKL</label>
+                          <input type="date" class="form-control form-control-sm" name="tgl_selesai_pkl" value="<?php if($dSurat['tgl_selesai_pkl'] == '0000-00-00' OR empty($dSurat['tgl_selesai_pkl'])) { echo "2026-08-14";} else { echo $dSurat['tgl_selesai_pkl']; }?>" required>
+                        </div>
                       </div>
                       <div class="form-group">
                         <label>Tembusan Surat</label>
-                        <textarea name="tembusan" class="form-control form-control-sm" rows="4" required><?php if (empty($dSurat['tembusan'])) { echo $dTembusan['isi'];} else { echo $dSurat['tembusan'];}?></textarea>
+                        <textarea name="tembusan" class="form-control form-control-sm" rows="4" placeholder="Contoh: 1. Wakil Dekan II dan III; 2. Ketua Prodi S1; 3. Kabag TU." required><?php if (empty($dSurat['tembusan'])) { echo "1. Wakil Dekan II dan III;\n2. Ketua Prodi S1;\n3. Kabag TU.";} else { echo $dSurat['tembusan'];}?></textarea>
                       </div>
                       <button type="submit" class="btn btn-sm btn-success">Update</button>
                     </form>

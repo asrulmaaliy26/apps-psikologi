@@ -357,6 +357,16 @@
                             ?>
                         </div>
                       </div>
+                      <div class="form-row">
+                        <div class="form-group col-sm-6">
+                          <label for="tgl_mulai_pkl">Tanggal Mulai PKL <span class="text-danger">*</span></label>
+                          <input type="date" class="form-control form-control-sm" name="tgl_mulai_pkl" value="<?php echo $dataku['tgl_mulai_pkl'];?>" readonly required>
+                        </div>
+                        <div class="form-group col-sm-6">
+                          <label for="tgl_selesai_pkl">Tanggal Selesai PKL <span class="text-danger">*</span></label>
+                          <input type="date" class="form-control form-control-sm" name="tgl_selesai_pkl" value="<?php echo $dataku['tgl_selesai_pkl'];?>" readonly required>
+                        </div>
+                      </div>
                       <div class="form-group">
                         <label for="file_persetujuan">Upload file persetujuan dari Crisis Center (PDF) <span class="text-danger">*</span></label>
                         <br>

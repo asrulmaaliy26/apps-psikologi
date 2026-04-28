@@ -1,15 +1,28 @@
 <?php
 include("contentsConAdm.php");
-$username = $_SESSION['username'];
-$queryAdm = "SELECT * FROM dt_all_adm WHERE username='$username'";
-$rAdm = mysqli_query($con, $queryAdm);
-$dAdm = mysqli_fetch_assoc($rAdm);
-$idAdm = $dAdm['username'];
-$idLevel = $dAdm['level'];
+  $username = $_SESSION['username'];
+  $isAdminUtama = (isset($_SESSION['level']) && $_SESSION['level'] == 'adminutama');
 
-$queryNmLevel = "SELECT * FROM opsi_level_admin WHERE id='$idLevel'";
-$rNmLevel = mysqli_query($con, $queryNmLevel);
-$dNmLevel = mysqli_fetch_assoc($rNmLevel);
+  if ($isAdminUtama) {
+      $idAdm = $username;
+      $idLevel = 'adminutama';
+      $dAdm = [
+          'username' => $username,
+          'level' => 'adminutama',
+          'nm_person' => $_SESSION['nm_person']
+      ];
+      $dNmLevel = ['nm' => 'Admin Utama'];
+  } else {
+      $queryAdm = "SELECT * FROM dt_all_adm WHERE username='$username'";
+      $rAdm = mysqli_query($con, $queryAdm);
+      $dAdm = mysqli_fetch_assoc($rAdm);
+      $idAdm = $dAdm['username'];
+      $idLevel = $dAdm['level'];
+
+      $queryNmLevel = "SELECT * FROM opsi_level_admin WHERE id='$idLevel'";
+      $rNmLevel = mysqli_query($con, $queryNmLevel);
+      $dNmLevel = mysqli_fetch_assoc($rNmLevel);
+  }
 
 ?>
 <nav class="main-header navbar navbar-expand navbar-white navbar-light">

@@ -26,8 +26,11 @@
    $tembusan=mysqli_real_escape_string($con, $_POST['tembusan']);
    $statusform=mysqli_real_escape_string($con, '2');
    $executor=mysqli_real_escape_string($con, $_POST['executor']);
+   $ta=mysqli_real_escape_string($con, $_POST['ta']);
+   $tgl_mulai_pkl=mysqli_real_escape_string($con, $_POST['tgl_mulai_pkl']);
+   $tgl_selesai_pkl=mysqli_real_escape_string($con, $_POST['tgl_selesai_pkl']);
    
-   mysqli_query($con, "UPDATE sitp SET no_agenda_surat='$no_agenda_surat',lembaga_tujuan_surat='$lembaga_tujuan_surat',alamat_lengkap_lts='$alamat_lengkap_lts',sebutan_pimpinan='$sebutan_pimpinan',kota_lts='$kota_lts',jenis_pkl='$jenis_pkl',tgl_proses='$tgl_proses',tgl_dikeluarkan='$tgl_dikeluarkan',tembusan='$tembusan',statusform='$statusform',executor='$executor' WHERE id='$id' LIMIT 1")  or die(mysqli_error($con)); 
+   mysqli_query($con, "UPDATE sitp SET no_agenda_surat='$no_agenda_surat',lembaga_tujuan_surat='$lembaga_tujuan_surat',alamat_lengkap_lts='$alamat_lengkap_lts',sebutan_pimpinan='$sebutan_pimpinan',kota_lts='$kota_lts',jenis_pkl='$jenis_pkl',ta='$ta',tgl_mulai_pkl='$tgl_mulai_pkl',tgl_selesai_pkl='$tgl_selesai_pkl',tgl_proses='$tgl_proses',tgl_dikeluarkan='$tgl_dikeluarkan',tembusan='$tembusan',statusform='$statusform',executor='$executor' WHERE id='$id' LIMIT 1")  or die(mysqli_error($con)); 
    
    $sql="UPDATE draf_anggota_pkl SET nim_anggota = '$anggota1' WHERE id_sitp = '$id' AND urutan='1'";
    $result = mysqli_query($con, $sql) or die(mysqli_error($con));

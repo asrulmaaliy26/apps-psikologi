@@ -15,6 +15,8 @@
 <script src="../vendor/dist/js/adminlte.js"></script>
 <script src="../vendor/dist/js/pages/dashboard.js"></script>
 <script type="text/javascript" src="tinymce/tinymce.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   $.widget.bridge('uibutton', $.ui.button)
   $(function () {
