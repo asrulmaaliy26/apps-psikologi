@@ -26,15 +26,21 @@
   <div class="panel-body">
     <form action="updateSiowAdm.php" method="post">
       <input type="text" name="id" class="sr-only" value="<?php echo $id;?>" required readonly>
-      <?php 
-        if($dataku['tgl_dikeluarkan']=='0000-00-00') {
-        echo '<input type="text" name="tgl_dikeluarkan" id="tgl_dikeluarkan" class="sr-only" value="'.date("Y-m-d").'" required>';}
-        else {
-        echo '<input type="text" name="tgl_dikeluarkan" id="tgl_dikeluarkan" class="sr-only" value="'.$dataku['tgl_dikeluarkan'].'" required>';}
+      <div class="form-group">
+        <label for="tgl_dikeluarkan">Tanggal Surat</label>
+        <?php 
+          if($dataku['tgl_dikeluarkan']=='0000-00-00') {
+            // Default to submission date if not set
+            $default_tgl = date("Y-m-d", strtotime($dataku['tgl_pengajuan']));
+            echo '<input type="date" name="tgl_dikeluarkan" id="tgl_dikeluarkan" class="form-control" value="'.$default_tgl.'" required>';
+          } else {
+            echo '<input type="date" name="tgl_dikeluarkan" id="tgl_dikeluarkan" class="form-control" value="'.$dataku['tgl_dikeluarkan'].'" required>';
+          }
         ?>
+      </div>
       <input type="text" name="wd1" class="sr-only" value="<?php echo $dwd1['id'];?>" required readonly>
       <input type="text" name="kp2" class="sr-only" value="<?php echo $dkp2['id'];?>" required readonly>
-      <input type="text" name="tgl_pengajuan" class="sr-only" value="<?php echo date("d-m-Y");?>" required readonly>
+      <input type="text" name="tgl_pengajuan" class="sr-only" value="<?php echo $dataku['tgl_pengajuan'];?>" required readonly>
       <div class="form-group">
         <label for="lembaga_tujuan_surat">Instansi/Lembaga Tujuan Surat</label>
         <input type="text" name="lembaga_tujuan_surat" class="form-control" id="lembaga_tujuan_surat" placeholder="Contoh: Bagian Akademik Universitas Islam Negeri Maulana Malik Ibrahim Malang, dll." value="<?php echo $dataku['lembaga_tujuan_surat'];?>" required>

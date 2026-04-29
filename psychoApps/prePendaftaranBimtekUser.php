@@ -112,6 +112,11 @@
                                   <p class="mb-0 ml-4 small"><strong>Waktu:</strong> <?php echo $d_aktif['waktu_online'] ? $d_aktif['waktu_online'] : '-';?></p>
                                 </div>
                               </li>
+                              <li class="nav-item bg-light">
+                                <div class="nav-link text-danger small font-italic">
+                                  <strong>*Catatan Absensi:</strong> Absensi dilakukan pada tanggal mengikuti dimulainya pelaksanaan bimtek sampai 2 hari, dan juga pada saat sesi online.
+                                </div>
+                              </li>
                               <?php if($d_aktif['file_pengumuman']): ?>
                               <li class="nav-item">
                                 <a href="file_pengumuman_bimtek/<?php echo $d_aktif['file_pengumuman'];?>" class="nav-link text-danger" target="_blank">

@@ -195,6 +195,25 @@ if (!function_exists('isOpen')) {
           </ul>
         </li>
         <?php } ?>
+        <?php if($dtDosen['jabatan_instansi']=='47') { ?>
+        <li class="nav-item <?php echo isOpen(['rekapSaranPembimbingBimtekKaprodi.php']); ?>">
+          <a href="#" class="nav-link text-warning <?php echo isActive(['rekapSaranPembimbingBimtekKaprodi.php']); ?>">
+            <i class="fas fa-user-friends nav-icon"></i>
+            <p>
+              Rekap Bimtek
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview" style="display: block;">
+            <li class="nav-item">
+              <a href="rekapSaranPembimbingBimtekKaprodi.php" class="nav-link <?php echo isActive('rekapSaranPembimbingBimtekKaprodi.php'); ?>">
+                <i class="text-xs far fa-circle nav-icon"></i>
+                <p>Saran Dosen Pembimbing</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <?php } ?>
         <?php
         $q_is_reviewer = mysqli_query($con, "SELECT id FROM bimtek_reviewer WHERE nip='$username' LIMIT 1");
         if(mysqli_num_rows($q_is_reviewer) > 0): ?>

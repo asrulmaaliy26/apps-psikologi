@@ -46,7 +46,7 @@
                         <select name="peminatan" class="form-control form-control-sm" required>
                           <option value="">-Pilih-</option>
                           <?php
-                            $q = mysqli_query($con, "SELECT * FROM opsi_bidang_skripsi ORDER BY id ASC");
+                            $q = mysqli_query($con, "SELECT * FROM opsi_bidang_skripsi ORDER BY id ASC LIMIT 4");
                             while ($tampil = mysqli_fetch_array($q)){
                               echo "<option value='$tampil[id]'>$tampil[nm]</option>";
                             }

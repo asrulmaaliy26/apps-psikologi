@@ -4,7 +4,6 @@
    $page= mysqli_real_escape_string($con, $_POST['page']);
    $date= mysqli_real_escape_string($con, $_POST['date']);
    $no_agenda_surat=mysqli_real_escape_string($con, $_POST['no_agenda_surat']);
-   $nim=mysqli_real_escape_string($con, $_POST['nim']);
    $lembaga_tujuan_surat=mysqli_real_escape_string($con, $_POST['lembaga_tujuan_surat']);
    $alamat_lengkap_lts=mysqli_real_escape_string($con, $_POST['alamat_lengkap_lts']);   
    $nama_obyek=mysqli_real_escape_string($con, $_POST['nama_obyek']);

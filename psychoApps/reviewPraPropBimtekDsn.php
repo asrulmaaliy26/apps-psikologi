@@ -252,9 +252,9 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
                   </div>
 
                   <?php if ($d_prop['catatan']): ?>
-                    <div class="alert alert-warning">
-                      <strong><i class="fas fa-comment-dots"></i> Catatan Revisi Sebelumnya:</strong>
-                      <div class="mt-2 border-top pt-2"><?php echo $d_prop['catatan']; ?></div>
+                    <div class="callout callout-warning" style="border-left: 5px solid #ffc107; background:#fffbea; padding:12px 16px; border-radius:4px;">
+                      <h6 class="font-weight-bold mb-2"><i class="fas fa-comment-dots text-warning"></i> Catatan Revisi Sebelumnya:</h6>
+                      <div><?php echo $d_prop['catatan']; ?></div>
                     </div>
                   <?php endif; ?>
                 </div>
@@ -282,23 +282,19 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
                     <input type="hidden" name="a6_val" id="h_a6">
                     <input type="hidden" name="nilai_akhir_val" id="h_nilai">
 
-                    <div class="form-group" id="catatan-box" style="display:none;">
-                      <label class="font-weight-bold text-danger"><i class="fas fa-comment"></i> Catatan / Revisi <span class="text-danger">*</span></label>
-                      <textarea id="catatan-field" class="form-control"><?php echo $d_prop['catatan'] ? htmlspecialchars($d_prop['catatan']) : ''; ?></textarea>
-                      <small class="text-muted">Wajib diisi jika memilih Minta Revisi.</small>
+                    <div class="form-group">
+                       <label class="font-weight-bold text-danger"><i class="fas fa-comment"></i> Catatan / Revisi</label>
+                       <textarea id="catatan-field" class="form-control"><?php echo $d_prop['catatan'] ? htmlspecialchars($d_prop['catatan']) : ''; ?></textarea>
+                       <small class="text-muted">Isi catatan jika ada poin yang perlu diperbaiki mahasiswa.</small>
                     </div>
 
                     <?php if ($d_prop['status'] !== 'diterima'): ?>
                       <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-success btn-block mb-3 py-2 font-weight-bold" id="btn-terima">
+                        <button type="button" class="btn btn-success btn-block mb-2 py-2 font-weight-bold" id="btn-terima">
                           <i class="fas fa-check-circle"></i> Terima Pra Proposal
                         </button>
-                        <hr>
-                        <button type="button" class="btn btn-danger btn-block py-2 font-weight-bold" id="btn-revisi">
-                          <i class="fas fa-redo"></i> Minta Revisi
-                        </button>
-                        <button type="submit" class="btn btn-dark btn-block mt-3" id="btn-submit" style="display:none;">
-                          <i class="fas fa-save"></i> Simpan Revisi & Penilaian
+                        <button type="button" class="btn btn-warning btn-block py-2 font-weight-bold" id="btn-simpan-revisi">
+                          <i class="fas fa-save"></i> Simpan Revisi
                         </button>
                       </div>
                     <?php else: ?>
@@ -373,7 +369,6 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
     });
 
     $('#btn-terima').on('click', function() {
-      // Check if all scores are filled
       var allFilled = true;
       $('.score-input').each(function() {
         if ($(this).val() == "" || $(this).val() == "0") allFilled = false;
@@ -385,19 +380,25 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
       }
 
       if (!confirm('Yakin ingin MENERIMA pra proposal ini dengan nilai tersebut?')) return;
+      calculateScore();
+      var catatan = $('#catatan-field').summernote('code').trim();
       $('#aksi-input').val('terima');
-      $('#catatan-hidden').val('');
+      $('#catatan-hidden').val(catatan);
       $('#form-review').submit();
     });
 
-    $('#btn-revisi').on('click', function() {
-      $('#catatan-box').slideToggle();
-      $('#btn-submit').toggle();
-      if ($('#aksi-input').val() !== 'revisi') {
-        $('#aksi-input').val('revisi');
-      } else {
-        $('#aksi-input').val('');
+    $('#btn-simpan-revisi').on('click', function() {
+      var catatan = $('#catatan-field').summernote('code').trim();
+      var stripped = catatan.replace(/<[^>]*>/g, '').trim();
+      if (stripped === '') {
+        Swal.fire('Peringatan', 'Catatan revisi wajib diisi sebelum menyimpan revisi!', 'warning');
+        return;
       }
+      if (!confirm('Simpan catatan revisi ini? Status akan menjadi "Perlu Revisi" dan mahasiswa akan diberi tahu.')) return;
+      calculateScore();
+      $('#aksi-input').val('revisi');
+      $('#catatan-hidden').val(catatan);
+      $('#form-review').submit();
     });
 
     // Init Summernote
@@ -420,15 +421,11 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
     <?php endif; ?>
 
     $('#form-review').on('submit', function(e) {
-      var catatan = $('#catatan-field').summernote('code').trim();
-      var stripped = catatan.replace(/<[^>]*>/g, '').trim();
-
-      if ($('#aksi-input').val() == 'revisi' && stripped === '') {
-        Swal.fire('Peringatan', 'Catatan revisi wajib diisi!', 'warning');
-        e.preventDefault();
-        return false;
+      // catatan-hidden already set by btn handlers, just ensure it
+      if (!$('#catatan-hidden').val()) {
+        var catatan = $('#catatan-field').summernote('code').trim();
+        $('#catatan-hidden').val(catatan);
       }
-      $('#catatan-hidden').val(catatan);
     });
   </script>
   <style>

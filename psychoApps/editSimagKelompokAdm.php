@@ -12,6 +12,7 @@
   $querySurat = "SELECT * FROM magang WHERE id='$id'";
   $rSurat = mysqli_query($con, $querySurat) or die( mysqli_error($con));
   $dSurat = mysqli_fetch_assoc($rSurat);
+  $nim = $dSurat['nim'];
   
   $queryMhssw = "SELECT * FROM dt_mhssw WHERE nim='$dSurat[nim]'";
   $rMhssw = mysqli_query($con,  $queryMhssw )or die( mysqli_error($con) );
