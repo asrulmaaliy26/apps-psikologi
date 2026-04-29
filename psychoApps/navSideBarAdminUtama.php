@@ -1,9 +1,12 @@
 <?php include("contentsConAdm.php");
 $currentPage = basename($_SERVER['PHP_SELF']);
 if (!function_exists('isActive')) {
-  function isActive($page) {
+  function isActive($page)
+  {
     global $currentPage;
-    if (is_array($page)) { return in_array($currentPage, $page) ? 'active bg-primary' : ''; }
+    if (is_array($page)) {
+      return in_array($currentPage, $page) ? 'active bg-primary' : '';
+    }
     return ($currentPage === $page) ? 'active bg-primary' : '';
   }
 }
@@ -30,6 +33,12 @@ if (!function_exists('isActive')) {
           <a href="kelolaPejabatAdm.php" class="nav-link <?php echo isActive('kelolaPejabatAdm.php'); ?>">
             <i class="nav-icon fas fa-user-tag"></i>
             <p>Tentukan Jabatan User</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="pengaturanTtdAdm.php" class="nav-link <?php echo isActive('pengaturanTtdAdm.php'); ?>">
+            <i class="nav-icon fas fa-signature"></i>
+            <p>Pengaturan TTD</p>
           </a>
         </li>
         <li class="nav-header">MANAJEMEN MAHASISWA</li>
@@ -69,6 +78,30 @@ if (!function_exists('isActive')) {
             <i class="nav-icon fas fa-user-plus"></i>
             <p>User Mahasiswa S2</p>
           </a>
+        </li>
+        <li class="nav-header">Percatakan</li>
+        <li class="nav-item <?php echo isActive(['suratMahasiswaAdm.php', 'suratPegawaiAdm.php']) ? 'menu-open' : ''; ?>">
+          <a href="#" class="nav-link <?php echo isActive(['suratMahasiswaAdm.php', 'suratPegawaiAdm.php']); ?>">
+            <i class="nav-icon fas fa-envelope"></i>
+            <p>
+              Tata Persuratan
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="suratMahasiswaAdm.php" class="nav-link <?php echo isActive('suratMahasiswaAdm.php'); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Surat Mahasiswa</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="suratPegawaiAdm.php" class="nav-link <?php echo isActive('suratPegawaiAdm.php'); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Surat Pegawai</p>
+              </a>
+            </li>
+          </ul>
         </li>
         <li class="nav-header">LAINNYA</li>
         <li class="nav-item">

@@ -17,12 +17,12 @@ $_sql_create_pra_prop = "CREATE TABLE IF NOT EXISTS bimtek_pra_proposal (
   catatan TEXT,
   pembimbing_saran_1 VARCHAR(30),
   pembimbing_saran_2 VARCHAR(30),
-  a1 TINYINT DEFAULT 0,
-  a2 TINYINT DEFAULT 0,
-  a3 TINYINT DEFAULT 0,
-  a4 TINYINT DEFAULT 0,
-  a5 TINYINT DEFAULT 0,
-  a6 TINYINT DEFAULT 0,
+  a1 INT DEFAULT 0,
+  a2 INT DEFAULT 0,
+  a3 INT DEFAULT 0,
+  a4 INT DEFAULT 0,
+  a5 INT DEFAULT 0,
+  a6 INT DEFAULT 0,
   nilai_akhir FLOAT DEFAULT 0,
   tgl_submit DATETIME,
   tgl_update DATETIME
@@ -67,13 +67,25 @@ if(mysqli_num_rows($_c4) == 0){
 $_c5 = mysqli_query($con, "SHOW COLUMNS FROM bimtek_pra_proposal LIKE 'a1'");
 if(mysqli_num_rows($_c5) == 0){
     mysqli_query($con, "ALTER TABLE bimtek_pra_proposal 
-        ADD COLUMN a1 TINYINT DEFAULT 0 AFTER pembimbing_saran_2,
-        ADD COLUMN a2 TINYINT DEFAULT 0 AFTER a1,
-        ADD COLUMN a3 TINYINT DEFAULT 0 AFTER a2,
-        ADD COLUMN a4 TINYINT DEFAULT 0 AFTER a3,
-        ADD COLUMN a5 TINYINT DEFAULT 0 AFTER a4,
-        ADD COLUMN a6 TINYINT DEFAULT 0 AFTER a5,
+        ADD COLUMN a1 INT DEFAULT 0 AFTER pembimbing_saran_2,
+        ADD COLUMN a2 INT DEFAULT 0 AFTER a1,
+        ADD COLUMN a3 INT DEFAULT 0 AFTER a2,
+        ADD COLUMN a4 INT DEFAULT 0 AFTER a3,
+        ADD COLUMN a5 INT DEFAULT 0 AFTER a4,
+        ADD COLUMN a6 INT DEFAULT 0 AFTER a5,
         ADD COLUMN nilai_akhir FLOAT DEFAULT 0 AFTER a6");
+} else {
+    // Ensure existing columns are INT (migration for 'Out of range' error)
+    $d_c5 = mysqli_fetch_assoc($_c5);
+    if(stripos($d_c5['Type'], 'tinyint') !== false){
+        mysqli_query($con, "ALTER TABLE bimtek_pra_proposal 
+            MODIFY COLUMN a1 INT DEFAULT 0,
+            MODIFY COLUMN a2 INT DEFAULT 0,
+            MODIFY COLUMN a3 INT DEFAULT 0,
+            MODIFY COLUMN a4 INT DEFAULT 0,
+            MODIFY COLUMN a5 INT DEFAULT 0,
+            MODIFY COLUMN a6 INT DEFAULT 0");
+    }
 }
 
 // Create upload directory if not exists

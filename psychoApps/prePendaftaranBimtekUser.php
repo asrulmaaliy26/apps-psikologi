@@ -25,11 +25,9 @@
             <?php
               if (!empty($_GET['message']) && $_GET['message'] == 'notifInput') {
               echo '
-              <div class="alert alert-success alert-dismissible fade show" role="alert">
-              <span>Pendaftaran berhasil!</span>
-              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-              </button>
+              <div class="callout callout-success" role="alert">
+              <h5><i class="icon fas fa-check"></i> Pendaftaran berhasil!</h5>
+              <span>Silakan lihat riwayat pendaftaran Anda di bawah ini.</span>
               </div>
               ';}
             ?>
@@ -50,9 +48,9 @@
                   </div>
                   <div class="card-body">
                     <?php if($ada_aktif > 0): ?>
-                      <div class="alert alert-info">
+                      <div class="callout callout-info">
                         <h5><i class="icon fas fa-info"></i> Pendaftaran Dibuka!</h5>
-                        Pendaftaran <strong><?php echo $d_aktif['nama_bimtek'];?></strong> dibuka dari <strong><?php echo $d_aktif['start_datetime'];?></strong> sampai <strong><?php echo $d_aktif['end_datetime'];?></strong>.
+                        Pendaftaran <strong><?php echo $d_aktif['nama_bimtek'];?></strong> dibuka dari <strong><?php echo date('d M Y H:i', strtotime($d_aktif['start_datetime']));?></strong> sampai <strong><?php echo date('d M Y H:i', strtotime($d_aktif['end_datetime']));?></strong>.
                       </div>
                       <?php
                         $now = date('Y-m-d H:i:s');
@@ -60,8 +58,9 @@
                         // Cek status pendaftaran
                         if($now < $d_aktif['start_datetime'] || $now > $d_aktif['end_datetime']):
                       ?>
-                        <div class="alert alert-warning">
-                          <i class="fas fa-exclamation-triangle"></i> Maaf, saat ini belum memasuki waktu pendaftaran atau waktu pendaftaran telah berakhir.
+                        <div class="callout callout-warning">
+                          <h5><i class="icon fas fa-exclamation-triangle"></i> Waktu Pendaftaran Belum Tersedia</h5>
+                          Maaf, saat ini belum memasuki waktu pendaftaran atau waktu pendaftaran telah berakhir.
                         </div>
                       <?php endif; ?>
 
@@ -73,7 +72,7 @@
                         
                         if($now >= $open_at && $sudah_daftar > 0):
                       ?>
-                        <div class="alert alert-success">
+                        <div class="callout callout-success">
                           <h5><i class="icon fas fa-check"></i> Absensi Telah Dibuka!</h5>
                           Silakan isi absensi pada tabel <strong>Riwayat Pendaftaran & Absensi</strong> di bawah ini.
                         </div>
@@ -126,7 +125,7 @@
                       <?php endif; ?>
 
                     <?php else: ?>
-                      <div class="alert alert-danger">
+                      <div class="callout callout-danger">
                         <h5><i class="icon fas fa-ban"></i> Pendaftaran Ditutup!</h5>
                         Saat ini tidak ada periode pendaftaran Bimtek yang aktif.
                       </div>
@@ -146,6 +145,7 @@
                           <tr>
                             <th>Bimtek</th>
                             <th>Peminatan</th>
+                            <th>Periode</th>
                             <th>Outline</th>
                             <th>Reviewer</th>
                             <th>Tgl Daftar</th>
@@ -172,6 +172,10 @@
                           <tr>
                             <td><?php echo $d_bim['nama_bimtek'];?></td>
                             <td><?php echo $d_pem['nm'];?></td>
+                            <td>
+                               <span class="badge badge-info"><?php echo date('d/m/y H:i', strtotime($d_bim['start_datetime']));?></span> - 
+                               <span class="badge badge-info"><?php echo date('d/m/y H:i', strtotime($d_bim['end_datetime']));?></span>
+                            </td>
                             <td><a href="file_outline_bimtek/<?php echo $row['file_outline'];?>" target="_blank">Lihat File</a></td>
                             <td><?php echo $reviewer_name;?></td>
                             <td><?php echo $row['tgl_daftar'];?></td>

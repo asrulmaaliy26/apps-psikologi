@@ -2,40 +2,73 @@
    
    $id=mysqli_real_escape_string($con, $_GET['id']);
    
-   $sql1 =  "SELECT * FROM nama_lembaga";
-   $result1 = mysqli_query($con, $sql1);
-   $data1 = mysqli_fetch_array($result1);
-   
-   $sql2 =  "SELECT * FROM nama_lembaga_induk";
-   $result2 = mysqli_query($con, $sql2);
-   $data2 = mysqli_fetch_array($result2);
-   
-   $myquery="SELECT * FROM st WHERE id='$id'";
-   $res=mysqli_query($con, $myquery) or die (mysqli_error($con));
-   $dataku=mysqli_fetch_assoc($res);
-   
-   $qry="SELECT COUNT(id_st) AS jumPersonil FROM personil_st WHERE id_st='$id' AND nama <>''";
-   $r=mysqli_query($con, $qry) or die (mysqli_error($con));
-   $dt=mysqli_fetch_assoc($r);
-   $jumPersonil=$dt['jumPersonil'];
-   
-   $qbln = "SELECT MONTH(tgl_ditetapkan) AS bulan FROM st WHERE id='$id'";
-   $resbln = mysqli_query($con,  $qbln )or die( mysqli_error($con) );
-   $dbln = mysqli_fetch_assoc( $resbln );
-   $ambilbln=$dbln['bulan'];
-   
-   $qthn = "SELECT YEAR(tgl_ditetapkan) AS tahun FROM st WHERE id='$id'";
-   $resthn = mysqli_query($con,  $qthn )or die( mysqli_error($con) );
-   $dthn = mysqli_fetch_assoc( $resthn );
-   $ambilthn=$dthn['tahun'];
-   
-   $qkodesrt="SELECT * FROM dekanat WHERE id='1'";
-   $reskodesrt=mysqli_query($con, $qkodesrt) or die (mysqli_error($con));
-   $dkodesrt=mysqli_fetch_assoc($reskodesrt);
-   
-   $qdekanat="SELECT * FROM dt_pegawai WHERE id='$dataku[dekan]'";
-   $resdekanat=mysqli_query($con, $qdekanat) or die (mysqli_error($con));
-   $ddekanat=mysqli_fetch_assoc($resdekanat);
+if ($id == 'dummy') {
+    // DATA DUMMY UNTUK PREVIEW LAYOUT SURAT TUGAS
+    $dataku = [
+        'id' => 'dummy',
+        'no_agenda_surat' => '201',
+        'tgl_ditetapkan' => date('Y-m-d'),
+        'awal_berlaku' => date('d-m-Y'),
+        'akhir_berlaku' => date('d-m-Y', strtotime('+7 days')),
+        'perihal' => 'Menghadiri Rapat Koordinasi Nasional di Jakarta',
+        'dekan' => '1',
+        'dasar' => "1. Kalender Akademik Universitas Contoh\n2. Surat Undangan Rektor Nomor: 123/UN/2026"
+    ];
+    $jumPersonil = 1;
+    $data1 = ['nm' => 'Fakultas Psikologi'];
+    $data2 = ['nm' => 'Universitas Contoh'];
+    $ambilbln = date('n');
+    $ambilthn = date('Y');
+    
+    // Ambil data pejabat dari tabel dekanat (ID 1 = Dekan)
+    $qset = mysqli_query($con, "SELECT * FROM dekanat WHERE id='1'");
+    $dset = mysqli_fetch_assoc($qset);
+    $nip_pejabat = ($dset && !empty($dset['nm_jabatan'])) ? $dset['nm_jabatan'] : '196811242000031001';
+
+    $qdekanat = "SELECT * FROM dt_pegawai WHERE id='$nip_pejabat'";
+    $resdekanat = mysqli_query($con, $qdekanat);
+    $ddekanat = mysqli_fetch_assoc($resdekanat);
+    
+    if (!$ddekanat) {
+        $ddekanat = [
+            'nama_tg' => 'Nama Dekan Belum Diatur',
+            'jabatan' => '1',
+            'jabatan_instansi' => '1'
+        ];
+    }
+} else {
+    // LOGIKA ASLI
+    $sql1 =  "SELECT * FROM nama_lembaga";
+    $result1 = mysqli_query($con, $sql1);
+    $data1 = mysqli_fetch_array($result1);
+    
+    $sql2 =  "SELECT * FROM nama_lembaga_induk";
+    $result2 = mysqli_query($con, $sql2);
+    $data2 = mysqli_fetch_array($result2);
+    
+    $myquery="SELECT * FROM st WHERE id='$id'";
+    $res=mysqli_query($con, $myquery) or die (mysqli_error($con));
+    $dataku=mysqli_fetch_assoc($res);
+    
+    $qry="SELECT COUNT(id_st) AS jumPersonil FROM personil_st WHERE id_st='$id' AND nama <>''";
+    $r=mysqli_query($con, $qry) or die (mysqli_error($con));
+    $dt=mysqli_fetch_assoc($r);
+    $jumPersonil=$dt['jumPersonil'] ?? 0;
+    
+    $qbln = "SELECT MONTH(tgl_ditetapkan) AS bulan FROM st WHERE id='$id'";
+    $resbln = mysqli_query($con,  $qbln )or die( mysqli_error($con) );
+    $dbln = mysqli_fetch_assoc( $resbln );
+    $ambilbln = $dbln['bulan'] ?? date('n');
+    
+    $qthn = "SELECT YEAR(tgl_ditetapkan) AS tahun FROM st WHERE id='$id'";
+    $resthn = mysqli_query($con,  $qthn )or die( mysqli_error($con) );
+    $dthn = mysqli_fetch_assoc( $resthn );
+    $ambilthn = $dthn['tahun'] ?? date('Y');
+    
+    $qdekanat="SELECT * FROM dt_pegawai WHERE id='$dataku[dekan]'";
+    $resdekanat=mysqli_query($con, $qdekanat) or die (mysqli_error($con));
+    $ddekanat=mysqli_fetch_assoc($resdekanat);
+}
       
    function bulanIndo($tanggal)
    {
@@ -311,11 +344,9 @@
          <br />
          <br />
          Dekan,
-         <br />
-         <br />
-         <span>&nbsp;&nbsp;&nbsp;&nbsp;*</span>
-         <br />
-         <br />
+         <div class="ttd">
+            <img src="images/<?php echo $dkodesrt['ttd'];?>" width="200" />
+         </div>
          <?php echo $ddekanat['nama_tg'];?>
       </div>
       <br />

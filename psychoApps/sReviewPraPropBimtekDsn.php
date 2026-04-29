@@ -10,7 +10,7 @@ $tgl = date('Y-m-d H:i:s');
 
 // Validate dosen owns this proposal
 $q_check = mysqli_query($con, "SELECT id, id_bimtek FROM bimtek_pra_proposal WHERE id='$id_prop' AND id_reviewer='$username'");
-if(mysqli_num_rows($q_check) == 0){
+if (mysqli_num_rows($q_check) == 0) {
     header("location:reviewerBimtekDsn.php?error=unauthorized");
     exit();
 }
@@ -25,7 +25,7 @@ $a5 = (int)($_POST['a5_val'] ?? 0);
 $a6 = (int)($_POST['a6_val'] ?? 0);
 $nilai = (float)($_POST['nilai_akhir_val'] ?? 0);
 
-if($aksi == 'terima'){
+if ($aksi == 'terima') {
     mysqli_query($con, "UPDATE bimtek_pra_proposal SET 
         status='diterima', 
         catatan='', 
@@ -33,7 +33,7 @@ if($aksi == 'terima'){
         nilai_akhir='$nilai',
         tgl_update='$tgl' 
         WHERE id='$id_prop'");
-} elseif($aksi == 'revisi'){
+} elseif ($aksi == 'revisi') {
     mysqli_query($con, "UPDATE bimtek_pra_proposal SET 
         status='revisi', 
         catatan='$catatan', 
@@ -44,4 +44,3 @@ if($aksi == 'terima'){
 }
 
 header("location:reviewPraPropBimtekDsn.php?id=$id_prop&message=success");
-?>

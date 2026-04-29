@@ -504,17 +504,17 @@ if (!empty($_GET['message']) && $_GET['message'] == 'notifLogin') {
       $('#level-input').val(id);
     }
 
-    $('#login-form').submit(function(e) {
-      if (!$('#level-input').val()) {
-        e.preventDefault();
-        Swal.fire({
-          icon: 'warning',
-          title: 'Perhatian',
-          text: 'Silakan pilih level terlebih dahulu!',
-          confirmButtonColor: '#1a2a6c'
-        });
-      }
-    });
+    // $('#login-form').submit(function(e) {
+    //   if (!$('#level-input').val()) {
+    //     e.preventDefault();
+    //     Swal.fire({
+    //       icon: 'warning',
+    //       title: 'Perhatian',
+    //       text: 'Silakan pilih level terlebih dahulu!',
+    //       confirmButtonColor: '#1a2a6c'
+    //     });
+    //   }
+    // });
   </script>
 </body>
 

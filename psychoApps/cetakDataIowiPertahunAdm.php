@@ -219,11 +219,9 @@
       <div class="right">
             a.n. Dekan, <br />
             <?php echo $djidekanat1['nm'];?>,
-            <br />
-            <br />
-            <span>*</span>
-            <br />
-            <br />
+            <div class="ttd">
+               <img src="images/<?php echo $dkddekanat1['ttd'];?>" width="200" />
+            </div>
             <?php echo $ddekanat1['nama_tg'];?>
          </div>
       <table width="100%">

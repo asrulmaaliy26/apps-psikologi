@@ -24,7 +24,7 @@ $d_prop = mysqli_fetch_assoc($q_prop);
 // Get list of lecturers for suggestions with their specialization
 $q_dosen = mysqli_query($con, "SELECT id, nama, kepakaran_mayor FROM dt_pegawai ORDER BY nama ASC");
 $lecturers = [];
-while($ld = mysqli_fetch_assoc($q_dosen)) $lecturers[] = $ld;
+while ($ld = mysqli_fetch_assoc($q_dosen)) $lecturers[] = $ld;
 $mhs_peminatan = $d_peserta['peminatan'];
 
 $errors_map = [
@@ -93,20 +93,20 @@ $errors_map = [
                           ?>
                         </td>
                       </tr>
-                      <?php if($d_prop['file_sertifikat']): ?>
-                      <tr>
-                        <th>Status Sertifikat</th>
-                        <td>:
-                          <?php
-                          $cs = $d_prop['status_sertifikat'] ?? 'pending';
-                          $s_badge = ['pending' => 'badge-warning', 'valid' => 'badge-success', 'invalid' => 'badge-danger', 'bypassed' => 'badge-info'];
-                          $s_label = ['pending' => 'Menunggu Validasi Admin', 'valid' => 'Valid ✓', 'invalid' => 'Tidak Valid ✗', 'bypassed' => 'Valid (Auto)'];
-                          $bc = $s_badge[$cs] ?? 'badge-secondary';
-                          $bl = $s_label[$cs] ?? $cs;
-                          echo "<span class='badge " . $bc . "'>" . $bl . "</span>";
-                          ?>
-                        </td>
-                      </tr>
+                      <?php if ($d_prop['file_sertifikat']): ?>
+                        <tr>
+                          <th>Status Sertifikat</th>
+                          <td>:
+                            <?php
+                            $cs = $d_prop['status_sertifikat'] ?? 'pending';
+                            $s_badge = ['pending' => 'badge-warning', 'valid' => 'badge-success', 'invalid' => 'badge-danger', 'bypassed' => 'badge-info'];
+                            $s_label = ['pending' => 'Menunggu Validasi Admin', 'valid' => 'Valid ✓', 'invalid' => 'Tidak Valid ✗', 'bypassed' => 'Valid (Auto)'];
+                            $bc = $s_badge[$cs] ?? 'badge-secondary';
+                            $bl = $s_label[$cs] ?? $cs;
+                            echo "<span class='badge " . $bc . "'>" . $bl . "</span>";
+                            ?>
+                          </td>
+                        </tr>
                       <?php endif; ?>
                     <?php endif; ?>
                   </table>
@@ -161,11 +161,11 @@ $errors_map = [
                         <th>File Proposal</th>
                         <td>: <a href="file_pra_proposal_bimtek/<?php echo $d_prop['file_proposal']; ?>" target="_blank" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i> Lihat PDF</a></td>
                       </tr>
-                      <?php if($d_prop['file_sertifikat']): ?>
-                      <tr>
-                        <th>Sertifikat</th>
-                        <td>: <a href="file_pra_proposal_bimtek/<?php echo $d_prop['file_sertifikat']; ?>" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-file-pdf"></i> Lihat Sertifikat</a></td>
-                      </tr>
+                      <?php if ($d_prop['file_sertifikat']): ?>
+                        <tr>
+                          <th>Sertifikat</th>
+                          <td>: <a href="file_pra_proposal_bimtek/<?php echo $d_prop['file_sertifikat']; ?>" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-file-pdf"></i> Lihat Sertifikat</a></td>
+                        </tr>
                       <?php endif; ?>
                       <tr>
                         <th>Tgl Submit</th>
@@ -201,11 +201,11 @@ $errors_map = [
                         <th>File Proposal</th>
                         <td>: <a href="file_pra_proposal_bimtek/<?php echo $d_prop['file_proposal']; ?>" target="_blank" class="btn btn-sm btn-danger"><i class="fas fa-file-pdf"></i> Lihat PDF</a></td>
                       </tr>
-                      <?php if($d_prop['file_sertifikat']): ?>
-                      <tr>
-                        <th>Sertifikat</th>
-                        <td>: <a href="file_pra_proposal_bimtek/<?php echo $d_prop['file_sertifikat']; ?>" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-file-pdf"></i> Lihat Sertifikat</a></td>
-                      </tr>
+                      <?php if ($d_prop['file_sertifikat']): ?>
+                        <tr>
+                          <th>Sertifikat</th>
+                          <td>: <a href="file_pra_proposal_bimtek/<?php echo $d_prop['file_sertifikat']; ?>" target="_blank" class="btn btn-sm btn-info"><i class="fas fa-file-pdf"></i> Lihat Sertifikat</a></td>
+                        </tr>
                       <?php endif; ?>
                       <tr>
                         <th>Tgl Submit</th>
@@ -290,10 +290,10 @@ $errors_map = [
   <script>
     $(document).ready(function() {
       bsCustomFileInput.init();
-      
-      <?php 
+
+      <?php
       $err = $_GET['error'] ?? '';
-      if(isset($errors_map[$err])): ?>
+      if (isset($errors_map[$err])): ?>
         Swal.fire('Gagal!', '<?php echo $errors_map[$err]; ?>', 'error');
       <?php endif; ?>
     });

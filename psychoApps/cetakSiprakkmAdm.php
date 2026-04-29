@@ -1,57 +1,107 @@
 <?php include( "contentsConAdm.php" );
    
-   $id = mysqli_real_escape_string($con,  $_GET[ 'id' ] );
-   $myquery = "select * from siprak_mahasiswa WHERE id='$id'";
-   $res = mysqli_query($con,  $myquery )or die( mysqli_error($con) );
-   $dt = mysqli_fetch_assoc( $res );
-   
-   $qry = "select * from dt_mhssw WHERE nim='$dt[nim]'";
-   $resp = mysqli_query($con,  $qry )or die( mysqli_error($con) );
-   $dataku = mysqli_fetch_assoc( $resp );
-   
-   $qnl = "select * from nama_lembaga";
-   $resnl = mysqli_query($con,  $qnl )or die( mysqli_error($con) );
-   $dnl = mysqli_fetch_assoc( $resnl );
-   $nm_lembaga = $dnl['nm'];
-   
-   $qnli = "select * from nama_lembaga_induk";
-   $resnli = mysqli_query($con,  $qnli )or die( mysqli_error($con) );
-   $dnli = mysqli_fetch_assoc( $resnli );
-   $nm_lembaga_induk = $dnli['nm'];
-   
-   $qbln = "SELECT MONTH(tgl_dikeluarkan) AS bulan FROM siprak_mahasiswa WHERE id='$id'";
-   $resbln = mysqli_query($con,  $qbln )or die( mysqli_error($con) );
-   $dbln = mysqli_fetch_assoc( $resbln );
-   $ambilbln=$dbln['bulan'];
-   
-   $qthn = "SELECT YEAR(tgl_dikeluarkan) AS tahun FROM siprak_mahasiswa WHERE id='$id'";
-   $resthn = mysqli_query($con,  $qthn )or die( mysqli_error($con) );
-   $dthn = mysqli_fetch_assoc( $resthn );
-   $ambilthn=$dthn['tahun'];
-   
-   $qmk = "select * from matkul_praktikum WHERE id='$dt[matkul]'";
-   $resmk = mysqli_query($con,  $qmk )or die( mysqli_error($con) );
-   $dmk = mysqli_fetch_assoc( $resmk );
-   
-   $qtp = "select * from opsi_tempat_praktikum";
-   $restp = mysqli_query($con,  $qtp )or die( mysqli_error($con) );
-   $dtp = mysqli_fetch_assoc( $restp );
-   
-   $qdekanat1="select * from dt_pegawai WHERE jabatan_instansi='2'";
-   $resdekanat1=mysqli_query($con, $qdekanat1) or die (mysqli_error($con));
-   $ddekanat1=mysqli_fetch_assoc($resdekanat1);
-   
-   $qjdekanat1="select * from opsi_jabatan WHERE id='$ddekanat1[jabatan]'";
-   $resjdekanat1=mysqli_query($con, $qjdekanat1) or die (mysqli_error($con));
-   $djdekanat1=mysqli_fetch_assoc($resjdekanat1);
-   
-   $qjidekanat1="select * from opsi_jabatan_instansi WHERE id='$ddekanat1[jabatan_instansi]'";
-   $resjidekanat1=mysqli_query($con, $qjidekanat1) or die (mysqli_error($con));
-   $djidekanat1=mysqli_fetch_assoc($resjidekanat1);
-   
-   $qkddekanat1="select * from dekanat WHERE id='2'";
-   $reskddekanat1=mysqli_query($con, $qkddekanat1) or die (mysqli_error($con));
-   $dkddekanat1=mysqli_fetch_assoc($reskddekanat1);
+if ($id == 'dummy') {
+    // DATA DUMMY UNTUK PREVIEW LAYOUT PRAKTIKUM KELOMPOK
+    $dt = [
+        'id' => 'dummy',
+        'no_agenda_surat' => '107',
+        'tgl_dikeluarkan' => date('Y-m-d'),
+        'dosen_testee' => 'Dr. H. M. Lutfi Mustafa, M.Ag',
+        'matkul_testee' => 'Psikologi Agama',
+        'waktu' => date('Y-m-d', strtotime('+3 days')),
+        'jam' => '08.00',
+        'tembusan' => "1. Dekan Fakultas Psikologi\n2. Arsip",
+        'matkul' => '1'
+    ];
+    $dataku = [
+        'nama' => 'Maya Sari',
+        'nim' => '2021010030'
+    ];
+    $nm_lembaga = 'Fakultas Psikologi';
+    $nm_lembaga_induk = 'Universitas Contoh';
+    $dmk = ['nama' => 'Psikologi Agama'];
+    $dtp = ['nm' => 'Aula MIN 1 Malang'];
+    $ambilbln = date('n');
+    $ambilthn = date('Y');
+    
+    // Ambil data pejabat dari tabel dekanat (ID 2 = WD1)
+    $qset = mysqli_query($con, "SELECT * FROM dekanat WHERE id='2'");
+    $dset = mysqli_fetch_assoc($qset);
+    $nip_pejabat = ($dset && !empty($dset['nm_jabatan'])) ? $dset['nm_jabatan'] : '196811242000031001';
+
+    $qdekanat1 = "SELECT * FROM dt_pegawai WHERE id='$nip_pejabat'";
+    $resdekanat1 = mysqli_query($con, $qdekanat1);
+    $ddekanat1 = mysqli_fetch_assoc($resdekanat1);
+    
+    if (!$ddekanat1) {
+        $ddekanat1 = [
+            'nama_tg' => 'Nama Pejabat Belum Diatur',
+            'jabatan' => '1',
+            'jabatan_instansi' => '2'
+        ];
+    }
+
+    $qjdekanat1 = "SELECT * FROM opsi_jabatan WHERE id='$ddekanat1[jabatan]'";
+    $resjdekanat1 = mysqli_query($con, $qjdekanat1);
+    $djdekanat1 = mysqli_fetch_assoc($resjdekanat1) ?: ['nm' => 'Jabatan'];
+
+    $qjidekanat1 = "SELECT * FROM opsi_jabatan_instansi WHERE id='$ddekanat1[jabatan_instansi]'";
+    $resjidekanat1 = mysqli_query($con, $qjidekanat1);
+    $djidekanat1 = mysqli_fetch_assoc($resjidekanat1) ?: ['nm' => 'Wakil Dekan Bidang Akademik'];
+} else {
+    // LOGIKA ASLI
+    $myquery = "select * from siprak_mahasiswa WHERE id='$id'";
+    $res = mysqli_query($con,  $myquery )or die( mysqli_error($con) );
+    $dt = mysqli_fetch_assoc( $res );
+    
+    $qry = "select * from dt_mhssw WHERE nim='$dt[nim]'";
+    $resp = mysqli_query($con,  $qry )or die( mysqli_error($con) );
+    $dataku = mysqli_fetch_assoc( $resp );
+    
+    $qnl = "select * from nama_lembaga";
+    $resnl = mysqli_query($con,  $qnl )or die( mysqli_error($con) );
+    $dnl = mysqli_fetch_assoc( $resnl );
+    $nm_lembaga = $dnl['nm'] ?? 'Fakultas Psikologi';
+    
+    $qnli = "select * from nama_lembaga_induk";
+    $resnli = mysqli_query($con,  $qnli )or die( mysqli_error($con) );
+    $dnli = mysqli_fetch_assoc( $resnli );
+    $nm_lembaga_induk = $dnli['nm'] ?? 'UIN Malang';
+    
+    $qbln = "SELECT MONTH(tgl_dikeluarkan) AS bulan FROM siprak_mahasiswa WHERE id='$id'";
+    $resbln = mysqli_query($con,  $qbln )or die( mysqli_error($con) );
+    $dbln = mysqli_fetch_assoc( $resbln );
+    $ambilbln = $dbln['bulan'] ?? date('n');
+    
+    $qthn = "SELECT YEAR(tgl_dikeluarkan) AS tahun FROM siprak_mahasiswa WHERE id='$id'";
+    $resthn = mysqli_query($con,  $qthn )or die( mysqli_error($con) );
+    $dthn = mysqli_fetch_assoc( $resthn );
+    $ambilthn = $dthn['tahun'] ?? date('Y');
+    
+    $qmk = "select * from matkul_praktikum WHERE id='$dt[matkul]'";
+    $resmk = mysqli_query($con,  $qmk )or die( mysqli_error($con) );
+    $dmk = mysqli_fetch_assoc( $resmk );
+    
+    $qtp = "select * from opsi_tempat_praktikum";
+    $restp = mysqli_query($con,  $qtp )or die( mysqli_error($con) );
+    $dtp = mysqli_fetch_assoc( $restp );
+    
+    $qdekanat1="select * from dt_pegawai WHERE jabatan_instansi='2'";
+    $resdekanat1=mysqli_query($con, $qdekanat1) or die (mysqli_error($con));
+    $ddekanat1=mysqli_fetch_assoc($resdekanat1);
+    
+    $qjdekanat1="select * from opsi_jabatan WHERE id='$ddekanat1[jabatan]'";
+    $resjdekanat1=mysqli_query($con, $qjdekanat1) or die (mysqli_error($con));
+    $djdekanat1=mysqli_fetch_assoc($resjdekanat1);
+    
+    $qjidekanat1="select * from opsi_jabatan_instansi WHERE id='$ddekanat1[jabatan_instansi]'";
+    $resjidekanat1=mysqli_query($con, $qjidekanat1) or die (mysqli_error($con));
+    $djidekanat1=mysqli_fetch_assoc($resjidekanat1);
+}
+    
+    $qkddekanat1="select * from dekanat WHERE id='2'";
+    $reskddekanat1=mysqli_query($con, $qkddekanat1) or die (mysqli_error($con));
+    $dkddekanat1=mysqli_fetch_assoc($reskddekanat1);
    
    function bulanIndo($tanggal)
    {
@@ -218,12 +268,9 @@
          <div class="right">
             a.n. Dekan <br />
             <?php echo $djidekanat1['nm'];?>,
-            <br />
-            <br />
-            <br />
-            <span>&nbsp;&nbsp;&nbsp;&nbsp;*</span>
-            <br />
-            <br />
+            <div class="ttd">
+               <img src="images/<?php echo $dkddekanat1['ttd'];?>" width="200" />
+            </div>
             <?php echo $ddekanat1['nama_tg'];?>
          </div>
          <table width="100%">
@@ -297,11 +344,9 @@
          <div class="right">
             a.n. Dekan, <br />
             <?php echo $djidekanat1['nm'];?>,
-            <br />
-            <br />
-            <br />
-            <span>*</span>
-            <br />
+            <div class="ttd">
+               <img src="images/<?php echo $dkddekanat1['ttd'];?>" width="200" />
+            </div>
             <?php echo $ddekanat1['nama_tg'];?>
          </div>
       </div>

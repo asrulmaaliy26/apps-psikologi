@@ -1,5 +1,5 @@
 <?php include( "contentsConAdm.php" );
-  $tahun = date("Y");?>
+  $tahun = isset($_GET['date']) ? $_GET['date'] : date("Y");?>
 <!DOCTYPE html>
 <html lang="en">
   <?php include( "headAdm.php" );?> 
@@ -263,7 +263,11 @@
                                       <tr>
                                         <th scope="col">Catatan Pengajuan</th>
                                         <td>:</td>
-                                        <td><?php if($data['catatan']=='') { echo '-';} else { echo $data['catatan']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['catatan']);}?></td>
+                                         <td>
+                                           <?php if($data['catatan']=='') { echo '-';} else { echo $data['catatan']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['catatan']);}?>
+                                           <br>
+                                           <a href="assets/PROPOSAL PRAKTIK KERJA LAPANGAN 2026.pdf" target="_blank" class="btn btn-xs btn-primary mt-1"><i class="fas fa-file-pdf"></i> Download Proposal PKL 2026</a>
+                                         </td>
                                       </tr>
                                       <tr>
                                         <th scope="col">Eksekutor</th>

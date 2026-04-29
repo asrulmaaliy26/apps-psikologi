@@ -52,6 +52,8 @@
                   <div class="card-body pb-0">
                     <div class="callout callout-info">
                       <?php echo $dataku['catatan'];?>
+                      <hr>
+                      <a href="assets/PROPOSAL PRAKTIK KERJA LAPANGAN 2026.pdf" target="_blank" class="btn btn-sm btn-primary"><i class="fas fa-file-pdf"></i> Download Proposal PKL 2026</a>
                     </div>
                   </div>
                 </div>

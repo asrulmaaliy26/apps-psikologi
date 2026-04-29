@@ -26,7 +26,7 @@
   $('#alert').removeClass('d-none');
   
   setTimeout(() => {
-    $('.alert').alert('close');
+    $('.alert:not(.no-close)').alert('close');
   }, 3000);
 
 /* Fungsi tanggal kepegawaian */
