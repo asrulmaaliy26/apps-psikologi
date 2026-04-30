@@ -79,8 +79,8 @@ if (isset($_SESSION['username'])) {
             </li>
           </ul>
         </li>
-        <li class="nav-item <?php echo isOpen(['prePendaftaranPklUser.php','plotLembagaPklUser.php','prePendaftaranBimtekUser.php','listPraPropBimtekUser.php','prePendaftaranSemproUser.php','prePendaftaranUjianKompreUser.php','prePendaftaranUjianSkripsiUser.php']); ?>">
-          <a href="#" class="nav-link <?php echo isActive(['prePendaftaranPklUser.php','plotLembagaPklUser.php','prePendaftaranBimtekUser.php','listPraPropBimtekUser.php','prePendaftaranSemproUser.php','prePendaftaranUjianKompreUser.php','prePendaftaranUjianSkripsiUser.php']); ?>">
+        <li class="nav-item <?php echo isOpen(['prePendaftaranPklUser.php','plotLembagaPklUser.php','prePendaftaranBimtekUser.php','listPraPropBimtekUser.php','prePendaftaranSemproUser.php','prePendaftaranUjianKompreUser.php','prePendaftaranUjianSkripsiUser.php','bookingLabUser.php']); ?>">
+          <a href="#" class="nav-link <?php echo isActive(['prePendaftaranPklUser.php','plotLembagaPklUser.php','prePendaftaranBimtekUser.php','listPraPropBimtekUser.php','prePendaftaranSemproUser.php','prePendaftaranUjianKompreUser.php','prePendaftaranUjianSkripsiUser.php','bookingLabUser.php']); ?>">
             <i class="fas fa-file-alt nav-icon"></i>
             <p>
               Pendaftaran
@@ -88,6 +88,12 @@ if (isset($_SESSION['username'])) {
             </p>
           </a>
           <ul class="nav nav-treeview" style="display: block;">
+            <li class="nav-item">
+              <a href="bookingLabUser.php" class="nav-link <?php echo isActive('bookingLabUser.php'); ?>">
+                <i class="fas fa-flask nav-icon"></i>
+                <p>Booking Lab</p>
+              </a>
+            </li>
             <li class="nav-item">
               <a href="prePendaftaranPklUser.php" class="nav-link <?php echo isActive('prePendaftaranPklUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
