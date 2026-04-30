@@ -18,14 +18,14 @@
   
   if(mysqli_num_rows($ada)>0)
   { 
-  mysqli_query($con, "UPDATE pengajuan_dospem SET syarat_sks='$syarat_sks',start_datetime='$start_datetime',end_datetime='$end_datetime' WHERE id='$id' LIMIT 1")  or DIE(mysqli_error($con));
+  mysqli_query($con, "UPDATE pengajuan_dospem SET syarat_sks='$syarat_sks',start_datetime='$start_datetime',end_datetime='$end_datetime',status='$status' WHERE id='$id' LIMIT 1")  or DIE(mysqli_error($con));
   header("location:pngjnDospemAdm.php?page=$page&message=notifSetengah"); }
   elseif(mysqli_num_rows($aktif)==0)
   { header("location:pngjnDospemAdm.php?page=$page&message=notifTa"); }
   else  {
   mysqli_query($con, "UPDATE pengelompokan_dospem_skripsi SET id_periode='$id_periode' WHERE id_periode='$id'")  or die(mysqli_error($con));
   mysqli_query($con, "UPDATE dospem_skripsi SET id_periode='$id_periode' WHERE id_periode='$id'")  or die(mysqli_error($con));
-  mysqli_query($con, "UPDATE pengajuan_dospem SET id='$id_periode',tahap='$tahap',ta='$ta',syarat_sks='$syarat_sks',start_datetime='$start_datetime',end_datetime='$end_datetime' WHERE id='$id' LIMIT 1")  or die(mysqli_error($con));
+  mysqli_query($con, "UPDATE pengajuan_dospem SET id='$id_periode',tahap='$tahap',ta='$ta',syarat_sks='$syarat_sks',start_datetime='$start_datetime',end_datetime='$end_datetime',status='$status' WHERE id='$id' LIMIT 1")  or die(mysqli_error($con));
   header("location:pngjnDospemAdm.php?page=$page&message=notifEdit");
   }
   ?>

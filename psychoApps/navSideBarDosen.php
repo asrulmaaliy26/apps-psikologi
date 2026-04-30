@@ -196,11 +196,11 @@ if (!function_exists('isOpen')) {
         </li>
         <?php } ?>
         <?php if($dtDosen['jabatan_instansi']=='47') { ?>
-        <li class="nav-item <?php echo isOpen(['rekapSaranPembimbingBimtekKaprodi.php']); ?>">
-          <a href="#" class="nav-link text-warning <?php echo isActive(['rekapSaranPembimbingBimtekKaprodi.php']); ?>">
+        <li class="nav-item <?php echo isOpen(['rekapSaranPembimbingBimtekKaprodi.php', 'rekapKuotaDospemKaprodi.php']); ?>">
+          <a href="#" class="nav-link text-warning <?php echo isActive(['rekapSaranPembimbingBimtekKaprodi.php', 'rekapKuotaDospemKaprodi.php']); ?>">
             <i class="fas fa-user-friends nav-icon"></i>
             <p>
-              Rekap Bimtek
+              Manajemen Dospem
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
@@ -209,6 +209,12 @@ if (!function_exists('isOpen')) {
               <a href="rekapSaranPembimbingBimtekKaprodi.php" class="nav-link <?php echo isActive('rekapSaranPembimbingBimtekKaprodi.php'); ?>">
                 <i class="text-xs far fa-circle nav-icon"></i>
                 <p>Saran Dosen Pembimbing</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="rekapKuotaDospemKaprodi.php" class="nav-link <?php echo isActive('rekapKuotaDospemKaprodi.php'); ?>">
+                <i class="text-xs far fa-circle nav-icon"></i>
+                <p>Kuota Dosen Pembimbing</p>
               </a>
             </li>
           </ul>

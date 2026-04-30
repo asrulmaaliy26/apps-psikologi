@@ -48,7 +48,8 @@
                             <th width="15%">Peminatan</th>
                             <th width="10%">Outline</th>
                             <th width="10%">Tgl Daftar</th>
-                            <th width="16%">Bukti Absensi</th>
+                            <th width="12%">Bukti Absensi</th>
+                            <th width="4%">Aksi</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -97,6 +98,14 @@
                                 <?php endfor; ?>
                               </div>
                             </td>
+                            <td>
+                              <button type="button" class="btn btn-xs btn-danger btn-delete" 
+                                data-nim="<?php echo $row['nim'];?>" 
+                                data-idbimtek="<?php echo $row['id_bimtek'];?>"
+                                data-nama="<?php echo htmlspecialchars($row['nama']);?>">
+                                <i class="fas fa-trash"></i>
+                              </button>
+                            </td>
                           </tr>
                           <?php } ?>
                         </tbody>
@@ -112,5 +121,51 @@
     </div>
     <?php include( "footerAdm.php" );?>
     <?php include( "jsAdm.php" );?>
+    <script>
+      $(document).on('click', '.btn-delete', function() {
+        const nim = $(this).data('nim');
+        const idBimtek = $(this).data('idbimtek');
+        const nama = $(this).data('nama');
+
+        Swal.fire({
+          title: 'Hapus Pendaftar?',
+          html: `Apakah Anda yakin ingin menghapus pendaftaran <b>${nama}</b>?<br><br><small class="text-danger">Tindakan ini tidak dapat dibatalkan.</small>`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Ya, Hapus!',
+          cancelButtonText: 'Batal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            $.ajax({
+              url: 'sDeletePndftrBimtekAdm.php',
+              type: 'POST',
+              data: {
+                nim: nim,
+                id_bimtek: idBimtek
+              },
+              dataType: 'json',
+              success: function(response) {
+                if (response.status === 'success') {
+                  Swal.fire({
+                    title: 'Berhasil!',
+                    text: response.message,
+                    icon: 'success'
+                  }).then(() => {
+                    location.reload();
+                  });
+                } else {
+                  Swal.fire('Gagal!', response.message, 'error');
+                }
+              },
+              error: function() {
+                Swal.fire('Error!', 'Terjadi kesalahan sistem.', 'error');
+              }
+            });
+          }
+        });
+      });
+    </script>
   </body>
 </html>
