@@ -41,6 +41,25 @@ if (!function_exists('isActive')) {
             <p>Pengaturan TTD</p>
           </a>
         </li>
+        <li class="nav-header">ORGANISASI MAHASISWA</li>
+        <li class="nav-item">
+          <a href="kelolaKatOrgMhsAdm.php" class="nav-link <?php echo isActive('kelolaKatOrgMhsAdm.php'); ?>">
+            <i class="nav-icon fas fa-sitemap"></i>
+            <p>Kategori Organisasi</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="kelolaRoleOrgMhsAdm.php" class="nav-link <?php echo isActive('kelolaRoleOrgMhsAdm.php'); ?>">
+            <i class="nav-icon fas fa-user-tag"></i>
+            <p>Role Jabatan</p>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a href="kelolaPersonaliaOrgMhsAdm.php" class="nav-link <?php echo isActive('kelolaPersonaliaOrgMhsAdm.php'); ?>">
+            <i class="nav-icon fas fa-users-cog"></i>
+            <p>Personalia Org</p>
+          </a>
+        </li>
         <li class="nav-header">MANAJEMEN MAHASISWA</li>
         <li class="nav-item">
           <a href="kelolaMahasiswaS1Adm.php" class="nav-link <?php echo isActive('kelolaMahasiswaS1Adm.php'); ?>">

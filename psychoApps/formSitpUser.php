@@ -80,7 +80,7 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                         <input type="text" class="form-control form-control-sm" placeholder="Nama lengkap." value="<?php echo $dataku['nama'] . "&nbsp;" . "($dataku[nim])"; ?>" disabled required>
                       </div>
                       <div class="form-group col-sm-3">
-                        <label for="anggota2">Anggota 2 <span class="text-danger">*</span></label>
+                        <label for="anggota2">Anggota 2</label>
                         <select name="anggota2" class="form-control form-control-sm">
                           <option value="">-Pilih-</option>
                           <?php

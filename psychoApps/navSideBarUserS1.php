@@ -13,6 +13,17 @@ if (!function_exists('isOpen')) {
         return 'menu-open';
     }
 }
+
+$isLabPsiko = false;
+if (isset($_SESSION['username'])) {
+    $us_check = mysqli_real_escape_string($con, $_SESSION['username']);
+    $q_check = mysqli_query($con, "SELECT p.id FROM org_mhs_personalia p 
+                                  JOIN org_mhs_kat k ON p.kat_id = k.id 
+                                  WHERE p.nim = '$us_check' AND k.nm = 'Lab. Psikodiagnostik' LIMIT 1");
+    if ($q_check && mysqli_num_rows($q_check) > 0) {
+        $isLabPsiko = true;
+    }
+}
 ?>
 <aside <?php include("main-sidebar-style.php") ?>>
   <?php include("brandNavAdm.php"); ?>
@@ -25,6 +36,14 @@ if (!function_exists('isOpen')) {
             <p>Dashboard</p>
           </a>
         </li>
+        <?php if ($isLabPsiko) { ?>
+          <li class="nav-item">
+            <a href="periodeBookingLabUser.php" class="nav-link <?php echo isActive('periodeBookingLabUser.php'); ?>">
+              <i class="nav-icon fas fa-calendar-alt"></i>
+              <p>Periode Booking Lab</p>
+            </a>
+          </li>
+        <?php } ?>
         <li class="nav-item">
           <a href="profilAkademikUser.php" class="nav-link <?php echo isActive(['profilAkademikUser.php','profilPribadiUser.php','profilOrtuUser.php','profilFotoUser.php']); ?>">
             <i class="nav-icon far fa-user-circle"></i>
