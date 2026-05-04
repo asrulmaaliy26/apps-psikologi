@@ -118,7 +118,7 @@ include("initPraPropBimtek.php");
                             LEFT JOIN dt_pegawai p ON pp.id_reviewer = p.id
                             LEFT JOIN dt_pegawai d1 ON pp.pembimbing_saran_1 = d1.id
                             LEFT JOIN dt_pegawai d2 ON pp.pembimbing_saran_2 = d2.id
-                            LEFT JOIN bimtek_peserta bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
+                            LEFT JOIN (SELECT bp_inner.* FROM bimtek_peserta bp_inner JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp_inner.id = latest.max_id) bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
                             LEFT JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
                             $where_sql
                             ORDER BY pp.tgl_submit DESC");

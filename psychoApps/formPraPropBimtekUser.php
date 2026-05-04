@@ -9,7 +9,8 @@ $q_peserta = mysqli_query($con, "SELECT bp.*, p.nama as reviewer_nama, b.nama_bi
     FROM bimtek_peserta bp 
     JOIN bimtek_pendaftaran b ON bp.id_bimtek = b.id
     LEFT JOIN dt_pegawai p ON bp.id_reviewer = p.id
-    WHERE bp.nim='$username' AND bp.id_bimtek='$id_bimtek' AND bp.id_reviewer != '' AND bp.id_reviewer IS NOT NULL");
+    WHERE bp.nim='$username' AND bp.id_bimtek='$id_bimtek' AND bp.id_reviewer != '' AND bp.id_reviewer IS NOT NULL
+    ORDER BY bp.id DESC LIMIT 1");
 $d_peserta = mysqli_fetch_assoc($q_peserta);
 
 if (!$d_peserta) {

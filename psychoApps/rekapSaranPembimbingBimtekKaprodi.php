@@ -119,7 +119,7 @@ if ($dMe['jabatan_instansi'] != '47') {
                             LEFT JOIN dt_pegawai d2 ON pp.pembimbing_saran_2 = d2.id
                             LEFT JOIN dospem_skripsi k1 ON d1.id = k1.nip AND k1.id_periode = '$active_period_id'
                             LEFT JOIN dospem_skripsi k2 ON d2.id = k2.nip AND k2.id_periode = '$active_period_id'
-                            LEFT JOIN bimtek_peserta bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
+                            LEFT JOIN (SELECT bp_inner.* FROM bimtek_peserta bp_inner JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp_inner.id = latest.max_id) bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
                             LEFT JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
                             $where_sql
                             ORDER BY b.id DESC, m.nama ASC");

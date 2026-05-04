@@ -37,6 +37,42 @@
                     }
                   ?>
                   <div class="card-body p-0">
+                    <div class="p-3 border-bottom bg-light">
+                      <form method="GET" action="">
+                          <input type="hidden" name="id_bimtek" value="<?php echo $id_bimtek; ?>">
+                          <div class="row">
+                              <div class="col-md-4 mb-2 mb-md-0">
+                                  <select name="peminatan" class="form-control form-control-sm">
+                                      <option value="">-- Semua Peminatan --</option>
+                                      <?php
+                                          $q_ops = mysqli_query($con, "SELECT id, nm FROM opsi_bidang_skripsi ORDER BY nm ASC");
+                                          while($d_ops = mysqli_fetch_assoc($q_ops)){
+                                              $sel = (isset($_GET['peminatan']) && $_GET['peminatan'] == $d_ops['id']) ? 'selected' : '';
+                                              echo "<option value='".$d_ops['id']."' $sel>".$d_ops['nm']."</option>";
+                                          }
+                                      ?>
+                                  </select>
+                              </div>
+                              <div class="col-md-3 mb-2 mb-md-0">
+                                  <select name="sort" class="form-control form-control-sm">
+                                      <option value="tgl_daftar" <?php echo (!isset($_GET['sort']) || $_GET['sort'] == 'tgl_daftar') ? 'selected' : ''; ?>>Urutkan: Tgl Daftar (Terbaru)</option>
+                                      <option value="nim" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'nim') ? 'selected' : ''; ?>>Urutkan: NIM (A-Z)</option>
+                                      <option value="nama" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'nama') ? 'selected' : ''; ?>>Urutkan: Nama (A-Z)</option>
+                                  </select>
+                              </div>
+                              <div class="col-md-4">
+                                  <button type="submit" class="btn btn-sm btn-primary"><i class="fas fa-filter"></i> Filter & Sort</button>
+                                  <a href="?id_bimtek=<?php echo $id_bimtek; ?>" class="btn btn-sm btn-default">Reset</a>
+                                  <?php
+                                    $export_url = "exportExcelRekapPndftrBimtekAdm.php?id_bimtek=$id_bimtek";
+                                    if(isset($_GET['peminatan']) && $_GET['peminatan'] != "") $export_url .= "&peminatan=".$_GET['peminatan'];
+                                    if(isset($_GET['sort']) && $_GET['sort'] != "") $export_url .= "&sort=".$_GET['sort'];
+                                  ?>
+                                  <a href="<?php echo $export_url; ?>" class="btn btn-sm btn-success ml-1"><i class="fas fa-file-excel"></i> Export Excel</a>
+                              </div>
+                          </div>
+                      </form>
+                    </div>
                     <div class="table-responsive">
                       <table class="table table-hover m-0 table-bordered text-center table-sm small">
                         <thead>
@@ -54,14 +90,29 @@
                         </thead>
                         <tbody>
                           <?php
-                            $filter_sql = $id_bimtek ? " WHERE pb.id_bimtek = '$id_bimtek' " : "";
+                            $filter_sql = $id_bimtek ? " WHERE pb.id_bimtek = '$id_bimtek' " : " WHERE 1=1 ";
+                            
+                            $peminatan_filter = isset($_GET['peminatan']) ? mysqli_real_escape_string($con, $_GET['peminatan']) : "";
+                            if($peminatan_filter != ""){
+                                $filter_sql .= " AND pb.peminatan = '$peminatan_filter' ";
+                            }
+
+                            $sort = isset($_GET['sort']) ? $_GET['sort'] : "tgl_daftar";
+                            $order_sql = "ORDER BY pb.tgl_daftar DESC";
+                            if($sort == "nim"){
+                                $order_sql = "ORDER BY pb.nim ASC";
+                            } else if($sort == "nama"){
+                                $order_sql = "ORDER BY m.nama ASC";
+                            }
+
                             $query = "SELECT pb.*, m.nama, b.nama_bimtek, ops.nm as nm_peminatan 
                                       FROM bimtek_peserta pb 
+                                      JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON pb.id = latest.max_id
                                       JOIN dt_mhssw m ON pb.nim = m.nim 
                                       JOIN bimtek_pendaftaran b ON pb.id_bimtek = b.id
                                       JOIN opsi_bidang_skripsi ops ON pb.peminatan = ops.id
                                       $filter_sql
-                                      ORDER BY pb.tgl_daftar DESC";
+                                      $order_sql";
                             $result = mysqli_query($con, $query);
                             $no = 1;
                             while($row = mysqli_fetch_array($result)){

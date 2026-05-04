@@ -186,7 +186,7 @@
                             <td><?php echo $row['tgl_daftar'];?></td>
                             <td>
                               <div class="d-flex flex-column">
-                                <?php for($s=1; $s<=3; $s++): 
+                                 <?php for($s=1; $s<=4; $s++): 
                                   $col_file = 'file_absensi_'.$s;
                                   $col_tgl = 'tgl_absensi_'.$s;
                                 ?>

@@ -16,7 +16,7 @@ if (!$nim || !$id_bimtek) {
 }
 
 // 1. Ambil nama file untuk dihapus secara fisik jika perlu
-$q_file = mysqli_query($con, "SELECT file_outline, file_absensi_1, file_absensi_2, file_absensi_3 FROM bimtek_peserta WHERE nim='$nim' AND id_bimtek='$id_bimtek'");
+$q_file = mysqli_query($con, "SELECT file_outline, file_absensi_1, file_absensi_2, file_absensi_3, file_absensi_4 FROM bimtek_peserta WHERE nim='$nim' AND id_bimtek='$id_bimtek'");
 $d_file = mysqli_fetch_assoc($q_file);
 
 if ($d_file) {
@@ -29,7 +29,7 @@ if ($d_file) {
         // Hapus file fisik (opsional)
         /*
         if ($d_file['file_outline'] && file_exists("file_outline_bimtek/".$d_file['file_outline'])) unlink("file_outline_bimtek/".$d_file['file_outline']);
-        for($i=1; $i<=3; $i++) {
+        for($i=1; $i<=4; $i++) {
             $f = $d_file['file_absensi_'.$i];
             if ($f && file_exists("file_absensi_bimtek/".$f)) unlink("file_absensi_bimtek/".$f);
         }

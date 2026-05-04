@@ -58,6 +58,7 @@ $q_periode = mysqli_query($con, "SELECT DISTINCT r.id_periode, b.id, b.nama_bimt
                         $q_mhs = mysqli_query($con, "SELECT bp.nim, bp.peminatan, m.nama, o.nm as nm_pem, pp.id as id_prop, pp.status, pp.tgl_submit, pp.status_sertifikat,
                                 b.bypass_sertifikat
                             FROM bimtek_peserta bp
+                            JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id
                             JOIN dt_mhssw m ON bp.nim = m.nim
                             JOIN bimtek_pendaftaran b ON bp.id_bimtek = b.id
                             JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id

@@ -23,7 +23,7 @@
   $kuota_per_kepakaran = [];
   foreach($kep_options as $dk) {
       $id_kep = $dk['id'];
-      $q_pend = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta WHERE id_bimtek='$id_periode' AND peminatan='$id_kep'");
+      $q_pend = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id WHERE bp.id_bimtek='$id_periode' AND bp.peminatan='$id_kep'");
       $tot_pendaftar = mysqli_fetch_assoc($q_pend)['tot'];
       
       $q_jml_rev = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_reviewer WHERE id_periode='$id_periode' AND id_kepakaran='$id_kep'");
@@ -151,7 +151,7 @@
                                       
                                       $total_kuota = $kuota_dasar + $kuota;
                                       
-                                      $q_plot = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta WHERE id_bimtek='$id_periode' AND id_reviewer='$nip'");
+                                      $q_plot = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id WHERE bp.id_bimtek='$id_periode' AND bp.id_reviewer='$nip'");
                                       $telah_plot = mysqli_fetch_assoc($q_plot)['tot'];
                                   }
 
@@ -219,6 +219,7 @@
                                         $no_mhs = 1;
                                         $q_mhs = "SELECT bp.*, dp.nama, o.nm as nm_peminatan 
                                                   FROM bimtek_peserta bp
+                                                  JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id
                                                   LEFT JOIN dt_mhssw dp ON bp.nim = dp.nim
                                                   JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
                                                   WHERE bp.id_bimtek = '$id_periode'
@@ -286,7 +287,7 @@
         $q_dsn_modal = mysqli_query($con, "SELECT id, nama FROM dt_pegawai WHERE jenis_pegawai='1' AND status='1'");
         while($d_dsn_modal = mysqli_fetch_assoc($q_dsn_modal)){
             $nip_modal = $d_dsn_modal['id'];
-            $q_mhs_plot = mysqli_query($con, "SELECT bp.nim, dp.nama FROM bimtek_peserta bp LEFT JOIN dt_mhssw dp ON bp.nim = dp.nim WHERE bp.id_bimtek='$id_periode' AND bp.id_reviewer='$nip_modal' ORDER BY dp.nama ASC");
+            $q_mhs_plot = mysqli_query($con, "SELECT bp.nim, dp.nama FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id LEFT JOIN dt_mhssw dp ON bp.nim = dp.nim WHERE bp.id_bimtek='$id_periode' AND bp.id_reviewer='$nip_modal' ORDER BY dp.nama ASC");
             if(mysqli_num_rows($q_mhs_plot) > 0){
       ?>
       <div class="modal fade" id="modalListMhs_<?php echo $nip_modal; ?>" tabindex="-1" role="dialog" aria-hidden="true">

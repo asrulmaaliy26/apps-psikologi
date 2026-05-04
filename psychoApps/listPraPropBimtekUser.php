@@ -11,6 +11,7 @@ $q_list = mysqli_query($con, "SELECT bp.id as id_peserta, bp.id_bimtek, bp.id_re
     pp.pembimbing_saran_1, pp.pembimbing_saran_2,
     pp.a1, pp.a2, pp.a3, pp.a4, pp.a5, pp.a6, pp.nilai_akhir
     FROM bimtek_peserta bp
+    JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id
     JOIN bimtek_pendaftaran b ON bp.id_bimtek = b.id
     LEFT JOIN dt_pegawai p ON bp.id_reviewer = p.id
     LEFT JOIN bimtek_pra_proposal pp ON pp.nim = bp.nim AND pp.id_bimtek = bp.id_bimtek

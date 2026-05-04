@@ -9,7 +9,7 @@ $q_prop = mysqli_query($con, "SELECT pp.*, m.nama as mhs_nama, b.nama_bimtek, b.
     FROM bimtek_pra_proposal pp
     JOIN dt_mhssw m ON pp.nim = m.nim
     JOIN bimtek_pendaftaran b ON pp.id_bimtek = b.id
-    JOIN bimtek_peserta bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
+    JOIN (SELECT bp_inner.* FROM bimtek_peserta bp_inner JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp_inner.id = latest.max_id) bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
     JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
     WHERE pp.id='$id_prop' AND pp.id_reviewer='$username'");
 $d_prop = mysqli_fetch_assoc($q_prop);

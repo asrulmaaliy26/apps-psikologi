@@ -10,7 +10,7 @@
       $id_kep = $d_pem['id_kepakaran'];
       
       // Calculate kuota dasar for this kepakaran
-      $q_pend = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta WHERE id_bimtek='$id_periode' AND peminatan='$id_kep'");
+      $q_pend = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id WHERE bp.id_bimtek='$id_periode' AND bp.peminatan='$id_kep'");
       $tot_pendaftar = mysqli_fetch_assoc($q_pend)['tot'];
       
       $q_jml_rev = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_reviewer WHERE id_periode='$id_periode' AND id_kepakaran='$id_kep'");
@@ -34,7 +34,7 @@
           $total_kuota = $my_kuota_dasar + $dr['kuota_tambahan'];
           
           // Get current plot count
-          $q_plot = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta WHERE id_bimtek='$id_periode' AND id_reviewer='$nip'");
+          $q_plot = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id WHERE bp.id_bimtek='$id_periode' AND bp.id_reviewer='$nip'");
           $telah_plot = mysqli_fetch_assoc($q_plot)['tot'];
           
           $reviewers[] = [
@@ -51,6 +51,7 @@
       // This handles cases where a reviewer changed their kepakaran after being assigned
       $q_invalid = mysqli_query($con, "SELECT bp.id, bp.id_reviewer 
                                        FROM bimtek_peserta bp
+                                       JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id
                                        WHERE bp.id_bimtek='$id_periode' 
                                          AND bp.peminatan='$id_kep'
                                          AND bp.id_reviewer != ''
@@ -64,7 +65,7 @@
       }
       
       // Get all unassigned students for this kepakaran
-      $q_mhs = mysqli_query($con, "SELECT id FROM bimtek_peserta WHERE id_bimtek='$id_periode' AND peminatan='$id_kep' AND (id_reviewer='' OR id_reviewer IS NULL)");
+      $q_mhs = mysqli_query($con, "SELECT bp.id FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id WHERE bp.id_bimtek='$id_periode' AND bp.peminatan='$id_kep' AND (bp.id_reviewer='' OR bp.id_reviewer IS NULL)");
       
       while($d_mhs = mysqli_fetch_assoc($q_mhs)){
           $id_peserta = $d_mhs['id'];

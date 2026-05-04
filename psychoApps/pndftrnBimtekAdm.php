@@ -129,7 +129,7 @@
                             $h = mysqli_query($con, $qry_nm_smt);
                             $dsemester = mysqli_fetch_assoc($h);
                             
-                            $qry1 = "SELECT COUNT(id) AS jumData FROM bimtek_peserta WHERE id_bimtek = '$id'";
+                            $qry1 = "SELECT COUNT(DISTINCT nim) AS jumData FROM bimtek_peserta WHERE id_bimtek = '$id'";
                             $has1 = mysqli_query($con,  $qry1 )or DIE( mysqli_error($con) );
                             $data1 = mysqli_fetch_assoc( $has1 );
                             ?>
