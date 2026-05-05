@@ -1,4 +1,4 @@
-<?php include( "contentsConAdm.php" );
+<?php include( "conAdm.php" );
   function antiinjection($data){
    
   $filter_sql = mysqli_real_escape_string($con, stripslashes(strip_tags(htmlspecialchars($data,ENT_QUOTES))));

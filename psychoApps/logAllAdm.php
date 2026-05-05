@@ -1,5 +1,5 @@
 <?php 
-  include( "contentsConAdm.php" );
+  include( "conAdm.php" );
   $level=mysqli_real_escape_string($con, $_POST['level']);
   $username=mysqli_real_escape_string($con, $_POST['username']);
   $password_plain = $_POST['password'];

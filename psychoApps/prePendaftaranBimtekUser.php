@@ -6,7 +6,7 @@
   $d_aktif = mysqli_fetch_assoc($r_cek_aktif);
   $ada_aktif = mysqli_num_rows($r_cek_aktif);
 
-  $q_cek_daftar = "SELECT * FROM bimtek_peserta WHERE nim='$username' ORDER BY tgl_daftar DESC";
+  $q_cek_daftar = "SELECT p1.* FROM bimtek_peserta p1 INNER JOIN (SELECT id_bimtek, MAX(id) as max_id FROM bimtek_peserta WHERE nim='$username' GROUP BY id_bimtek) p2 ON p1.id = p2.max_id ORDER BY p1.tgl_daftar DESC";
   $r_cek_daftar = mysqli_query($con, $q_cek_daftar);
   $sudah_daftar = mysqli_num_rows($r_cek_daftar);
 ?>

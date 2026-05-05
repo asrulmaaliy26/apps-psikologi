@@ -144,18 +144,23 @@
             </div>
             <div class="row">
               <section class="col-md-12 connectedSortable">
+                <form action="inputPenghapusanBmnAdm.php" method="post">
                 <div class="card card-outline card-success">
                   <div class="card-header">
                     <div class="clearfix">
                       <h4 class="card-title float-left">Data Barang (<?php echo $d_jum['jumData'];?>)</h4>
-                      <button type="button" class="btn btn-outline-primary btn-xs float-right" data-toggle="modal" data-target="#inputModal"><i class="far fa-plus-square"></i> Input Data Barang</button>
+                      <div class="float-right">
+                        <button type="submit" name="action" value="penghapusan" class="btn btn-outline-danger btn-xs mr-1"><i class="fas fa-trash-alt"></i> Ajukan Penghapusan</button>
+                        <button type="button" class="btn btn-outline-primary btn-xs" data-toggle="modal" data-target="#inputModal"><i class="far fa-plus-square"></i> Input Data Barang</button>
+                      </div>
                     </div>
                   </div>
                   <div class="card-body p-0">
                     <div class="table-responsive">
                       <table class="table table-hover m-0 table-sm custom">
                         <thead class="thead-light">
-                          <th width="4%" class="pl-1 text-center">No.</th>
+                          <th width="4%" class="pl-1 text-center"><input type="checkbox" id="checkAll"></th>
+                          <th width="4%" class="text-center">No.</th>
                           <th width="12%">Kode Barang</th>
                           <th width="24%">Nama Barang</th>
                           <th width="16%">Kategori</th>
@@ -199,7 +204,10 @@
                             $d_ospb = mysqli_fetch_assoc($r_ospb);
                             ?>
                           <tr data-widget="expandable-table" aria-expanded="false">
-                            <td class="text-center pl-1"> <?php echo ++$no_urut;?> </td>
+                            <td class="text-center pl-1">
+                              <input type="checkbox" name="id_barang[]" value="<?php echo $data['id'];?>" class="checkItem">
+                            </td>
+                            <td class="text-center"> <?php echo ++$no_urut;?> </td>
                             <td class="text-center"> <?php echo $data['id_inventaris'];?> </td>
                             <td class="text-left"> <?php echo $data['nm'];?> </td>
                             <td class="text-left"> <?php echo $d_kat['nm'];?> </td>
@@ -289,6 +297,7 @@
                   <div class="card-footer pb-0 clearfix">
                     <div class="float-right"><?php echo paginate_one($reload, $page, $tpages);?></div>
                   </div>
+                  </form>
                 </div>
               </section>
             </div>
@@ -395,5 +404,12 @@
     </form>
     <?php include( "footerAdm.php" );?>
     <?php include( "jsAdm.php" );?>
+    <script>
+      $(document).ready(function() {
+        $("#checkAll").click(function() {
+          $(".checkItem").prop('checked', $(this).prop('checked'));
+        });
+      });
+    </script>
   </body>
 </html>

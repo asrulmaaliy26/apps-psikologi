@@ -1,4 +1,3 @@
-<?php include( "contentsConAdm.php" );?> 
 <script src="../vendor/plugins/jquery/jquery.min.js"></script>
 <script src="../vendor/plugins/jquery-ui/jquery-ui.min.js"></script>
 <script src="../vendor/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -15,6 +14,7 @@
 <script src="../vendor/dist/js/adminlte.js"></script>
 <script src="../vendor/dist/js/pages/dashboard.js"></script>
 <script type="text/javascript" src="tinymce/tinymce.min.js"></script>
+<script src="../vendor/plugins/bs-custom-file-input/bs-custom-file-input.min.js"></script>
 <!-- SweetAlert2 -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
