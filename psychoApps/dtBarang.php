@@ -1,5 +1,10 @@
 <?php include( "contentsConAdm.php" );
-  $qry_jum = "SELECT COUNT(id) AS jumData FROM dt_inventaris_barang";
+  $qry_jum = "SELECT COUNT(id) AS jumData FROM dt_inventaris_barang 
+               WHERE id NOT IN (
+                 SELECT id_barang FROM dt_pengajuan_penghapusan_bmn_detail d 
+                 JOIN dt_pengajuan_penghapusan_bmn p ON d.id_pengajuan = p.id 
+                 WHERE p.status IN ('Disetujui', 'Selesai')
+               )";
   $r_jum = mysqli_query($con,  $qry_jum )or DIE( mysqli_error($con) );
   $d_jum = mysqli_fetch_assoc( $r_jum );
   ?>
@@ -75,10 +80,18 @@
           </div>
         </div>
         <?php include 'pagination.php';
-          $tahun = date("Y");    
+          $tahun = date("Y");
+          $excluded_items_query = "SELECT id_barang FROM dt_pengajuan_penghapusan_bmn_detail d 
+                                   JOIN dt_pengajuan_penghapusan_bmn p ON d.id_pengajuan = p.id 
+                                   WHERE p.status IN ('Disetujui', 'Selesai')";
+          
+          $filter_thn = isset($_GET['thn']) ? mysqli_real_escape_string($con, $_GET['thn']) : '';
+          $where_thn = $filter_thn != '' ? " AND r.thn_perolehan = '$filter_thn' " : "";
+          $where_thn_simple = $filter_thn != '' ? " AND thn_perolehan = '$filter_thn' " : "";
+
           if(isset($_REQUEST['keyword']) && $_REQUEST['keyword']<>""){
           $keyword=$_REQUEST['keyword'];
-          $reload = "dtBarang.php?pagination=true&keyword=$keyword";
+          $reload = "dtBarang.php?pagination=true&keyword=$keyword" . ($filter_thn != '' ? "&thn=$filter_thn" : "");
           
           $sql = "SELECT r.id
           , r.id_inventaris
@@ -101,12 +114,18 @@
           LEFT JOIN opsi_status_peminjaman_barang ospb
           on r.status_peminjaman = ospb.id
           
-          WHERE r.id LIKE '%$keyword%' OR r.id_inventaris LIKE '%$keyword%' OR r.nm LIKE '%$keyword%' OR r.merk LIKE '%$keyword%' OR r.tgl_perolehan LIKE '%$keyword%' OR r.thn_perolehan LIKE '%$keyword%' OR r.kategori LIKE '%$keyword%' OR r.letak LIKE '%$keyword%' OR r.kondisi LIKE '%$keyword%' OR okb.nm LIKE '%$keyword%' OR omb.nm LIKE '%$keyword%' OR okob.nm LIKE '%$keyword%' OR ospb.nm LIKE '%$keyword%' ORDER BY r.nm ASC";
+          WHERE (r.id LIKE '%$keyword%' OR r.id_inventaris LIKE '%$keyword%' OR r.nm LIKE '%$keyword%' OR r.merk LIKE '%$keyword%' OR r.tgl_perolehan LIKE '%$keyword%' OR r.thn_perolehan LIKE '%$keyword%' OR r.kategori LIKE '%$keyword%' OR r.letak LIKE '%$keyword%' OR r.kondisi LIKE '%$keyword%' OR okb.nm LIKE '%$keyword%' OR omb.nm LIKE '%$keyword%' OR okob.nm LIKE '%$keyword%' OR ospb.nm LIKE '%$keyword%')
+          AND r.id NOT IN ($excluded_items_query)
+          $where_thn
+          ORDER BY r.nm ASC";
           
           $result = mysqli_query($con, $sql);
           }else{
-          $reload = "dtBarang.php?pagination=true";
-          $sql = "SELECT * FROM dt_inventaris_barang ORDER BY nm ASC";
+          $reload = "dtBarang.php?pagination=true" . ($filter_thn != '' ? "&thn=$filter_thn" : "");
+          $sql = "SELECT * FROM dt_inventaris_barang 
+                  WHERE id NOT IN ($excluded_items_query)
+                  $where_thn_simple
+                  ORDER BY nm ASC";
           $result = mysqli_query($con, $sql);
           }
           
@@ -122,24 +141,51 @@
           <div class="container-fluid">
             <div class="row">
               <div class="col-sm mb-2">
-                <form method="post" action="dtBarang.php">
+                <form method="get" action="dtBarang.php">
                   <?php error_reporting(E_ALL & ~E_NOTICE);?>
                   <div class="input-group">
-                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo $_REQUEST['keyword'];?>" required>
+                    <?php if($filter_thn != ''): ?>
+                      <input type="hidden" name="thn" value="<?php echo $filter_thn; ?>">
+                    <?php endif; ?>
+                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo isset($_REQUEST['keyword']) ? $_REQUEST['keyword'] : '';?>" required>
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-sm btn-default">
-                      <i class="fa fa-search"></i>
+                       <i class="fa fa-search"></i>
                       </button>
                       <?php
-                        if($_REQUEST['keyword']<>""){
+                        if(isset($_REQUEST['keyword']) && $_REQUEST['keyword']<>""){
                         ?>
-                      <a class="btn btn-sm btn-warning" title="Kembali" href="dtBarang.php"><i class="fas fa-sync"></i> Kembali</a>
+                      <a class="btn btn-sm btn-warning" title="Kembali" href="dtBarang.php<?php echo $filter_thn != '' ? '?thn='.$filter_thn : ''; ?>"><i class="fas fa-sync"></i> Kembali</a>
                       <?php
                         }
                         ?>
                     </div>
                   </div>
                 </form>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <div class="col-12">
+                <div class="card card-outline card-success shadow-sm">
+                  <div class="card-header p-2">
+                    <h3 class="card-title text-sm"><i class="fas fa-filter mr-1"></i> Filter Tahun Perolehan</h3>
+                  </div>
+                  <div class="card-body p-2" style="max-height: 120px; overflow-y: auto;">
+                    <ul class="nav nav-pills">
+                      <li class="nav-item">
+                        <a class="nav-link py-1 px-3 text-sm <?php echo $filter_thn == '' ? 'active' : ''; ?>" href="dtBarang.php<?php echo isset($_REQUEST['keyword']) ? '?keyword='.$_REQUEST['keyword'] : ''; ?>">Semua</a>
+                      </li>
+                      <?php
+                      $q_thn = mysqli_query($con, "SELECT DISTINCT thn_perolehan FROM dt_inventaris_barang WHERE thn_perolehan != '' AND thn_perolehan IS NOT NULL ORDER BY thn_perolehan DESC");
+                      while($d_thn = mysqli_fetch_assoc($q_thn)){
+                        $active = $filter_thn == $d_thn['thn_perolehan'] ? 'active' : '';
+                        $url = "dtBarang.php?thn=" . $d_thn['thn_perolehan'] . (isset($_REQUEST['keyword']) ? "&keyword=".$_REQUEST['keyword'] : "");
+                        echo "<li class='nav-item'><a class='nav-link py-1 px-3 text-sm $active' href='$url'>$d_thn[thn_perolehan]</a></li>";
+                      }
+                      ?>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="row">

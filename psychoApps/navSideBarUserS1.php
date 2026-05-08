@@ -2,27 +2,31 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
 if (!function_exists('isActive')) {
-    function isActive($page) {
-        global $currentPage;
-        if (is_array($page)) { return in_array($currentPage, $page) ? 'active bg-primary' : ''; }
-        return ($currentPage === $page) ? 'active bg-primary' : '';
+  function isActive($page)
+  {
+    global $currentPage;
+    if (is_array($page)) {
+      return in_array($currentPage, $page) ? 'active bg-primary' : '';
     }
+    return ($currentPage === $page) ? 'active bg-primary' : '';
+  }
 }
 if (!function_exists('isOpen')) {
-    function isOpen($pages) {
-        return 'menu-open';
-    }
+  function isOpen($pages)
+  {
+    return 'menu-open';
+  }
 }
 
 $isLabPsiko = false;
 if (isset($_SESSION['username'])) {
-    $us_check = mysqli_real_escape_string($con, $_SESSION['username']);
-    $q_check = mysqli_query($con, "SELECT p.id FROM org_mhs_personalia p 
+  $us_check = mysqli_real_escape_string($con, $_SESSION['username']);
+  $q_check = mysqli_query($con, "SELECT p.id FROM org_mhs_personalia p 
                                   JOIN org_mhs_kat k ON p.kat_id = k.id 
                                   WHERE p.nim = '$us_check' AND k.nm = 'Lab. Psikodiagnostik' LIMIT 1");
-    if ($q_check && mysqli_num_rows($q_check) > 0) {
-        $isLabPsiko = true;
-    }
+  if ($q_check && mysqli_num_rows($q_check) > 0) {
+    $isLabPsiko = true;
+  }
 }
 ?>
 <aside <?php include("main-sidebar-style.php") ?>>
@@ -43,9 +47,15 @@ if (isset($_SESSION['username'])) {
               <p>Periode Booking Lab</p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="ruanganBookingLabUser.php" class="nav-link <?php echo isActive('ruanganBookingLabUser.php'); ?>">
+              <i class="nav-icon fas fa-door-open"></i>
+              <p>Data Ruangan Lab</p>
+            </a>
+          </li>
         <?php } ?>
         <li class="nav-item">
-          <a href="profilAkademikUser.php" class="nav-link <?php echo isActive(['profilAkademikUser.php','profilPribadiUser.php','profilOrtuUser.php','profilFotoUser.php']); ?>">
+          <a href="profilAkademikUser.php" class="nav-link <?php echo isActive(['profilAkademikUser.php', 'profilPribadiUser.php', 'profilOrtuUser.php', 'profilFotoUser.php']); ?>">
             <i class="nav-icon far fa-user-circle"></i>
             <p>Profil</p>
           </a>
@@ -57,7 +67,7 @@ if (isset($_SESSION['username'])) {
           </a>
         </li>
         <li class="nav-item">
-          <a href="prePengajuanDospemUser.php" class="nav-link <?php echo isActive(['prePengajuanDospemUser.php','riwayatPengajuanDospemUser.php']); ?>">
+          <a href="prePengajuanDospemUser.php" class="nav-link <?php echo isActive(['prePengajuanDospemUser.php', 'riwayatPengajuanDospemUser.php']); ?>">
             <i class="nav-icon fas fa-people-arrows"></i>
             <p>Pengajuan Dospem Skripsi</p>
           </a>
@@ -79,8 +89,8 @@ if (isset($_SESSION['username'])) {
             </li>
           </ul>
         </li>
-        <li class="nav-item <?php echo isOpen(['prePendaftaranPklUser.php','plotLembagaPklUser.php','prePendaftaranBimtekUser.php','listPraPropBimtekUser.php','prePendaftaranSemproUser.php','prePendaftaranUjianKompreUser.php','prePendaftaranUjianSkripsiUser.php','bookingLabUser.php']); ?>">
-          <a href="#" class="nav-link <?php echo isActive(['prePendaftaranPklUser.php','plotLembagaPklUser.php','prePendaftaranBimtekUser.php','listPraPropBimtekUser.php','prePendaftaranSemproUser.php','prePendaftaranUjianKompreUser.php','prePendaftaranUjianSkripsiUser.php','bookingLabUser.php']); ?>">
+        <li class="nav-item <?php echo isOpen(['prePendaftaranPklUser.php', 'plotLembagaPklUser.php', 'prePendaftaranBimtekUser.php', 'listPraPropBimtekUser.php', 'prePendaftaranSemproUser.php', 'prePendaftaranUjianKompreUser.php', 'prePendaftaranUjianSkripsiUser.php', 'bookingLabUser.php']); ?>">
+          <a href="#" class="nav-link <?php echo isActive(['prePendaftaranPklUser.php', 'plotLembagaPklUser.php', 'prePendaftaranBimtekUser.php', 'listPraPropBimtekUser.php', 'prePendaftaranSemproUser.php', 'prePendaftaranUjianKompreUser.php', 'prePendaftaranUjianSkripsiUser.php', 'bookingLabUser.php']); ?>">
             <i class="fas fa-file-alt nav-icon"></i>
             <p>
               Pendaftaran
@@ -91,7 +101,7 @@ if (isset($_SESSION['username'])) {
             <li class="nav-item">
               <a href="bookingLabUser.php" class="nav-link <?php echo isActive('bookingLabUser.php'); ?>">
                 <i class="fas fa-flask nav-icon"></i>
-                <p>Booking Lab</p>
+                <p>Booking Layanan Lab</p>
               </a>
             </li>
             <li class="nav-item">

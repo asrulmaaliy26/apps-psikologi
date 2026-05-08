@@ -77,13 +77,13 @@
                 <form method="post" action="rekapSuratTugasAdm.php">
                   <?php  error_reporting(E_ALL & ~E_NOTICE);?>
                   <div class="input-group">
-                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo $_REQUEST['keyword'];?>" required>
+                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo isset($_REQUEST['keyword']) ? htmlspecialchars($_REQUEST['keyword']) : ''; ?>" required>
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-sm btn-default">
                       <i class="fa fa-search"></i>
                       </button>
                       <?php
-                        if($_REQUEST['keyword']<>""){
+                        if(isset($_REQUEST['keyword']) && $_REQUEST['keyword']<>""){
                         ?>
                       <a class="btn btn-sm btn-warning" title="Kembali" href="rekapSuratTugasAdm.php"><i class="fas fa-sync"></i> Kembali</a>
                       <?php
@@ -145,7 +145,7 @@
                             ?>
                           <tr data-widget="expandable-table" aria-expanded="false">
                             <td class="text-center pl-1"><?php echo ++$no_urut;?></td>
-                            <td class="text-left" title="<?php echo $data['perihal']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['perihal']);?>"><?php $allowedlimit = 58; if(mb_strlen($data['perihal'])>$allowedlimit) { echo mb_substr($$data['perihal']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['perihal']),0,$allowedlimit)."...".'';} else {echo  $data['perihal']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['perihal']);}?></td>
+                            <td class="text-left" title="<?php echo $data['perihal']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['perihal']);?>"><?php $allowedlimit = 58; if(mb_strlen($data['perihal'])>$allowedlimit) { echo mb_substr($data['perihal']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['perihal']),0,$allowedlimit)."...".'';} else {echo  $data['perihal']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['perihal']);}?></td>
                             <td class="text-left"><?php echo $dJenisSt['nm'];?></td>
                             <td class="text-center"><?php echo $data['awal_berlaku'].'-'.$data['akhir_berlaku'];?></td>
                             <td class="text-center"><?php echo date("d-m-Y", strtotime($data['tgl_ditetapkan']) );?></td>
@@ -208,12 +208,17 @@
                                             $qPersonil="SELECT * FROM personil_st WHERE id_st='$data[id]' AND nama<>'' ORDER BY urutan_jabatan";
                                             $rPersonil=mysqli_query($con, $qPersonil) or die (mysqli_error($con));
                                             while($dPersonil=mysqli_fetch_assoc($rPersonil)) {
-                                            
-                                            $qNamaPersonil="SELECT * FROM dt_pegawai WHERE id='$dPersonil[nama]'";
-                                            $rNamaPersonil=mysqli_query($con, $qNamaPersonil) or die (mysqli_error($con));
-                                            $dNamaPersonil=mysqli_fetch_assoc($rNamaPersonil);
-                                            
-                                            if($dPersonil['nama'] == $dNamaPersonil['id']) { echo $dNamaPersonil['nama'];} else { echo $dPersonil['nama'];} echo "<br/>";
+                                              $safe_nama = mysqli_real_escape_string($con, $dPersonil['nama']);
+                                              $qNamaPersonil="SELECT * FROM dt_pegawai WHERE id='$safe_nama'";
+                                              $rNamaPersonil=mysqli_query($con, $qNamaPersonil) or die (mysqli_error($con));
+                                              $dNamaPersonil=mysqli_fetch_assoc($rNamaPersonil);
+                                              
+                                              if($dNamaPersonil && $dPersonil['nama'] == $dNamaPersonil['id']) { 
+                                                echo $dNamaPersonil['nama'];
+                                              } else { 
+                                                echo $dPersonil['nama'];
+                                              } 
+                                              echo "<br/>";
                                             }
                                             ?>
                                         </td>

@@ -70,6 +70,60 @@ $d_mhs = mysqli_fetch_array($q_mhs);
     transform: scale(1.02);
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
+
+  .custom-selection {
+    display: flex;
+    gap: 15px;
+    margin-top: 8px;
+  }
+  .selection-item {
+    flex: 1;
+    position: relative;
+  }
+  .selection-item input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+  }
+  .selection-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 10px;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid #444;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-align: center;
+    height: 100%;
+  }
+  .selection-box i {
+    font-size: 1.4rem;
+    margin-bottom: 5px;
+    color: #666;
+  }
+  .selection-box span {
+    font-weight: 600;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    display: block;
+  }
+  .selection-item input:checked + .selection-box {
+    background: rgba(23, 162, 184, 0.2);
+    border-color: #17a2b8;
+    color: #fff;
+  }
+  .selection-item input:checked + .selection-box i {
+    color: #17a2b8;
+  }
+  .selection-box:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: #666;
+  }
 </style>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -82,28 +136,68 @@ $d_mhs = mysqli_fetch_array($q_mhs);
       <div class="content-header">
         <div class="container-fluid">
           <?php
-          if (!empty($_GET['message']) && $_GET['message'] == 'notifAdd') {
-            echo '<div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <span><i class="fas fa-check-circle mr-2"></i> Pendaftaran berhasil! Silakan cek email untuk konfirmasi.</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>';
-          }
-          if (!empty($_GET['message']) && $_GET['message'] == 'failedBooked') {
-            echo '<div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <span><i class="fas fa-exclamation-triangle mr-2"></i> Gagal! Slot ini sudah di-booking oleh Kelompok lain.</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>';
+          $msg_title = "";
+          $msg_body = "";
+          $msg_icon = "";
+          $msg_color = "";
+          
+          if (!empty($_GET['message'])) {
+            $m = $_GET['message'];
+            if ($m == 'notifAdd') {
+              $msg_title = "Pendaftaran Berhasil!";
+              $msg_body = "Pendaftaran Anda telah berhasil direkam. Silakan cek email Anda untuk detail konfirmasi.";
+              $msg_icon = "fa-check-circle";
+              $msg_color = "success";
+            } elseif ($m == 'failedQuota') {
+              $msg_title = "Kuota Penuh!";
+              $msg_body = "Mohon maaf, kuota pendaftar untuk sesi ruangan ini sudah penuh.";
+              $msg_icon = "fa-users-slash";
+              $msg_color = "danger";
+            } elseif ($m == 'failedBooked') {
+              $msg_title = "Gagal Booking!";
+              $msg_body = "Slot ini baru saja di-booking oleh kelompok lain. Silakan pilih jadwal lainnya.";
+              $msg_icon = "fa-exclamation-triangle";
+              $msg_color = "danger";
+            }
           }
           ?>
           <div class="row mb-2">
-            <div class="col-sm-6">
-              <h1 class="m-0 font-weight-bold"><i class="fas fa-flask mr-2 text-info"></i>Pendaftaran Lab Psikodiagnostik</h1>
+            <div class="col-sm-12">
+              <h1 class="m-0 font-weight-bold"><i class="fas fa-flask mr-2 text-info"></i>Pendaftaran Layanan Belajar Lab Psikodiagnostik dan Pengembangan Alat ukur</h1>
             </div>
           </div>
         </div>
       </div>
       <section class="content">
         <div class="container-fluid">
+          <div class="row mb-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+              <div class="card h-100 bg-gradient-info text-white shadow-sm border-0 booking-card">
+                <div class="card-body">
+                  <h5 class="font-weight-bold mb-3"><i class="fas fa-info-circle mr-2"></i>Informasi Pendaftaran</h5>
+                  <ul class="list-unstyled mb-0" style="font-size: 0.9rem; line-height: 1.5;">
+                    <li class="mb-2"><i class="fas fa-check-circle mr-2"></i>Booking Anda akan dikonfirmasi melalui <b>WhatsApp</b> oleh Asisten Lab (Aslab).</li>
+                    <li><i class="fas fa-check-circle mr-2"></i>Jika nama Anda sudah tertera di daftar dan status jadwal sudah <b>Closed</b>, berarti Anda sudah resmi terdaftar/booking.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="card h-100 shadow-sm border-0 booking-card">
+                <div class="card-body">
+                  <h5 class="font-weight-bold text-dark mb-3"><i class="fas fa-clipboard-list mr-2 text-info"></i>SOP Layanan Belajar</h5>
+                  <ol class="small text-muted mb-0 pl-3" style="line-height: 1.4;">
+                    <li class="mb-1">Mahasiswa masuk kelas tepat waktu. Maksimal keterlambatan <b>10 menit</b>.</li>
+                    <li class="mb-1">Handphone wajib <b>silent</b> dan disimpan di dalam tas selama kelas berlangsung.</li>
+                    <li class="mb-1">Tas diletakkan di depan. Di atas meja hanya terdapat buku dan alat tulis.</li>
+                    <li class="mb-1">Pelaksanaan layanan belajar sesuai jadwal.</li>
+                    <li>Mahasiswa wajib mengisi buku absensi kehadiran.</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="row mb-3">
             <div class="col-12">
               <div class="card bg-white shadow-sm border-0">
@@ -136,8 +230,10 @@ $d_mhs = mysqli_fetch_array($q_mhs);
                           <th>TANGGAL</th>
                           <th>WAKTU</th>
                           <th>RUANGAN</th>
+                          <th>LAYANAN LAB</th>
                           <th>ASISTEN</th>
-                          <th width="30%">PENDAFTAR (INDIVIDU/KELOMPOK)</th>
+                          <th width="25%">PENDAFTAR (INDIVIDU/KELOMPOK)</th>
+                          <th>STATUS</th>
                           <th>AKSI</th>
                         </tr>
                       </thead>
@@ -148,8 +244,7 @@ $d_mhs = mysqli_fetch_array($q_mhs);
                         $q = mysqli_query($con, "SELECT p.*, r.nm as nama_ruang 
                                                FROM lab_booking_periode p 
                                                LEFT JOIN dt_ruang r ON p.ruangan_id = r.id 
-                                               WHERE p.status=1 
-                                               ORDER BY p.tgl ASC, p.jam_mulai ASC");
+                                               ORDER BY p.status DESC, p.tgl ASC, p.jam_mulai ASC");
                         while ($d = mysqli_fetch_array($q)) {
                           $periode_id = $d['id'];
 
@@ -163,10 +258,15 @@ $d_mhs = mysqli_fetch_array($q_mhs);
                             $label = ($reg['kategori_peserta'] == 'Kelompok' ? 'K' : 'I');
 
                             $registrants_list .= '
-                              <button class="btn btn-registrant ' . $badge_class . '" data-toggle="modal" data-target="#modalDetail' . $reg['id'] . '">
-                                <span class="badge badge-light mr-1" style="font-size:0.65rem">' . $label . '</span>
-                                <b>' . $reg['nama'] . '</b>
-                              </button>';
+                               <button class="btn btn-registrant ' . $badge_class . '" data-toggle="modal" data-target="#modalDetail' . $reg['id'] . '">
+                                 <div class="d-flex align-items-center">
+                                   <span class="badge badge-light mr-2" style="font-size:0.65rem">' . $label . '</span>
+                                   <div class="text-left">
+                                     <div class="font-weight-bold" style="line-height: 1.1;">' . $reg['nama'] . '</div>
+                                     <div class="small opacity-75" style="font-size: 0.7rem;">' . $reg['jenis_layanan'] . '</div>
+                                   </div>
+                                 </div>
+                               </button>';
 
                             // Generate Modal Detail for each person
                             $modals .= '
@@ -182,28 +282,42 @@ $d_mhs = mysqli_fetch_array($q_mhs);
                                   <div class="modal-body p-4 text-white text-left">
                                     <div class="row mb-2">
                                       <div class="col-4 text-muted small">NAMA</div>
-                                      <div class="col-8 font-weight-bold">' . $reg['nama'] . ' (' . $reg['jml_orang'] . ' Orang)</div>
+                                      <div class="col-8 font-weight-bold">' . $reg['nama'] . '</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                      <div class="col-4 text-muted small">NIM</div>
+                                      <div class="col-8">' . $reg['nim'] . '</div>
                                     </div>
                                     <div class="row mb-2">
                                       <div class="col-4 text-muted small">KATEGORI</div>
                                       <div class="col-8"><span class="badge ' . ($reg['kategori_peserta'] == 'Kelompok' ? 'badge-primary' : 'badge-warning') . '">' . $reg['kategori_peserta'] . '</span></div>
                                     </div>
                                     <div class="row mb-2">
-                                      <div class="col-4 text-muted small">LAYANAN</div>
+                                      <div class="col-4 text-muted small">LAYANAN UTAMA</div>
+                                      <div class="col-8">' . ($reg['layanan_utama'] ?: '-') . '</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                      <div class="col-4 text-muted small">JENIS LAYANAN</div>
                                       <div class="col-8">' . $reg['jenis_layanan'] . '</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                      <div class="col-4 text-muted small">JUMLAH ORANG</div>
+                                      <div class="col-8">' . $reg['jml_orang'] . ' Orang</div>
                                     </div>
                                     <div class="row mb-2">
                                       <div class="col-4 text-muted small">ALAT</div>
                                       <div class="col-8">' . ($reg['tipe_alat'] ?: '-') . '</div>
                                     </div>
                                     <div class="border-top border-secondary pt-2 mt-2">
-                                      <div class="text-muted small mb-1">KEPERLUAN:</div>
+                                      <div class="text-muted small mb-1">CATATAN:</div>
                                       <p class="mb-0 text-light small">' . nl2br($reg['keperluan_alat']) . '</p>
-                                    </div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>';
+                                    </div>';
+
+                                     $modals .= '
+                                   </div>
+                                 </div>
+                               </div>
+                             </div>';
                           }
                         ?>
                           <tr class="border-bottom">
@@ -211,17 +325,37 @@ $d_mhs = mysqli_fetch_array($q_mhs);
                             <td class="align-middle font-weight-bold"><?php echo date('d M Y', strtotime($d['tgl'])); ?></td>
                             <td class="align-middle"><span class="badge bg-info-light text-info border border-info px-2 py-1"><?php echo substr($d['jam_mulai'], 0, 5) . ' - ' . substr($d['jam_selesai'], 0, 5); ?></span></td>
                             <td class="align-middle"><?php echo $d['nama_ruang'] ?? '-'; ?></td>
+                             <td class="align-middle">
+                               <?php if (!empty($d['layanan'])) { ?>
+                                 <div class="small text-muted italic" style="font-size: 0.8rem;">
+                                   <?php echo nl2br($d['layanan']); ?>
+                                 </div>
+                               <?php } else { echo '-'; } ?>
+                             </td>
                             <td class="align-middle text-muted small"><?php echo $d['info_tenaga']; ?></td>
                             <td class="align-middle">
                               <div class="list-pendaftar">
                                 <?php echo $registrants_list ?: '<span class="text-muted"><i>Belum ada pendaftar</i></span>'; ?>
                               </div>
                             </td>
-                            <td class="align-middle">
-                              <button class="btn btn-primary btn-sm btn-premium shadow-sm px-3" data-toggle="modal" data-target="#modalBook<?php echo $d['id']; ?>">
-                                <i class="fas fa-plus-circle mr-1"></i> Daftar
-                              </button>
-                            </td>
+                             <td class="align-middle">
+                               <?php if ($d['status'] == 1) { ?>
+                                 <span class="badge badge-success badge-premium">Open</span>
+                               <?php } else { ?>
+                                 <span class="badge badge-danger badge-premium">Closed</span>
+                               <?php } ?>
+                             </td>
+                             <td class="align-middle">
+                               <?php if ($d['status'] == 1) { ?>
+                                 <button class="btn btn-primary btn-sm btn-premium shadow-sm px-3" data-toggle="modal" data-target="#modalBook<?php echo $d['id']; ?>">
+                                   <i class="fas fa-plus-circle mr-1"></i> Daftar
+                                 </button>
+                               <?php } else { ?>
+                                 <button class="btn btn-secondary btn-sm btn-premium shadow-sm px-3 disabled" disabled>
+                                   <i class="fas fa-lock mr-1"></i> Daftar
+                                 </button>
+                               <?php } ?>
+                             </td>
                           </tr>
 
                         <?php
@@ -249,13 +383,25 @@ $d_mhs = mysqli_fetch_array($q_mhs);
 
                                     <div class="row">
                                       <div class="col-md-12">
-                                        <div class="form-group">
+                                        <div class="form-group mb-4">
                                           <label class="small text-uppercase opacity-75">Kategori Peserta <span class="text-danger">*</span></label>
-                                          <select name="kategori_peserta" class="form-control bg-dark text-white border-secondary" required onchange="handleCategoryChange(this, ' . $d['id'] . ')">
-                                            <option value="">- Pilih Kategori -</option>
-                                            <option value="Individu">Individu</option>
-                                            ' . (!$has_kelompok ? '<option value="Kelompok">Kelompok</option>' : '') . '
-                                          </select>
+                                          <div class="custom-selection">
+                                            <label class="selection-item">
+                                              <input type="radio" name="kategori_peserta" value="Individu" required onchange="handleCategoryChange(this, ' . $d['id'] . ')">
+                                              <div class="selection-box">
+                                                <i class="fas fa-user"></i>
+                                                <span>Individu</span>
+                                              </div>
+                                            </label>
+                                            ' . (!$has_kelompok ? '
+                                            <label class="selection-item">
+                                              <input type="radio" name="kategori_peserta" value="Kelompok" required onchange="handleCategoryChange(this, ' . $d['id'] . ')">
+                                              <div class="selection-box">
+                                                <i class="fas fa-users"></i>
+                                                <span>Kelompok</span>
+                                              </div>
+                                            </label>' : '') . '
+                                          </div>
                                         </div>
                                       </div>
                                     </div>
@@ -274,22 +420,52 @@ $d_mhs = mysqli_fetch_array($q_mhs);
                                         </div>
                                       </div>
                                     </div>
-                                    <div class="form-group">
-                                      <label class="small text-uppercase opacity-75">Email <span class="text-danger">*</span></label>
-                                      <input type="email" name="email" class="form-control bg-transparent text-white border-secondary" value="' . $d_mhs['imel'] . '" required>
+                                    <div class="row">
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label class="small text-uppercase opacity-75">Email <span class="text-danger">*</span></label>
+                                          <input type="email" name="email" class="form-control bg-transparent text-white border-secondary" value="' . $d_mhs['imel'] . '" required>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                        <div class="form-group">
+                                          <label class="small text-uppercase opacity-75">Nomor WA <span class="text-danger">*</span></label>
+                                          <input type="text" name="no_wa" class="form-control bg-transparent text-white border-secondary" placeholder="Contoh: 08123456789" required>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                      <div class="col-md-12">
+                                        <div class="form-group mb-0">
+                                          <label class="small text-uppercase opacity-75">Pilih Layanan Utama <span class="text-danger">*</span></label>
+                                          <div class="custom-selection">
+                                            <label class="selection-item">
+                                              <input type="radio" name="layanan_utama" value="Alat Test Psikologi" required onchange="handleLayananUtamaChange(this, ' . $d['id'] . ')">
+                                              <div class="selection-box">
+                                                <i class="fas fa-brain"></i>
+                                                <span>Alat Test Psikologi</span>
+                                              </div>
+                                            </label>
+                                            <label class="selection-item">
+                                              <input type="radio" name="layanan_utama" value="Alat Ukur" required onchange="handleLayananUtamaChange(this, ' . $d['id'] . ')">
+                                              <div class="selection-box">
+                                                <i class="fas fa-ruler-combined"></i>
+                                                <span>Alat Ukur</span>
+                                              </div>
+                                            </label>
+                                          </div>
+                                        </div>
+                                      </div>
                                     </div>
                                     <div class="form-group">
-                                      <label class="small text-uppercase opacity-75">Jenis Layanan <span class="text-danger">*</span></label>
-                                      <select name="jenis_layanan" class="form-control bg-dark text-white border-secondary" required>
-                                        <option value="">- Pilih Jenis Layanan -</option>
-                                        <option value="Praktikum Mandiri">Praktikum Mandiri</option>
-                                        <option value="Penelitian">Penelitian</option>
-                                        <option value="Lainnya">Lainnya</option>
+                                      <label class="small text-uppercase opacity-75">Jenis Layanan Spesifik <span class="text-danger">*</span></label>
+                                      <select name="jenis_layanan" id="jenis_layanan_' . $d['id'] . '" class="form-control bg-dark text-white border-secondary" required disabled>
+                                        <option value="">- Pilih Jenis Layanan Terlebih Dahulu -</option>
                                       </select>
                                     </div>
                                     <div class="form-group">
-                                      <label class="small text-uppercase opacity-75">Keperluan Alat & Ruang <span class="text-danger">*</span></label>
-                                      <textarea name="keperluan_alat" class="form-control bg-transparent text-white border-secondary" rows="3" required placeholder="Jelaskan detail kebutuhan..."></textarea>
+                                      <label class="small text-uppercase opacity-75">Catatan <span class="text-danger">*</span></label>
+                                      <textarea name="keperluan_alat" class="form-control bg-transparent text-white border-secondary" rows="3" required placeholder="Tuliskan catatan tambahan..."></textarea>
                                     </div>
                                   </div>
                                   <div class="modal-footer border-0">
@@ -313,6 +489,34 @@ $d_mhs = mysqli_fetch_array($q_mhs);
       </section>
     </div>
     <?php echo $modals; ?>
+
+    <!-- Modal Notification Centered -->
+    <?php if (!empty($msg_title)) { ?>
+    <div class="modal fade" id="modalNotification" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+          <div class="modal-body text-center p-5">
+            <div class="mb-4">
+              <i class="fas <?php echo $msg_icon; ?> text-<?php echo $msg_color; ?>" style="font-size: 5rem; opacity: 0.8;"></i>
+            </div>
+            <h3 class="font-weight-bold mb-2 text-dark"><?php echo $msg_title; ?></h3>
+            <p class="text-muted mb-4"><?php echo $msg_body; ?></p>
+            <button type="button" class="btn btn-<?php echo $msg_color; ?> btn-lg btn-block btn-premium py-3" data-dismiss="modal" style="border-radius: 12px;">
+              Oke, Saya Mengerti
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        $('#modalNotification').modal('show');
+        // Clean URL after showing
+        window.history.replaceState({}, document.title, window.location.pathname);
+      };
+    </script>
+    <?php } ?>
+
     <?php include("footerAdm.php"); ?>
     <?php include("jsAdm.php"); ?>
     <script>
@@ -334,6 +538,38 @@ $d_mhs = mysqli_fetch_array($q_mhs);
         } else {
           btnSubmit.innerHTML = 'Konfirmasi';
           btnSubmit.className = 'btn btn-primary btn-premium px-4 shadow';
+        }
+      }
+
+      function handleLayananUtamaChange(select, id) {
+        const jenisLayananSelect = document.getElementById('jenis_layanan_' + id);
+        const options = {
+          'Alat Test Psikologi': [
+            'Self Assessment',
+            'Scoring Alat Test',
+            'Instruksi & Materi Alat Test',
+            'Roleplay'
+          ],
+          'Alat Ukur': [
+            'Instrumen Alat Ukur',
+            'Validitas & Reliabilitas',
+            'Uji Asumsi Klasik',
+            'Uji Hipotesis'
+          ]
+        };
+
+        jenisLayananSelect.innerHTML = '<option value="">- Pilih Jenis Layanan -</option>';
+        
+        if (select.value && options[select.value]) {
+          jenisLayananSelect.disabled = false;
+          options[select.value].forEach(opt => {
+            const optionElement = document.createElement('option');
+            optionElement.value = opt;
+            optionElement.textContent = opt;
+            jenisLayananSelect.appendChild(optionElement);
+          });
+        } else {
+          jenisLayananSelect.disabled = true;
         }
       }
     </script>

@@ -108,6 +108,7 @@
                         <th>Nama Barang</th>
                         <th>Merk</th>
                         <th>Kondisi</th>
+                        <th width="10%" class="text-center">Foto</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -128,6 +129,11 @@
                           <td><?php echo $dd['nm']; ?></td>
                           <td><?php echo $dd['nama_merk']; ?></td>
                           <td><?php echo $dd['nama_kondisi']; ?></td>
+                          <td class="text-center">
+                            <a href="javascript:void(0)" onclick="viewImage('<?php echo $dd['image']; ?>', '<?php echo $dd['nm']; ?>')" class="btn btn-xs btn-outline-info" title="Lihat Foto">
+                              <i class="fas fa-image"></i>
+                            </a>
+                          </td>
                         </tr>
                       <?php } ?>
                     </tbody>
@@ -141,6 +147,24 @@
     </div>
     <?php include("footerAdm.php"); ?>
     <?php include("jsAdm.php"); ?>
+    <script>
+      function viewImage(url, name) {
+        if (!url || url === '') {
+          url = 'images/image_none.jpg';
+        }
+        Swal.fire({
+          title: name,
+          imageUrl: url,
+          imageAlt: name,
+          imageWidth: 600,
+          showCloseButton: true,
+          showConfirmButton: false,
+          imageError: function() {
+            this.src = 'images/image_none.jpg';
+          }
+        });
+      }
+    </script>
   </div>
 </body>
 

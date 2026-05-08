@@ -58,11 +58,12 @@ if (!function_exists('isActive')) {
             <li class="<?php echo isActive('formPengajuanPt.php'); ?>"><a href="formPengajuanPt.php">Pembimbing Tesis</a></li>
           </ul>
         </li>
-        <li class="dropdown <?php echo isActive(['formPendSempro.php','formPendUjTes.php','formRevisiSempro.php','formRevisiTesis.php']); ?>">
+        <li class="dropdown <?php echo isActive(['formPendSempro.php','formPendUjTes.php','formThesisCamp.php','formRevisiSempro.php','formRevisiTesis.php']); ?>">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pendaftaran <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li class="<?php echo isActive('formPendSempro.php'); ?>"><a href="formPendSempro.php">Seminar Proposal</a></li>
             <li class="<?php echo isActive('formPendUjTes.php'); ?>"><a href="formPendUjTes.php">Ujian Tesis</a></li>
+            <li class="<?php echo isActive('formThesisCamp.php'); ?>"><a href="formThesisCamp.php">Thesis Camp</a></li>
             <li role="separator" class="divider"></li>
             <li class="<?php echo isActive('formRevisiSempro.php'); ?>"><a href="formRevisiSempro.php">Upload Revisi Seminar Proposal</a></li>
             <li class="<?php echo isActive('formRevisiTesis.php'); ?>"><a href="formRevisiTesis.php">Upload Revisi Ujian Tesis</a></li>

@@ -89,29 +89,34 @@ $username = $_SESSION['username'];
       <div class="content-header">
         <div class="container-fluid">
           <?php
-          if (!empty($_GET['message']) && $_GET['message'] == 'notifAdd') {
-            echo '<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                    <span>Berhasil menambah periode jadwal!</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>';
-          }
-          if (!empty($_GET['message']) && $_GET['message'] == 'notifEdit') {
-            echo '<div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
-                    <span>Berhasil memperbarui periode jadwal!</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>';
-          }
-          if (!empty($_GET['message']) && $_GET['message'] == 'notifDel') {
-            echo '<div class="alert alert-danger alert-dismissible fade show shadow-sm" role="alert">
-                    <span>Berhasil menghapus periode jadwal!</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>';
-          }
-          if (!empty($_GET['message']) && $_GET['message'] == 'notifMove') {
-            echo '<div class="alert alert-primary alert-dismissible fade show shadow-sm" role="alert">
-                    <span>Berhasil memindahkan pendaftar ke jadwal baru!</span>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  </div>';
+          $msg_title = "";
+          $msg_body = "";
+          $msg_icon = "";
+          $msg_color = "";
+          
+          if (!empty($_GET['message'])) {
+            $m = $_GET['message'];
+            if ($m == 'notifAdd') {
+              $msg_title = "Berhasil!";
+              $msg_body = "Jadwal baru telah berhasil ditambahkan.";
+              $msg_icon = "fa-check-circle";
+              $msg_color = "success";
+            } elseif ($m == 'notifEdit') {
+              $msg_title = "Berhasil Diperbarui!";
+              $msg_body = "Perubahan jadwal telah disimpan dengan sukses.";
+              $msg_icon = "fa-edit";
+              $msg_color = "success";
+            } elseif ($m == 'notifDel') {
+              $msg_title = "Berhasil Dihapus!";
+              $msg_body = "Jadwal telah dihapus dari sistem.";
+              $msg_icon = "fa-trash-alt";
+              $msg_color = "success";
+            } elseif ($m == 'notifMove') {
+              $msg_title = "Berhasil Dipindahkan!";
+              $msg_body = "Pendaftar telah berhasil dipindahkan ke jadwal yang baru.";
+              $msg_icon = "fa-exchange-alt";
+              $msg_color = "success";
+            }
           }
           ?>
           <div class="row mb-2">
@@ -162,7 +167,8 @@ $username = $_SESSION['username'];
                           <th>Tanggal</th>
                           <th>Waktu</th>
                           <th>Ruangan</th>
-                          <th width="35%">Daftar Pendaftar (Individu/Kelompok)</th>
+                          <th>Layanan Lab</th>
+                          <th width="30%">Daftar Pendaftar (Individu/Kelompok)</th>
                           <th>Status</th>
                           <th>Aksi</th>
                         </tr>
@@ -171,9 +177,9 @@ $username = $_SESSION['username'];
                         <?php
                         // Fetch all data first to detect overlaps
                         $all_rows = [];
-                        $q = mysqli_query($con, "SELECT p.*, r.nm as nama_ruang 
+                        $q = mysqli_query($con, "SELECT p.*, r.nama as nama_ruang, r.kuota 
                                                FROM lab_booking_periode p 
-                                               LEFT JOIN dt_ruang r ON p.ruangan_id = r.id 
+                                               LEFT JOIN lab_booking_ruangan r ON p.ruangan_id = r.id 
                                                ORDER BY p.tgl DESC, p.jam_mulai DESC");
                         while($row = mysqli_fetch_array($q)) {
                           $all_rows[] = $row;
@@ -215,6 +221,7 @@ $username = $_SESSION['username'];
                               <div style="cursor:pointer; flex-grow:1" data-toggle="modal" data-target="#modalDetail'.$reg['id'].'">
                                 <span class="badge badge-'.$badge_color.' mr-2" style="font-size:0.7rem">'.($reg['kategori_peserta'] == 'Kelompok' ? 'K' : 'I').'</span>
                                 <span class="font-weight-bold text-dark">'.$reg['nama'].'</span>
+                                <div class="text-muted" style="font-size: 0.75rem; margin-left: 28px; line-height: 1;">'.$reg['jenis_layanan'].'</div>
                               </div>
                               <button class="btn btn-primary btn-xs btn-premium shadow-sm ml-2" data-toggle="modal" data-target="#modalMove'.$reg['id'].'" title="Pindahkan Pendaftar">
                                 <i class="fas fa-exchange-alt"></i>
@@ -237,12 +244,37 @@ $username = $_SESSION['username'];
                                       <tr><th width="40%" class="text-muted small uppercase">Nama</th><td>: '.$reg['nama'].'</td></tr>
                                       <tr><th class="text-muted small uppercase">NIM</th><td>: '.$reg['nim'].'</td></tr>
                                       <tr><th class="text-muted small uppercase">Kategori</th><td>: <span class="badge badge-'.$badge_color.'">'.$reg['kategori_peserta'].'</span></td></tr>
+                                      <tr><th class="text-muted small uppercase">WA</th><td>: '.$reg['no_wa'].'</td></tr>
+                                      <tr><th class="text-muted small uppercase">Layanan Utama</th><td>: '.$reg['layanan_utama'].'</td></tr>
+                                      <tr><th class="text-muted small uppercase">Jenis Layanan</th><td>: '.$reg['jenis_layanan'].'</td></tr>
                                       <tr><th class="text-muted small uppercase">Jumlah Orang</th><td>: '.$reg['jml_orang'].'</td></tr>
-                                      <tr><th class="text-muted small uppercase">Layanan</th><td>: '.$reg['jenis_layanan'].'</td></tr>
                                       <tr><th class="text-muted small uppercase">Alat</th><td>: '.($reg['tipe_alat'] ?: '-').'</td></tr>
-                                      <tr><th class="text-muted small uppercase">Keperluan</th><td>: '.nl2br($reg['keperluan_alat']).'</td></tr>
+                                      <tr><th class="text-muted small uppercase">Catatan</th><td>: '.nl2br($reg['keperluan_alat']).'</td></tr>
                                       <tr><th class="text-muted small uppercase">Terdaftar Pada</th><td>: '.$reg['tgl_input'].'</td></tr>
-                                    </table>
+                                    </table>';
+
+                                    if (!empty($reg['no_wa'])) { 
+                                      $wa_num = preg_replace("/[^0-9]/", "", $reg["no_wa"]);
+                                      if (substr($wa_num, 0, 1) === "0") $wa_num = "62" . substr($wa_num, 1);
+                                      
+                                      $wa_msg = "Assalamualaikum, saya asisten Lab Psikologi mau konfirmasi jadwal booking Anda:\n\n"
+                                              . "*Nama:* " . $reg["nama"] . "\n"
+                                              . "*Jadwal:* " . date("d M Y", strtotime($d["tgl"])) . " (" . substr($d["jam_mulai"],0,5) . "-" . substr($d["jam_selesai"],0,5) . ")\n"
+                                              . "*Ruang:* " . ($d["nama_ruang"] ?? "-") . "\n"
+                                              . "*Layanan:* " . $reg["jenis_layanan"] . "\n"
+                                              . "*Catatan:* " . str_replace(["\r", "\n"], " ", $reg["keperluan_alat"]);
+                                      
+                                      $wa_link = "https://wa.me/" . $wa_num . "?text=" . urlencode($wa_msg);
+                                      
+                                      $modals .= '
+                                      <div class="mt-4">
+                                        <a href="' . $wa_link . '" target="_blank" class="btn btn-success btn-block btn-premium shadow-sm">
+                                          <i class="fab fa-whatsapp mr-2"></i> Hubungi via WhatsApp
+                                        </a>
+                                      </div>';
+                                    }
+
+                                    $modals .= '
                                   </div>
                                 </div>
                               </div>
@@ -313,18 +345,26 @@ $username = $_SESSION['username'];
                               <?php if($is_overlap) echo '<i class="fas fa-exclamation-triangle text-danger" title="Jadwal Bentrok"></i> '; ?>
                               <?php echo substr($d['jam_mulai'], 0, 5) . ' - ' . substr($d['jam_selesai'], 0, 5); ?>
                             </td>
-                            <td class="align-middle"><?php echo $d['nama_ruang'] ?? '-'; ?></td>
+                            <td class="align-middle">
+                              <div><?php echo $d['nama_ruang'] ?? '-'; ?></div>
+                              <div class="small text-muted"><i class="fas fa-users mr-1"></i> Kuota: <?php echo $d['kuota'] ?? 0; ?> Orang</div>
+                            </td>
+                            <td class="align-middle">
+                              <?php if (!empty($d['layanan'])) { ?>
+                                <div class="small text-muted italic" style="font-size: 0.8rem;">
+                                  <?php echo nl2br($d['layanan']); ?>
+                                </div>
+                              <?php } else { echo '-'; } ?>
+                            </td>
                             <td class="align-middle">
                               <div class="list-pendaftar-adm shadow-sm">
                                 <?php echo $registrants_html ?: '<span class="text-muted italic small">Belum ada pendaftar</span>'; ?>
                               </div>
                             </td>
                             <td class="align-middle">
-                              <?php if ($d['status'] == 1) { ?>
-                                <span class="badge badge-success badge-premium">Open</span>
-                              <?php } else { ?>
-                                <span class="badge badge-danger badge-premium">Closed</span>
-                              <?php } ?>
+                              <a href="aksiLabBooking.php?act=toggleStatus&id=<?php echo $d['id']; ?>" class="badge badge-<?php echo ($d['status'] == 1 ? 'success' : 'danger'); ?> badge-premium shadow-sm" style="cursor: pointer; transition: all 0.2s;" title="Klik untuk <?php echo ($d['status'] == 1 ? 'Tutup' : 'Buka'); ?> Pendaftaran">
+                                <?php echo ($d['status'] == 1 ? 'Open' : 'Closed'); ?>
+                              </a>
                             </td>
                             <td class="align-middle">
                               <button class="btn btn-warning btn-xs btn-premium" data-toggle="modal" data-target="#modalEdit<?php echo $d['id']; ?>" title="Edit Jadwal">
@@ -373,10 +413,10 @@ $username = $_SESSION['username'];
                                       <label class="small text-uppercase opacity-75">Ruangan</label>
                                       <select name="ruangan_id" class="form-control bg-dark text-white border-secondary" required>
                                         <option value="">- Pilih Ruangan -</option>';
-                                        $q_ruang = mysqli_query($con, "SELECT * FROM dt_ruang ORDER BY nm ASC");
+                                        $q_ruang = mysqli_query($con, "SELECT * FROM lab_booking_ruangan ORDER BY nama ASC");
                                         while($r = mysqli_fetch_array($q_ruang)) {
                                           $selected = ($r['id'] == $d['ruangan_id']) ? 'selected' : '';
-                                          $modals .= "<option value='$r[id]' $selected>$r[nm]</option>";
+                                          $modals .= "<option value='$r[id]' $selected>$r[nama] (Kuota: $r[kuota])</option>";
                                         }
                           $modals .= '
                                       </select>
@@ -384,6 +424,10 @@ $username = $_SESSION['username'];
                                     <div class="form-group">
                                       <label class="small text-uppercase opacity-75">Info Tenaga (Asisten/Laboran)</label>
                                       <textarea name="info_tenaga" class="form-control bg-transparent text-white border-secondary" rows="2">'.$d['info_tenaga'].'</textarea>
+                                    </div>
+                                    <div class="form-group">
+                                      <label class="small text-uppercase opacity-75">Layanan (Paragraf Singkat)</label>
+                                      <textarea name="layanan" class="form-control bg-transparent text-white border-secondary" rows="3" placeholder="Deskripsi layanan yang tersedia pada jadwal ini...">'.$d['layanan'].'</textarea>
                                     </div>
                                     <div class="form-group">
                                       <label class="small text-uppercase opacity-75">Status</label>
@@ -449,9 +493,9 @@ $username = $_SESSION['username'];
                 <select name="ruangan_id" class="form-control bg-dark text-white border-secondary" required>
                   <option value="">- Pilih Ruangan -</option>
                   <?php 
-                  $q_ruang = mysqli_query($con, "SELECT * FROM dt_ruang ORDER BY nm ASC");
+                  $q_ruang = mysqli_query($con, "SELECT * FROM lab_booking_ruangan ORDER BY nama ASC");
                   while($r = mysqli_fetch_array($q_ruang)) {
-                    echo "<option value='$r[id]'>$r[nm]</option>";
+                    echo "<option value='$r[id]'>$r[nama] (Kuota: $r[kuota])</option>";
                   }
                   ?>
                 </select>
@@ -459,6 +503,10 @@ $username = $_SESSION['username'];
               <div class="form-group">
                 <label class="small text-uppercase opacity-75">Info Tenaga (Asisten/Laboran)</label>
                 <textarea name="info_tenaga" class="form-control bg-transparent text-white border-secondary" rows="2" placeholder="Nama asisten yang bertugas..."></textarea>
+              </div>
+              <div class="form-group">
+                <label class="small text-uppercase opacity-75">Layanan (Paragraf Singkat)</label>
+                <textarea name="layanan" class="form-control bg-transparent text-white border-secondary" rows="3" placeholder="Deskripsi layanan yang tersedia pada jadwal ini..."></textarea>
               </div>
             </div>
             <div class="modal-footer border-0">
@@ -471,6 +519,33 @@ $username = $_SESSION['username'];
     </div>
 
     <?php echo $modals; ?>
+
+    <!-- Modal Notification Centered -->
+    <?php if (!empty($msg_title)) { ?>
+    <div class="modal fade" id="modalNotification" tabindex="-1" role="dialog" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 20px; overflow: hidden;">
+          <div class="modal-body text-center p-5">
+            <div class="mb-4">
+              <i class="fas <?php echo $msg_icon; ?> text-<?php echo $msg_color; ?>" style="font-size: 5rem; opacity: 0.8;"></i>
+            </div>
+            <h3 class="font-weight-bold mb-2 text-dark"><?php echo $msg_title; ?></h3>
+            <p class="text-muted mb-4"><?php echo $msg_body; ?></p>
+            <button type="button" class="btn btn-<?php echo $msg_color; ?> btn-lg btn-block btn-premium py-3" data-dismiss="modal" style="border-radius: 12px;">
+              Tutup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      window.onload = function() {
+        $('#modalNotification').modal('show');
+        window.history.replaceState({}, document.title, window.location.pathname);
+      };
+    </script>
+    <?php } ?>
+
     <?php include("footerAdm.php"); ?>
     <?php include("jsAdm.php"); ?>
   </div>

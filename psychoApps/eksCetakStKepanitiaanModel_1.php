@@ -82,44 +82,23 @@
    $data2 = mysqli_fetch_array($result2);
    
    function my_ucwords($str, $is_name=false) {
-      // exceptions to standard case conversion
       if ($is_name) {
           $all_uppercase = '';
           $all_lowercase = 'De La|De Las|Der|Van De|Van Der|Vit De|Von|Or|And';
       } else {
-          // addresses, essay titles ... and anything else
           $all_uppercase = 'Po|Rr|Se|Sw|Ne|Nw|Ii|Iii|Iv|Vi|Vii|Viii|Ix|Xi|Xii|Xiii|Ixx';
           $all_lowercase = 'A|Dan|Sebagai|Dengan|Pada|Dalam|Dari|Atau|Untuk|And|As|By|In|On|At|From|Or|To';
       }
       $prefixes = 'Mc';
       $suffixes = "'S";
    
-      // captialize all first letters
-      $str = preg_replace('/\\b(\\w)/e', 'strtoupper("$1")', strtolower(trim($str)));
-   
-      if ($all_uppercase) {
-          // capitalize acronymns and initialisms e.g. PHP
-          $str = preg_replace("/\\b($all_uppercase)\\b/e", 'strtoupper("$1")', $str);
-      }
-      if ($all_lowercase) {
-          // decapitalize short words e.g. and
-          if ($is_name) {
-              // all occurences will be changed to lowercase
-              $str = preg_replace("/\\b($all_lowercase)\\b/e", 'strtolower("$1")', $str);
-          } else {
-              // first and last word will not be changed to lower case (i.e. titles)
-              $str = preg_replace("/(?<=\\W)($all_lowercase)(?=\\W)/e", 'strtolower("$1")', $str);
-          }
-      }
-      if ($prefixes) {
-          // capitalize letter after certain name prefixes e.g 'Mc'
-          $str = preg_replace("/\\b($prefixes)(\\w)/e", '"$1".strtoupper("$2")', $str);
-      }
-      if ($suffixes) {
-          // decapitalize certain word suffixes e.g. 's
-          $str = preg_replace("/(\\w)($suffixes)\\b/e", '"$1".strtolower("$2")', $str);
-      }
-      return $str;
+      return preg_replace_callback(
+          '/\b(\w)/',
+          function ($matches) {
+              return strtoupper($matches[1]);
+          },
+          strtolower(trim($str))
+      );
    }
    ?>
 <!DOCTYPE html>
@@ -162,11 +141,12 @@
                      $qambilpersonil="SELECT * FROM personil_st WHERE id_st='$dataku[id]' AND nama<>'' ORDER BY id ASC";
                      $resambilpersonil=mysqli_query($con, $qambilpersonil) or die (mysqli_error($con));
                      $dambilpersonil=mysqli_fetch_assoc($resambilpersonil);
-                  				  
-                  	$qpersonil="SELECT * FROM dt_pegawai WHERE id='$dambilpersonil[nama]'";
+                   				  
+                     $safe_nama = mysqli_real_escape_string($con, $dambilpersonil['nama']);
+                   	$qpersonil="SELECT * FROM dt_pegawai WHERE id='$safe_nama'";
                      $respersonil=mysqli_query($con, $qpersonil) or die (mysqli_error($con));
                      $dtpersonil=mysqli_fetch_assoc($respersonil);
-
+ 
                      echo $dtpersonil['nama'];}
                      else {?>
                <ol type="a">
@@ -175,7 +155,8 @@
                      $resambilpersonil=mysqli_query($con, $qambilpersonil) or die (mysqli_error($con));
                      while ($dambilpersonil=mysqli_fetch_assoc($resambilpersonil)) { 
                                  
-                     $qpersonil="SELECT * FROM dt_pegawai WHERE id='$dambilpersonil[nama]'";
+                     $safe_nama = mysqli_real_escape_string($con, $dambilpersonil['nama']);
+                     $qpersonil="SELECT * FROM dt_pegawai WHERE id='$safe_nama'";
                      $respersonil=mysqli_query($con, $qpersonil) or die (mysqli_error($con));
                      $dtpersonil=mysqli_fetch_assoc($respersonil);                  
                      ?>    
@@ -200,11 +181,11 @@
                      $qambilpersonil="SELECT * FROM personil_st WHERE id_st='$dataku[id]' AND nama<>'' ORDER BY id ASC";
                      $resambilpersonil=mysqli_query($con, $qambilpersonil) or die (mysqli_error($con));
                      $dambilpersonil=mysqli_fetch_assoc($resambilpersonil);
-                  
+                   
                      $qjab="SELECT * FROM opsi_jabatan_st_kepanitiaan WHERE id='$dambilpersonil[jabatan_st]'";
                      $resjab=mysqli_query($con, $qjab) or die (mysqli_error($con));
                      $dtjab=mysqli_fetch_assoc($resjab);
-                  
+                   
                      echo $dtjab['nama'];}
                      else {?>
                <ol type="a">

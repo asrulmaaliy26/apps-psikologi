@@ -55,11 +55,12 @@ if (!function_exists('isActive')) {
             <li class="<?php echo isActive('rekapPsiptAdm.php'); ?>"><a href="rekapPsiptAdm.php">Surat Izin Penelitian Tesis</a></li>
           </ul>
         </li>
-        <li class="dropdown <?php echo isActive(['rekapPendSemproAdm.php','rekapPendUjtesAdm.php','rekapRevisiProAdm.php','rekapRevisiTesAdm.php']); ?>">
+        <li class="dropdown <?php echo isActive(['rekapPendSemproAdm.php','rekapPendUjtesAdm.php','rekapThesisCampAdm.php','rekapRevisiProAdm.php','rekapRevisiTesAdm.php']); ?>">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pendaftaran <span class="caret"></span></a>
           <ul class="dropdown-menu">
             <li class="<?php echo isActive('rekapPendSemproAdm.php'); ?>"><a href="rekapPendSemproAdm.php">Seminar Proposal</a></li>
             <li class="<?php echo isActive('rekapPendUjtesAdm.php'); ?>"><a href="rekapPendUjtesAdm.php">Ujian Tesis</a></li>
+            <li class="<?php echo isActive('rekapThesisCampAdm.php'); ?>"><a href="rekapThesisCampAdm.php">Thesis Camp</a></li>
             <li class="<?php echo isActive('rekapRevisiProAdm.php'); ?>"><a href="rekapRevisiProAdm.php">Revisi Seminar Proposal</a></li>
             <li class="<?php echo isActive('rekapRevisiTesAdm.php'); ?>"><a href="rekapRevisiTesAdm.php">Revisi Tesis</a></li>
           </ul>
