@@ -29,7 +29,39 @@ $j_publikasi = $_FILES['file_publikasi']['type'];
 $nf_kwitansi = "file_kwitansi_sempro/";
 $j_kwitansi = $_FILES['file_kwitansi']['type'];
 
-if ($jenis_berkas == "application/pdf" && $j_berkas == "application/pdf" && $jns_berkas == "application/pdf" && $j_transkrip == "application/pdf" && $j_audien == "application/pdf" && $j_diseminasi == "application/pdf" && $j_publikasi == "application/pdf" && $j_kwitansi == "application/pdf") {
+$files_to_check = [
+    'file_prop' => 'Proposal Tesis',
+    'file_turnitin' => 'Lampiran Turnitin',
+    'file_toefl' => 'Sertifikat TOEFL',
+    'file_transkrip' => 'Transkrip Nilai',
+    'file_audien' => 'Bukti Audien',
+    'file_diseminasi' => 'Bukti Diseminasi',
+    'file_publikasi' => 'Bukti Publikasi',
+    'file_kwitansi' => 'Kwitansi Pembayaran'
+];
+
+$errors = [];
+
+foreach ($files_to_check as $key => $label) {
+    if (isset($_FILES[$key]) && $_FILES[$key]['name'] != '') {
+        if ($_FILES[$key]['error'] != 0) {
+            if ($_FILES[$key]['error'] == 1 || $_FILES[$key]['error'] == 2) {
+                $errors[] = "File <strong>$label</strong> terlalu besar.";
+            } else {
+                $errors[] = "File <strong>$label</strong> gagal diupload (Error: " . $_FILES[$key]['error'] . ").";
+            }
+        } else {
+            $ext = strtolower(pathinfo($_FILES[$key]['name'], PATHINFO_EXTENSION));
+            if ($ext != 'pdf') {
+                $errors[] = "File <strong>$label</strong> bukan file PDF (Ekstensi: .$ext).";
+            }
+        }
+    } else {
+        $errors[] = "File <strong>$label</strong> wajib diisi.";
+    }
+}
+
+if (empty($errors)) {
 	
 	$temp = explode(".", $_FILES["file_prop"]["name"]);
 	$nama_baru = $nim . '-' . $id_sempro . '_proposal' . '.' . end($temp);
@@ -73,8 +105,8 @@ if ($jenis_berkas == "application/pdf" && $j_berkas == "application/pdf" && $jns
 			
 	mysqli_query(
 		$GLOBALS["___mysqli_ston"],
-		"insert into mag_peserta_sempro(id_sempro,ta,nim,angkatan,smt_daftar,judul_prop,file_prop,file_turnitin,file_toefl,file_transkrip,file_audien,file_diseminasi,file_publikasi,file_kwitansi,dospem_tesis1,dospem_tesis2,tgl_pendaftaran,thn_pendaftaran,cek)"
-			. "values('$id_sempro','$ta','$nim','$angkatan','$smt_daftar','$judul_prop','$berkas','$turnitin','$toefl','$transkrip','$audien','$diseminasi','$publikasi','$kwitansi','$dospem_tesis1','$dospem_tesis2','$tgl_pendaftaran','$thn_pendaftaran','$cek')"
+		"insert into mag_peserta_sempro(id_sempro,ta,nim,angkatan,smt_daftar,judul_prop,file_prop,file_turnitin,file_toefl,file_transkrip,file_audien,file_diseminasi,file_publikasi,file_kwitansi,dospem_tesis1,dospem_tesis2,tgl_pendaftaran,thn_pendaftaran,cek,id_reg,id_jdwl,tgl_cek,catatan)"
+			. "values('$id_sempro','$ta','$nim','$angkatan','$smt_daftar','$judul_prop','$berkas','$turnitin','$toefl','$transkrip','$audien','$diseminasi','$publikasi','$kwitansi','$dospem_tesis1','$dospem_tesis2','$tgl_pendaftaran','$thn_pendaftaran','$cek','','','','')"
 	) or die(mysqli_error($GLOBALS["___mysqli_ston"]));
 
 	$qid = "select id from mag_peserta_sempro WHERE id_sempro='$id_sempro' AND nim='$nim' LIMIT 1";
@@ -89,8 +121,8 @@ if ($jenis_berkas == "application/pdf" && $j_berkas == "application/pdf" && $jns
 
 	mysqli_query(
 		$GLOBALS["___mysqli_ston"],
-		"insert into mag_jadwal_sempro(id_sempro,nim,id_pendaftaran,penguji1,penguji2)"
-			. "values('$id_sempro','$nim','$id','$dospem_tesis1','$dospem_tesis2')"
+		"insert into mag_jadwal_sempro(id_sempro,nim,id_pendaftaran,penguji1,penguji2,penguji3,penguji4,cekhadir1,cekhadir2,cekhadir3,cekhadir4,tgl_seminar,jam_mulai,jam_selesai,ruang,batas_revisi)"
+			. "values('$id_sempro','$nim','$id','$dospem_tesis1','$dospem_tesis2','','','','','','','','','','','1970-01-01')"
 	) or die(mysqli_error($GLOBALS["___mysqli_ston"]));
 
 	$qidjdwl = "select id from mag_jadwal_sempro WHERE id_sempro='$id_sempro' AND nim='$nim' LIMIT 1";
@@ -103,12 +135,13 @@ if ($jenis_berkas == "application/pdf" && $j_berkas == "application/pdf" && $jns
 
 	mysqli_query(
 		$GLOBALS["___mysqli_ston"],
-		"insert into mag_nilai_sempro(id_pendaftaran,id_sempro,validasi)"
-			. "values('$id','$id_sempro','1')"
+		"insert into mag_nilai_sempro(id_pendaftaran,id_sempro,validasi,catatan_penguji1,catatan_penguji2,catatan_penguji3,catatan_penguji4,nilai_penguji1,nilai_penguji2,nilai_penguji3,nilai_penguji4,mean_nilai)"
+			. "values('$id','$id_sempro','1','','','','',0,0,0,0,0)"
 	) or die(mysqli_error($GLOBALS["___mysqli_ston"]));
 
 	header("location:formPendSempro.php?message=notifInput");
 } else {
+    $_SESSION['upload_errors'] = $errors;
 	header("location:formPendSempro.php?message=notifGagal");
 }
 ?>

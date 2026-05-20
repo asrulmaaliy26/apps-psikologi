@@ -47,6 +47,17 @@
       <div class="row">
         <?php
           if (!empty($_GET['message']) && $_GET['message'] == 'notifGagal') {
+                 $error_content = '<p>Salah satu atau semua file yang diupload bermasalah:</p><ul>';
+                 if (isset($_SESSION['upload_errors']) && !empty($_SESSION['upload_errors'])) {
+                     foreach ($_SESSION['upload_errors'] as $err) {
+                         $error_content .= "<li>$err</li>";
+                     }
+                     unset($_SESSION['upload_errors']); // Bersihkan session setelah digunakan
+                 } else {
+                     $error_content .= '<li>Format file bukan PDF atau file terlalu besar.</li>';
+                 }
+                 $error_content .= '</ul><p><strong>Note:</strong> Pastikan semua file berformat PDF dan ukurannya tidak melebihi batas.</p>';
+                 
                  echo '
           <div class="modal fade" id="myModal" role="dialog">
           <div class="modal-dialog">
@@ -56,8 +67,7 @@
           <h4 class="modal-title">Submit gagal</h4>
           </div>
           <div class="modal-body">
-          <p>Salah satu atau semua file yang diupload bukan berbentuk PDF (berekstensi .pdf).</p>
-          <p><strong>Note:</strong> Konversikan file ke PDF terlebih dahulu...</p>
+          ' . $error_content . '
           </div>
           <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -271,6 +281,36 @@
       }
       });
       });
+
+      $('form[action="sformPendSempro.php"]').submit(function(e) {
+           var max_size = 10 * 1024 * 1024; // 10MB per file
+           var errors = [];
+           
+           $(this).find('input[type="file"]').each(function() {
+               if (this.files.length > 0) {
+                   var file = this.files[0];
+                   var label = $(this).closest('.form-group').find('label').text() || $(this).attr('name');
+                   label = label.replace(':', '').trim();
+                   
+                   // Cek ukuran file
+                   if (file.size > max_size) {
+                       errors.push("- " + label + " terlalu besar (" + (file.size / (1024 * 1024)).toFixed(2) + " MB). Maksimal 10 MB.");
+                   }
+                   
+                   // Cek ekstensi file
+                   var ext = file.name.split('.').pop().toLowerCase();
+                   if (ext !== 'pdf') {
+                       errors.push("- " + label + " harus berformat PDF.");
+                   }
+               }
+           });
+           
+           if (errors.length > 0) {
+               e.preventDefault();
+               alert("Terjadi kesalahan pada file yang dipilih:\n\n" + errors.join("\n") + "\n\nSilakan perbaiki file Anda (kompres jika terlalu besar) sebelum mengirimkan kembali.");
+               return false;
+           }
+       });
     </script>
   </body>
 </html>

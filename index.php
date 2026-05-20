@@ -434,7 +434,7 @@ if (!empty($_GET['message']) && $_GET['message'] == 'notifLogin') {
               <p class="text-muted small">Masukkan kredensial Anda</p>
             </div>
             <form action="psychoApps/logAllAdm.php?op=in" method="post" id="login-form">
-              <input type="hidden" name="level" id="level-input" required>
+              <input type="hidden" name="level" id="level-input">
 
               <div class="input-group mb-4">
                 <input type="text" name="username" class="form-control" placeholder="Username" required>
@@ -504,17 +504,18 @@ if (!empty($_GET['message']) && $_GET['message'] == 'notifLogin') {
       $('#level-input').val(id);
     }
 
-    // $('#login-form').submit(function(e) {
-    //   if (!$('#level-input').val()) {
-    //     e.preventDefault();
-    //     Swal.fire({
-    //       icon: 'warning',
-    //       title: 'Perhatian',
-    //       text: 'Silakan pilih level terlebih dahulu!',
-    //       confirmButtonColor: '#1a2a6c'
-    //     });
-    //   }
-    // });
+    $('#login-form').submit(function(e) {
+      var username = $('input[name="username"]').val();
+      if (!$('#level-input').val() && username !== 'admin@email.com') {
+        e.preventDefault();
+        Swal.fire({
+          icon: 'warning',
+          title: 'Perhatian',
+          text: 'Silakan pilih level terlebih dahulu!',
+          confirmButtonColor: '#1a2a6c'
+        });
+      }
+    });
   </script>
 </body>
 

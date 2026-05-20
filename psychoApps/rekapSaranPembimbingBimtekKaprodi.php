@@ -41,13 +41,13 @@ if ($dMe['jabatan_instansi'] != '47') {
           <!-- Filter -->
           <div class="card card-outline card-secondary mb-3">
             <div class="card-header">
-              <h5 class="card-title">Filter Periode</h5>
+              <h5 class="card-title"><i class="fas fa-filter mr-1"></i> Filter & Pencarian</h5>
             </div>
             <div class="card-body">
-              <form method="GET" class="form-inline">
-                <div class="form-group mr-3">
-                  <label class="mr-2">Periode:</label>
-                  <select name="id_bimtek" class="form-control form-control-sm">
+              <form method="GET" class="form-inline row">
+                <div class="form-group col-md-3 mb-2">
+                  <label class="mr-2 small font-weight-bold">Periode:</label>
+                  <select name="id_bimtek" class="form-control form-control-sm w-100">
                     <option value="">-- Semua Periode --</option>
                     <?php
                     $q_all_per = mysqli_query($con, "SELECT id, nama_bimtek FROM bimtek_pendaftaran ORDER BY id DESC");
@@ -60,13 +60,41 @@ if ($dMe['jabatan_instansi'] != '47') {
                     $current_id_bimtek = isset($_GET['id_bimtek']) ? $_GET['id_bimtek'] : $latest_id;
                     foreach ($periods as $dp) {
                       $sel = ($current_id_bimtek == $dp['id']) ? 'selected' : '';
-                      echo "<option value='" . $dp['id'] . "' $sel>" . $dp['nama_bimtek'] . "</option>";
+                      echo "<option value='" . $dp['id'] . "' $sel>" . htmlspecialchars($dp['nama_bimtek']) . "</option>";
                     }
                     ?>
                   </select>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> Filter</button>
-                <a href="rekapSaranPembimbingBimtekKaprodi.php" class="btn btn-secondary btn-sm ml-2"><i class="fas fa-times"></i> Reset</a>
+                <div class="form-group col-md-3 mb-2">
+                  <label class="mr-2 small font-weight-bold">Status:</label>
+                  <select name="status_filter" class="form-control form-control-sm w-100">
+                    <?php
+                    $current_status = isset($_GET['status_filter']) ? $_GET['status_filter'] : 'all';
+                    $status_options = [
+                        'all' => 'Semua Status',
+                        'pending' => 'Belum Diproses',
+                        'approved' => 'Sudah Terdata'
+                    ];
+                    foreach ($status_options as $val => $lab) {
+                        $sel = ($current_status == $val) ? 'selected' : '';
+                        echo "<option value='$val' $sel>$lab</option>";
+                    }
+                    ?>
+                  </select>
+                </div>
+                <div class="form-group col-md-3 mb-2">
+                  <label class="mr-2 small font-weight-bold">Cari Mahasiswa:</label>
+                  <div class="input-group input-group-sm w-100">
+                    <input type="text" id="tableSearch" class="form-control" placeholder="Nama atau NIM...">
+                    <div class="input-group-append">
+                      <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-3 mb-2 d-flex align-items-end">
+                  <button type="submit" class="btn btn-primary btn-sm mr-2"><i class="fas fa-sync-alt"></i> Terapkan</button>
+                  <a href="rekapSaranPembimbingBimtekKaprodi.php" class="btn btn-secondary btn-sm"><i class="fas fa-times"></i> Reset</a>
+                </div>
               </form>
             </div>
           </div>
@@ -76,7 +104,7 @@ if ($dMe['jabatan_instansi'] != '47') {
             <div class="card-header">
               <h5 class="card-title"><i class="fas fa-user-friends"></i> Rekap Saran Dosen Pembimbing Mahasiswa</h5>
               <div class="card-tools">
-                <span class="badge badge-warning">Hanya tampil yang sudah diterima dan memilih saran pembimbing</span>
+                <span class="badge badge-info">Menampilkan seluruh progres mahasiswa Bimtek</span>
               </div>
             </div>
             <div class="card-body p-0">
@@ -88,7 +116,7 @@ if ($dMe['jabatan_instansi'] != '47') {
                       <th>NIM</th>
                       <th>Nama Mahasiswa</th>
                       <th>Peminatan</th>
-                      <th>Periode Bimtek</th>
+                      <th>Status Bimtek</th>
                       <th>Saran Dosen Pembimbing 1</th>
                       <th>Saran Dosen Pembimbing 2</th>
                       <th>Aksi</th>
@@ -103,11 +131,19 @@ if ($dMe['jabatan_instansi'] != '47') {
                       $active_period_id = $d_per_active['id'];
                     }
 
-                    $where = ["pp.status='diterima'", "(pp.pembimbing_saran_1 IS NOT NULL OR pp.pembimbing_saran_2 IS NOT NULL)"];
+                    $where = ["1=1"]; // Mulai dengan kondisi selalu benar
                     if (!empty($current_id_bimtek)) $where[] = "pp.id_bimtek='" . mysqli_real_escape_string($con, $current_id_bimtek) . "'";
+                    
+                    // Filter Status Registrasi Dospem (Approved/Pending)
+                    if ($current_status == 'pending') {
+                        $where[] = "pp.nim NOT IN (SELECT nim FROM pengelompokan_dospem_skripsi WHERE id_periode = '$active_period_id' AND status IN ('2','3'))";
+                    } elseif ($current_status == 'approved') {
+                        $where[] = "pp.nim IN (SELECT nim FROM pengelompokan_dospem_skripsi WHERE id_periode = '$active_period_id' AND status IN ('2','3'))";
+                    }
+
                     $where_sql = "WHERE " . implode(' AND ', $where);
 
-                    $q_list = mysqli_query($con, "SELECT pp.nim, pp.pembimbing_saran_1, pp.pembimbing_saran_2,
+                    $q_list = mysqli_query($con, "SELECT pp.nim, pp.pembimbing_saran_1, pp.pembimbing_saran_2, pp.status as status_bimtek,
                             m.nama as mhs_nama, b.nama_bimtek, o.nm as nm_pem,
                             d1.nama as saran1_nama, d2.nama as saran2_nama,
                             k1.kuota1 as s1_k1, k1.kuota2 as s1_k2,
@@ -154,34 +190,63 @@ if ($dMe['jabatan_instansi'] != '47') {
 
                       $row_class = ($s1_full || $s1_zero || $s2_full || $s2_zero) ? 'table-danger' : '';
                     ?>
-                      <tr class="<?php echo $row_class; ?>">
+                      <tr class="<?php echo $row_class; ?> mhs-row">
                         <td><?php echo $no++; ?></td>
-                        <td><?php echo $d['nim']; ?></td>
-                        <td class="text-left font-weight-bold">
-                          <?php echo $d['mhs_nama']; ?>
+                        <td class="nim-col"><?php echo htmlspecialchars($d['nim']); ?></td>
+                        <td class="text-left font-weight-bold nama-col">
+                          <?php echo htmlspecialchars($d['mhs_nama']); ?>
                           <?php if($row_class): ?>
                             <br><small class="text-danger font-italic"><i class="fas fa-exclamation-triangle"></i> Kuota Pembimbing Bermasalah</small>
                           <?php endif; ?>
                         </td>
-                        <td><?php echo $d['nm_pem']; ?></td>
-                        <td class="small text-muted"><?php echo $d['nama_bimtek']; ?></td>
-                        <td class="text-left">
+                        <td><?php echo htmlspecialchars($d['nm_pem']); ?></td>
+                        <td>
+                            <?php
+                            $st_class = ['proses' => 'badge-warning', 'revisi' => 'badge-danger', 'diterima' => 'badge-success'];
+                            $st_label = ['proses' => 'Review', 'revisi' => 'Revisi', 'diterima' => 'Diterima'];
+                            $cls = $st_class[$d['status_bimtek']] ?? 'badge-secondary';
+                            $lab = $st_label[$d['status_bimtek']] ?? $d['status_bimtek'];
+                            echo "<span class='badge $cls px-2 py-1'>$lab</span>";
+                            ?>
+                            <div class="xsmall text-muted mt-1"><?php echo htmlspecialchars($d['nama_bimtek']); ?></div>
+                        </td>
+                        <td class="text-left" style="min-width: 180px;">
                           <?php if ($d['saran1_nama']): ?>
-                            <div class="mb-1"><i class="fas fa-user-tie text-warning mr-1"></i><?php echo $d['saran1_nama']; ?></div>
-                            <div class="">
-                              <span class="badge <?php echo ($s1_zero || $s1_full) ? 'badge-danger' : 'badge-light border'; ?> text-dark py-1 px-2" style="font-size: 0.9rem;" title="Kuota Aktif (I / II)">K: <?php echo (int)$d['s1_k1']; ?> / <?php echo (int)$d['s1_k2']; ?></span>
-                              <span class="badge badge-info ml-1 py-1 px-2" style="font-size: 0.9rem;" title="Total Bimbingan Terisi">T: <?php echo $s1_real; ?></span>
+                            <div class="mb-1"><i class="fas fa-user-tie text-primary mr-1"></i><b><?php echo htmlspecialchars($d['saran1_nama']); ?></b></div>
+                            <?php 
+                                $s1_total_k = (int)$d['s1_k1'] + (int)$d['s1_k2'];
+                                $s1_perc = ($s1_total_k > 0) ? round(($s1_real / $s1_total_k) * 100) : 0;
+                                $s1_bar_class = 'bg-success';
+                                if ($s1_perc >= 100) $s1_bar_class = 'bg-danger';
+                                elseif ($s1_perc >= 80) $s1_bar_class = 'bg-warning';
+                            ?>
+                            <div class="progress mb-1" style="height: 12px; border-radius: 6px;" title="Terisi: <?php echo $s1_real; ?> / <?php echo $s1_total_k; ?>">
+                                <div class="progress-bar <?php echo $s1_bar_class; ?>" role="progressbar" style="width: <?php echo min(100, $s1_perc); ?>%" aria-valuenow="<?php echo $s1_perc; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex justify-content-between small px-1">
+                                <span class="text-muted">K: <?php echo (int)$d['s1_k1'] + (int)$d['s1_k2']; ?></span>
+                                <span class="font-weight-bold <?php echo ($s1_perc >= 100) ? 'text-danger' : 'text-primary'; ?>">T: <?php echo $s1_real; ?></span>
                             </div>
                           <?php else: ?>
                             <span class="text-muted">-</span>
                           <?php endif; ?>
                         </td>
-                        <td class="text-left">
+                        <td class="text-left" style="min-width: 180px;">
                           <?php if ($d['saran2_nama']): ?>
-                            <div class="mb-1"><i class="fas fa-user-tie text-warning mr-1"></i><?php echo $d['saran2_nama']; ?></div>
-                            <div class="">
-                              <span class="badge <?php echo ($s2_zero || $s2_full) ? 'badge-danger' : 'badge-light border'; ?> text-dark py-1 px-2" style="font-size: 0.9rem;" title="Kuota Aktif (I / II)">K: <?php echo (int)$d['s2_k1']; ?> / <?php echo (int)$d['s2_k2']; ?></span>
-                              <span class="badge badge-info ml-1 py-1 px-2" style="font-size: 0.9rem;" title="Total Bimbingan Terisi">T: <?php echo $s2_real; ?></span>
+                            <div class="mb-1"><i class="fas fa-user-tie text-secondary mr-1"></i><b><?php echo htmlspecialchars($d['saran2_nama']); ?></b></div>
+                            <?php 
+                                $s2_total_k = (int)$d['s2_k1'] + (int)$d['s2_k2'];
+                                $s2_perc = ($s2_total_k > 0) ? round(($s2_real / $s2_total_k) * 100) : 0;
+                                $s2_bar_class = 'bg-success';
+                                if ($s2_perc >= 100) $s2_bar_class = 'bg-danger';
+                                elseif ($s2_perc >= 80) $s2_bar_class = 'bg-warning';
+                            ?>
+                            <div class="progress mb-1" style="height: 12px; border-radius: 6px;" title="Terisi: <?php echo $s2_real; ?> / <?php echo $s2_total_k; ?>">
+                                <div class="progress-bar <?php echo $s2_bar_class; ?>" role="progressbar" style="width: <?php echo min(100, $s2_perc); ?>%" aria-valuenow="<?php echo $s2_perc; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                            <div class="d-flex justify-content-between small px-1">
+                                <span class="text-muted">K: <?php echo (int)$d['s2_k1'] + (int)$d['s2_k2']; ?></span>
+                                <span class="font-weight-bold <?php echo ($s2_perc >= 100) ? 'text-danger' : 'text-primary'; ?>">T: <?php echo $s2_real; ?></span>
                             </div>
                           <?php else: ?>
                             <span class="text-muted">-</span>
@@ -199,31 +264,43 @@ if ($dMe['jabatan_instansi'] != '47') {
                                       <i class="fas fa-undo"></i> Batalkan
                                     </button>';
                           } else {
-                              if ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) {
-                                  echo '<button type="button" class="btn btn-xs btn-info btn-detail mr-1" 
+                              if ($d['status_bimtek'] == 'diterima') {
+                                  // Selalu tampilkan tombol Detail/Tentukan agar Kaprodi bisa memilihkan
+                                  $btn_label = ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) ? 'Detail & Edit' : 'Tentukan Pembimbing';
+                                  $btn_class = ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) ? 'btn-info' : 'btn-warning';
+                                  
+                                  echo '<button type="button" class="btn btn-xs '.$btn_class.' btn-detail mr-1" 
                                           data-nim="'.$d['nim'].'" 
                                           data-nama="'.htmlspecialchars($d['mhs_nama']).'"
                                           data-idbimtek="'.$current_id_bimtek.'">
-                                          <i class="fas fa-eye"></i> Detail
+                                          <i class="fas fa-user-edit"></i> '.$btn_label.'
                                         </button>';
-                                  echo '<button type="button" class="btn btn-xs btn-success btn-approve" 
-                                          data-nim="'.$d['nim'].'" 
-                                          data-nama="'.htmlspecialchars($d['mhs_nama']).'"
-                                          data-saran1="'.$d['pembimbing_saran_1'].'" 
-                                          data-s1nama="'.htmlspecialchars($d['saran1_nama']).'"
-                                          data-s1k1="'.(int)$d['s1_k1'].'" 
-                                          data-s1k2="'.(int)$d['s1_k2'].'" 
-                                          data-s1real="'.$s1_real.'"
-                                          data-saran2="'.$d['pembimbing_saran_2'].'" 
-                                          data-s2nama="'.htmlspecialchars($d['saran2_nama']).'"
-                                          data-s2k1="'.(int)$d['s2_k1'].'" 
-                                          data-s2k2="'.(int)$d['s2_k2'].'" 
-                                          data-s2real="'.$s2_real.'"
-                                          data-idbimtek="'.$current_id_bimtek.'">
-                                          <i class="fas fa-check"></i> Setujui & Data
-                                        </button>';
+                                        
+                                  if ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) {
+                                      echo '<button type="button" class="btn btn-xs btn-success btn-approve" 
+                                              data-nim="'.$d['nim'].'" 
+                                              data-nama="'.htmlspecialchars($d['mhs_nama']).'"
+                                              data-saran1="'.$d['pembimbing_saran_1'].'" 
+                                              data-s1nama="'.htmlspecialchars($d['saran1_nama']).'"
+                                              data-s1k1="'.(int)$d['s1_k1'].'" 
+                                              data-s1k2="'.(int)$d['s1_k2'].'" 
+                                              data-s1real="'.$s1_real.'"
+                                              data-saran2="'.$d['pembimbing_saran_2'].'" 
+                                              data-s2nama="'.htmlspecialchars($d['saran2_nama']).'"
+                                              data-s2k1="'.(int)$d['s2_k1'].'" 
+                                              data-s2k2="'.(int)$d['s2_k2'].'" 
+                                              data-s2real="'.$s2_real.'"
+                                              data-idbimtek="'.$current_id_bimtek.'">
+                                              <i class="fas fa-check"></i> Setujui & Data
+                                            </button>';
+                                  }
                               } else {
-                                  echo '<span class="text-muted small">Belum ada saran</span>';
+                                  echo '<button type="button" class="btn btn-xs btn-outline-info btn-detail" 
+                                          data-nim="'.$d['nim'].'" 
+                                          data-nama="'.htmlspecialchars($d['mhs_nama']).'"
+                                          data-idbimtek="'.$current_id_bimtek.'">
+                                          <i class="fas fa-search"></i> Cek Progres
+                                        </button>';
                               }
                           }
                           ?>
@@ -274,6 +351,20 @@ if ($dMe['jabatan_instansi'] != '47') {
   <?php include("footerAdm.php");
   include("jsAdm.php"); ?>
   <script>
+    function escapeHTML(str) {
+      if (str === null || str === undefined) return "";
+      const s = String(str);
+      return s.replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#39;'
+        }[m];
+      });
+    }
+
     $(document).on('click', '.btn-approve', function() {
       const nim = $(this).data('nim');
       const nama = $(this).data('nama');
@@ -406,37 +497,67 @@ if ($dMe['jabatan_instansi'] != '47') {
                   <div class="bg-light p-2 border rounded">
                     <h6 class="font-weight-bold mb-1 text-primary">Informasi Mahasiswa</h6>
                     <table class="table table-sm table-borderless m-0 small">
-                      <tr><td width="120">NIM / Nama</td><td>: ${nim} / ${nama}</td></tr>
+                      <tr><td width="120">NIM / Nama</td><td>: ${escapeHTML(nim)} / ${escapeHTML(nama)}</td></tr>
+                      <tr>
+                        <td>Status Bimtek</td>
+                        <td>: 
+                            ${(function() {
+                                if (d.status === 'proses') return '<span class="badge badge-warning"><i class="fas fa-clock mr-1"></i> Sedang Direview: Menunggu penilaian reviewer.</span>';
+                                if (d.status === 'revisi') return '<span class="badge badge-danger"><i class="fas fa-exclamation-circle mr-1"></i> Perlu Revisi: Mahasiswa sedang melakukan perbaikan.</span>';
+                                if (d.status === 'diterima') return '<span class="badge badge-success"><i class="fas fa-check-circle mr-1"></i> Lolos Review: Siap untuk ditentukan pembimbing.</span>';
+                                return escapeHTML(d.status);
+                            })()}
+                        </td>
+                      </tr>
                     </table>
                   </div>
                 </div>
                 <div class="col-md-6 border-right">
                   <h6 class="font-weight-bold text-info border-bottom pb-1">Review Hasil Bimtek</h6>
+                  <div id="review-status-container" class="mb-2"></div>
+
                   <div class="mb-2">
                     <label class="small mb-0 font-weight-bold">Judul Proposal:</label>
-                    <p class="small bg-light p-2 border rounded">${d.judul || '-'}</p>
+                    <p class="small bg-light p-2 border rounded m-0">${escapeHTML(d.judul) || '-'}</p>
                   </div>
                   <div class="mb-2">
                     <label class="small mb-0 font-weight-bold">Abstrak:</label>
-                    <div class="small bg-light p-2 border rounded" style="max-height: 150px; overflow-y: auto;">${d.abstrak || '-'}</div>
+                    <div class="small bg-light p-2 border rounded" style="max-height: 120px; overflow-y: auto;">${escapeHTML(d.abstrak) || '-'}</div>
                   </div>
-                  <div class="row small">
-                    <div class="col-6"><label class="mb-0 font-weight-bold">Reviewer:</label><br>${d.reviewer_nama || '-'}</div>
-                    <div class="col-6"><label class="mb-0 font-weight-bold">Nilai Akhir:</label><br><span class="badge badge-info">${d.nilai_akhir || '0'}</span></div>
+                  <div class="row small mb-2">
+                    <div class="col-6">
+                        <label class="mb-0 font-weight-bold">Reviewer:</label><br>
+                        <span class="text-muted"><i class="fas fa-user-shield mr-1"></i>${escapeHTML(d.reviewer_nama) || 'Belum Ditentukan'}</span>
+                    </div>
+                    <div class="col-6">
+                        <label class="mb-0 font-weight-bold">Nilai Akhir:</label><br>
+                        <span class="badge ${parseFloat(d.nilai_akhir) > 0 ? 'badge-primary' : 'badge-secondary'} px-2">${escapeHTML(d.nilai_akhir) || '0.00'}</span>
+                    </div>
                   </div>
-                  <div class="mt-2 small">
+                  
+                  <div class="mt-2 small ${d.status === 'proses' ? 'text-muted' : ''}">
                     <label class="font-weight-bold mb-1">Rincian Nilai:</label>
-                    <table class="table table-bordered table-sm text-center m-0">
+                    <table class="table table-bordered table-sm text-center m-0" style="font-size: 0.8rem;">
                       <tr class="bg-light"><td>A1</td><td>A2</td><td>A3</td><td>A4</td><td>A5</td><td>A6</td></tr>
-                      <tr><td>${d.a1}</td><td>${d.a2}</td><td>${d.a3}</td><td>${d.a4}</td><td>${d.a5}</td><td>${d.a6}</td></tr>
+                      <tr>
+                        <td>${escapeHTML(d.a1)}</td>
+                        <td>${escapeHTML(d.a2)}</td>
+                        <td>${escapeHTML(d.a3)}</td>
+                        <td>${escapeHTML(d.a4)}</td>
+                        <td>${escapeHTML(d.a5)}</td>
+                        <td>${escapeHTML(d.a6)}</td>
+                      </tr>
                     </table>
+                    ${d.status === 'proses' ? '<div class="xsmall italic mt-1">* Nilai akan muncul setelah proses review selesai.</div>' : ''}
                   </div>
+                  
+                  <div id="catatan-reviewer-placeholder"></div>
                 </div>
                 <div class="col-md-6">
                   <h6 class="font-weight-bold text-success border-bottom pb-1">Saran Pembimbing</h6>
                   <form id="formUpdateSaran">
-                    <input type="hidden" name="nim" value="${nim}">
-                    <input type="hidden" name="id_bimtek" value="${idBimtek}">
+                    <input type="hidden" name="nim" value="${escapeHTML(nim)}">
+                    <input type="hidden" name="id_bimtek" value="${escapeHTML(idBimtek)}">
                     <div class="form-group mb-2">
                       <label class="small font-weight-bold">Dosen Pembimbing 1:</label>
                       <select name="saran1" class="form-control form-control-sm select2-adv" required>
@@ -457,6 +578,19 @@ if ($dMe['jabatan_instansi'] != '47') {
               </div>
             `;
             $('#detailContent').html(html);
+            
+            // Isi catatan reviewer secara aman jika ada
+            if (d.catatan) {
+                let catatanHtml = `
+                  <div class="mt-3 small border-top pt-2">
+                    <label class="font-weight-bold mb-0 text-danger"><i class="fas fa-comment-dots mr-1"></i> Catatan Reviewer:</label>
+                    <div id="catatan-content-inner" class="p-2 bg-light border rounded mt-1" style="max-height: 80px; overflow-y: auto;"></div>
+                  </div>
+                `;
+                $('#catatan-reviewer-placeholder').html(catatanHtml);
+                $('#catatan-content-inner').html(d.catatan);
+            }
+            
             $('#btnSaveDetail, #btnApproveDetail').prop('disabled', false);
 
             // Inisialisasi Select2 untuk dropdown di dalam modal
@@ -635,6 +769,16 @@ if ($dMe['jabatan_instansi'] != '47') {
             }
           });
         }
+      });
+    });
+
+    // Real-time Search
+    $("#tableSearch").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $(".mhs-row").filter(function() {
+        var nim = $(this).find(".nim-col").text().toLowerCase();
+        var nama = $(this).find(".nama-col").text().toLowerCase();
+        $(this).toggle(nim.indexOf(value) > -1 || nama.indexOf(value) > -1)
       });
     });
   </script>

@@ -24,11 +24,11 @@ $qry_nm_smt = "SELECT * FROM opsi_nama_semester WHERE id='$dnta[semester]'";
 $h = mysqli_query($con, $qry_nm_smt);
 $dsemester = mysqli_fetch_assoc($h);
 
-$q_dospem1 = "SELECT * FROM dt_pegawai WHERE id=$data[dospem_skripsi1]";
+$q_dospem1 = "SELECT * FROM dt_pegawai WHERE id='$data[dospem_skripsi1]'";
 $rdospem1 = mysqli_query($con, $q_dospem1);
 $ddospem1 = mysqli_fetch_assoc($rdospem1);
                             
-$q_dospem2 = "SELECT * FROM dt_pegawai WHERE id=$data[dospem_skripsi2]";
+$q_dospem2 = "SELECT * FROM dt_pegawai WHERE id='$data[dospem_skripsi2]'";
 $rdospem2 = mysqli_query($con, $q_dospem2);
 $ddospem2 = mysqli_fetch_assoc($rdospem2);                         
                             
@@ -60,11 +60,12 @@ $qujskrip = "SELECT * FROM peserta_ujskrip WHERE nim='$data[nim]'";
 $hujskrip = mysqli_query($con, $qujskrip);
 $dujskrip = mysqli_fetch_assoc($hujskrip);
 
-$qjadwalujskrip = "SELECT * FROM jadwal_ujskrip WHERE id_pendaftaran='$dujskrip[id]'";
+$id_ujskrip = $dujskrip['id'] ?? '';
+$qjadwalujskrip = "SELECT * FROM jadwal_ujskrip WHERE id_pendaftaran='$id_ujskrip'";
 $hjadwalujskrip = mysqli_query($con, $qjadwalujskrip);
 $djadwalujskrip = mysqli_fetch_assoc($hjadwalujskrip);
                             
-$qnilaiujskrip = "SELECT * FROM nilai_ujskrip WHERE id_pendaftaran='$dujskrip[id]'";
+$qnilaiujskrip = "SELECT * FROM nilai_ujskrip WHERE id_pendaftaran='$id_ujskrip'";
 $hnilaiujskrip = mysqli_query($con, $qnilaiujskrip);
 $dnilaiujskrip = mysqli_fetch_assoc($hnilaiujskrip);
 $no++;

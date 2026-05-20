@@ -127,6 +127,10 @@
                                           <dd class="col-sm-9"><?php echo($data2['nmJenisAitem']);?></dd>
                                           <dt class="col-sm-3">Bukti fisik</dt>
                                           <dd class="col-sm-9"><?php echo $data3['nmBuktiFisik'];?></dd>
+                                          <?php if (!empty($data['bukti_fisik_file'])): ?>
+                                            <dt class="col-sm-3">File Bukti</dt>
+                                            <dd class="col-sm-9"><a href="file_skkm/<?php echo $data['bukti_fisik_file'];?>" target="_blank" class="btn btn-xs btn-info"><i class="fas fa-file-alt"></i> Lihat File</a></dd>
+                                          <?php endif; ?>
                                           <dt class="col-sm-3">Deskripsi unsur</dt>
                                           <dd class="col-sm-9"><?php echo $data['deskrip_unsur']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['deskrip_unsur']);?></dd>
                                           <dt class="col-sm-3">Tempat/lembaga</dt>

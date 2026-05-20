@@ -7,12 +7,14 @@ $username = $_SESSION['username'];
 $q_list = mysqli_query($con, "SELECT bp.id as id_peserta, bp.id_bimtek, bp.id_reviewer, bp.peminatan,
     b.nama_bimtek,
     p.nama as reviewer_nama,
+    o.nm as nm_peminatan,
     pp.id as id_prop, pp.status, pp.judul, pp.catatan, pp.tgl_submit, pp.tgl_update, pp.status_sertifikat, pp.catatan_sertifikat,
     pp.pembimbing_saran_1, pp.pembimbing_saran_2,
     pp.a1, pp.a2, pp.a3, pp.a4, pp.a5, pp.a6, pp.nilai_akhir
     FROM bimtek_peserta bp
     JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id
     JOIN bimtek_pendaftaran b ON bp.id_bimtek = b.id
+    JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
     LEFT JOIN dt_pegawai p ON bp.id_reviewer = p.id
     LEFT JOIN bimtek_pra_proposal pp ON pp.nim = bp.nim AND pp.id_bimtek = bp.id_bimtek
     WHERE bp.nim='$username'
@@ -102,16 +104,22 @@ while ($ld = mysqli_fetch_assoc($q_dosen)) $lecturers[] = $ld;
                           </td>
                           <td>
                             <?php if ($d['status']): ?>
-                              <span class="badge <?php echo $badge[$d['status']]; ?>"><?php echo $label[$d['status']]; ?></span>
+                              <div class="mb-2">
+                                <small class="text-muted d-block">Status File:</small>
+                                <span class="badge <?php echo $badge[$d['status']]; ?>"><?php echo $label[$d['status']]; ?></span>
+                              </div>
                               <?php if (isset($d['status_sertifikat']) && $d['status_sertifikat']): ?>
                                 <?php
                                 $cur_s = $d['status_sertifikat'];
                                 $s_badge = ['pending' => 'badge-warning', 'valid' => 'badge-success', 'invalid' => 'badge-danger', 'bypassed' => 'badge-info'];
-                                $s_label = ['pending' => 'Sertifikat Pending', 'valid' => 'Sertifikat Valid', 'invalid' => 'Sertifikat Ditolak', 'bypassed' => 'Sertifikat Valid'];
+                                $s_label = ['pending' => 'Pending', 'valid' => 'Valid', 'invalid' => 'Ditolak', 'bypassed' => 'Valid'];
                                 $bc = $s_badge[$cur_s] ?? 'badge-secondary';
                                 $bl = $s_label[$cur_s] ?? $cur_s;
-                                echo "<br><span class='badge " . $bc . "' style='margin-top:2px;'>" . $bl . "</span>";
                                 ?>
+                                <div class="mt-2">
+                                  <small class="text-muted d-block">Status Sertifikat:</small>
+                                  <span class="badge <?php echo $bc; ?>"><?php echo $bl; ?></span>
+                                </div>
                               <?php endif; ?>
                             <?php elseif (!$has_reviewer): ?>
                               <span class="badge badge-secondary">Menunggu Reviewer</span>
@@ -135,6 +143,91 @@ while ($ld = mysqli_fetch_assoc($q_dosen)) $lecturers[] = $ld;
                             <?php endif; ?>
                           </td>
                         </tr>
+
+                        <!-- Saran Dosen Pembimbing (Moved Up) -->
+                        <?php 
+                          $cur_status = strtolower(trim($d['status'] ?? ''));
+                          if ($cur_status == 'diterima'): 
+                          $has_selected = (!empty($d['pembimbing_saran_1']) || !empty($d['pembimbing_saran_2']));
+                        ?>
+                          <tr class="bg-light">
+                            <td colspan="7" class="text-left py-3 px-4">
+                              <div class="card card-outline card-warning shadow-sm mb-0">
+                                <div class="card-header py-2">
+                                  <h6 class="card-title text-warning font-weight-bold mb-0 small">
+                                    <i class="fas fa-user-friends"></i> Saran Dosen Pembimbing untuk: <strong><?php echo $d['nama_bimtek']; ?></strong>
+                                    <span class="badge badge-warning ml-2">Kepakaran: <?php echo $d['nm_peminatan']; ?></span>
+                                    <?php if ($has_selected): ?>
+                                      <span class="badge badge-success ml-1"><i class="fas fa-check-circle"></i> Sudah Dipilih</span>
+                                    <?php endif; ?>
+                                  </h6>
+                                </div>
+                                <div class="card-body py-3">
+                                  <form action="simpanSaranPembimbingUser.php" method="POST">
+                                    <input type="hidden" name="id_prop" value="<?php echo $d['id_prop']; ?>">
+                                    <input type="hidden" name="id_bimtek" value="<?php echo $d['id_bimtek']; ?>">
+                                    <input type="hidden" class="peminatan-val" value="<?php echo $d['peminatan']; ?>">
+
+                                    <div class="callout callout-info py-1 px-2 mb-2 border-left" style="border-left-width: 4px !important; font-size: 0.85rem;">
+                                      <i class="fas fa-info-circle mr-1 text-info"></i> <strong>Disclaimer:</strong> Pemilihan ini bersifat aspirasi untuk pertimbangan plotting dan tidak bersifat mengikat.
+                                      <?php if ($has_selected): ?>
+                                        <br><span class="text-danger font-weight-bold"><i class="fas fa-lock"></i> Pilihan sudah disimpan dan tidak dapat dirubah kembali.</span>
+                                      <?php endif; ?>
+                                    </div>
+
+                                    <div class="row align-items-end">
+                                      <div class="col-md-4">
+                                        <div class="custom-control custom-checkbox mb-2">
+                                          <input type="checkbox" class="custom-control-input toggle-rumpun-inline" id="tr_<?php echo $d['id_prop']; ?>" <?php echo $has_selected ? 'disabled' : ''; ?>>
+                                          <label class="custom-control-label small font-weight-bold" for="tr_<?php echo $d['id_prop']; ?>">Tampilkan dosen luar rumpun</label>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <div class="form-group mb-0">
+                                          <label class="small font-weight-bold mb-1">Pilihan 1</label>
+                                          <select name="pembimbing_saran_1" class="form-control form-control-xs select2-dosen-inline" <?php echo $has_selected ? 'disabled' : ''; ?>>
+                                            <option value="">-- Pilih Dosen 1 --</option>
+                                            <?php foreach ($lecturers as $l):
+                                              $is_same = ($l['kepakaran_mayor'] == $d['peminatan']);
+                                            ?>
+                                              <option value="<?php echo $l['id']; ?>" data-rumpun="<?php echo $l['kepakaran_mayor']; ?>" <?php echo ($d['pembimbing_saran_1'] == $l['id']) ? 'selected' : ''; ?>>
+                                                <?php echo $l['nama'] . (!$is_same ? ' (Luar Rumpun)' : ''); ?>
+                                              </option>
+                                            <?php endforeach; ?>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-3">
+                                        <div class="form-group mb-0">
+                                          <label class="small font-weight-bold mb-1">Pilihan 2</label>
+                                          <select name="pembimbing_saran_2" class="form-control form-control-xs select2-dosen-inline" <?php echo $has_selected ? 'disabled' : ''; ?>>
+                                            <option value="">-- Pilih Dosen 2 --</option>
+                                            <?php foreach ($lecturers as $l):
+                                              $is_same = ($l['kepakaran_mayor'] == $d['peminatan']);
+                                            ?>
+                                              <option value="<?php echo $l['id']; ?>" data-rumpun="<?php echo $l['kepakaran_mayor']; ?>" <?php echo ($d['pembimbing_saran_2'] == $l['id']) ? 'selected' : ''; ?>>
+                                                <?php echo $l['nama'] . (!$is_same ? ' (Luar Rumpun)' : ''); ?>
+                                              </option>
+                                            <?php endforeach; ?>
+                                          </select>
+                                        </div>
+                                      </div>
+                                      <div class="col-md-2">
+                                        <?php if (!$has_selected): ?>
+                                          <button type="submit" class="btn btn-xs btn-warning btn-block font-weight-bold py-1 shadow-sm"><i class="fas fa-save"></i> Simpan</button>
+                                        <?php else: ?>
+                                          <div class="text-center py-1">
+                                            <span class="badge badge-secondary px-3 py-2 border w-100"><i class="fas fa-lock"></i> Terkunci</span>
+                                          </div>
+                                        <?php endif; ?>
+                                      </div>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </td>
+                          </tr>
+                        <?php endif; ?>
                         <?php if ($d['status']): ?>
                           <tr class="bg-light">
                             <td colspan="7" class="text-left py-3 px-4">
@@ -186,12 +279,20 @@ while ($ld = mysqli_fetch_assoc($q_dosen)) $lecturers[] = $ld;
                           </tr>
                         <?php endif; ?>
 
-                        <?php if (!empty($d['catatan'])): ?>
-                          <tr class="table-danger">
+                        <?php if (!empty($d['catatan'])): 
+                          $is_revisi = ($d['status'] == 'revisi');
+                          $row_class = $is_revisi ? 'table-danger' : 'table-warning';
+                          $badge_class = $is_revisi ? 'badge-danger' : 'badge-warning';
+                          $icon = $is_revisi ? 'fa-comment-dots' : 'fa-info-circle';
+                          $title = $is_revisi ? 'Catatan Revisi' : 'Catatan / Masukan Reviewer';
+                        ?>
+                          <tr class="<?php echo $row_class; ?>">
                             <td colspan="7" class="text-left py-2 px-3">
                               <div class="d-flex align-items-start">
-                                <span class="badge badge-danger mr-2 mt-1" style="white-space:nowrap;"><i class="fas fa-comment-dots"></i> Catatan Revisi</span>
-                                <div><?php echo $d['catatan']; ?></div>
+                                <span class="badge <?php echo $badge_class; ?> mr-2 mt-1" style="white-space:nowrap;"><i class="fas <?php echo $icon; ?>"></i> <?php echo $title; ?></span>
+                                <div style="width: 100%; word-break: break-word; padding-right: 10px;">
+                                  <?php echo $d['catatan']; ?>
+                                </div>
                               </div>
                             </td>
                           </tr>
@@ -202,71 +303,6 @@ while ($ld = mysqli_fetch_assoc($q_dosen)) $lecturers[] = $ld;
                               <div class="d-flex align-items-start">
                                 <span class="badge badge-danger mr-2 mt-1" style="white-space:nowrap;"><i class="fas fa-certificate"></i> Sertifikat Tidak Valid</span>
                                 <div class="text-danger small"><strong>Catatan Admin:</strong> <?php echo $d['catatan_sertifikat']; ?></div>
-                              </div>
-                            </td>
-                          </tr>
-                        <?php endif; ?>
-
-                        <?php if ($d['status'] == 'diterima'): ?>
-                          <tr class="bg-light">
-                            <td colspan="7" class="text-left py-3 px-4">
-                              <div class="card card-outline card-warning shadow-sm mb-0">
-                                <div class="card-header py-2">
-                                  <h6 class="card-title text-warning font-weight-bold mb-0 small"><i class="fas fa-user-friends"></i> Saran Dosen Pembimbing untuk: <strong><?php echo $d['nama_bimtek']; ?></strong></h6>
-                                </div>
-                                <div class="card-body py-3">
-                                  <form action="simpanSaranPembimbingUser.php" method="POST">
-                                    <input type="hidden" name="id_prop" value="<?php echo $d['id_prop']; ?>">
-                                    <input type="hidden" name="id_bimtek" value="<?php echo $d['id_bimtek']; ?>">
-                                    <input type="hidden" class="peminatan-val" value="<?php echo $d['peminatan']; ?>">
-
-                                    <div class="callout callout-info py-1 px-2 mb-2 border-left" style="border-left-width: 4px !important; font-size: 0.85rem;">
-                                      <i class="fas fa-info-circle mr-1 text-info"></i> <strong>Disclaimer:</strong> Pemilihan ini bersifat aspirasi untuk pertimbangan plotting dan tidak bersifat mengikat.
-                                    </div>
-
-                                    <div class="row align-items-end">
-                                      <div class="col-md-4">
-                                        <div class="custom-control custom-checkbox mb-2">
-                                          <input type="checkbox" class="custom-control-input toggle-rumpun-inline" id="tr_<?php echo $d['id_prop']; ?>">
-                                          <label class="custom-control-label small font-weight-bold" for="tr_<?php echo $d['id_prop']; ?>">Tampilkan dosen luar rumpun</label>
-                                        </div>
-                                      </div>
-                                      <div class="col-md-3">
-                                        <div class="form-group mb-0">
-                                          <label class="small font-weight-bold mb-1">Pilihan 1</label>
-                                          <select name="pembimbing_saran_1" class="form-control form-control-xs select2-dosen-inline">
-                                            <option value="">-- Pilih Dosen 1 --</option>
-                                            <?php foreach ($lecturers as $l):
-                                              $is_same = ($l['kepakaran_mayor'] == $d['peminatan']);
-                                            ?>
-                                              <option value="<?php echo $l['id']; ?>" data-rumpun="<?php echo $l['kepakaran_mayor']; ?>" <?php echo ($d['pembimbing_saran_1'] == $l['id']) ? 'selected' : ''; ?>>
-                                                <?php echo $l['nama'] . (!$is_same ? ' (Luar Rumpun)' : ''); ?>
-                                              </option>
-                                            <?php endforeach; ?>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <div class="col-md-3">
-                                        <div class="form-group mb-0">
-                                          <label class="small font-weight-bold mb-1">Pilihan 2</label>
-                                          <select name="pembimbing_saran_2" class="form-control form-control-xs select2-dosen-inline">
-                                            <option value="">-- Pilih Dosen 2 --</option>
-                                            <?php foreach ($lecturers as $l):
-                                              $is_same = ($l['kepakaran_mayor'] == $d['peminatan']);
-                                            ?>
-                                              <option value="<?php echo $l['id']; ?>" data-rumpun="<?php echo $l['kepakaran_mayor']; ?>" <?php echo ($d['pembimbing_saran_2'] == $l['id']) ? 'selected' : ''; ?>>
-                                                <?php echo $l['nama'] . (!$is_same ? ' (Luar Rumpun)' : ''); ?>
-                                              </option>
-                                            <?php endforeach; ?>
-                                          </select>
-                                        </div>
-                                      </div>
-                                      <div class="col-md-2">
-                                        <button type="submit" class="btn btn-xs btn-warning btn-block font-weight-bold py-1 shadow-sm"><i class="fas fa-save"></i> Simpan</button>
-                                      </div>
-                                    </div>
-                                  </form>
-                                </div>
                               </div>
                             </td>
                           </tr>

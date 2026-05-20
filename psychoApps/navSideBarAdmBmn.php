@@ -46,12 +46,37 @@
             <p>Daftar Inventaris Ruangan (DIR)</p>
           </a>
         </li>
-        <li class="nav-item">
-          <a href="rekapPenghapusanBmnAdm.php" class="nav-link <?php echo isActive('rekapPenghapusanBmnAdm.php'); ?>">
-            <i class="fas fa-trash-alt nav-icon"></i>
-            <p>Penghapusan Barang</p>
+        <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
+        <li class="nav-item <?php echo isOpen(['bmnBookingRuangan.php','bmnBookingPersetujuan.php']); ?>">
+          <a href="#" class="nav-link <?php echo isActive(['bmnBookingRuangan.php','bmnBookingPersetujuan.php']); ?>">
+            <i class="fas fa-calendar-check nav-icon"></i>
+            <p>
+              Booking Ruangan BMN
+              <i class="fas fa-angle-left right"></i>
+            </p>
           </a>
+          <ul class="nav nav-treeview" style="display: block;">
+            <li class="nav-item">
+              <a href="bmnBookingRuangan.php" class="nav-link <?php echo isActive('bmnBookingRuangan.php'); ?>">
+                <i class="text-xs far fa-circle nav-icon"></i>
+                <p>Kelola Ruangan Booking</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="bmnBookingPersetujuan.php" class="nav-link <?php echo isActive('bmnBookingPersetujuan.php'); ?>">
+                <i class="text-xs far fa-circle nav-icon"></i>
+                <p>Persetujuan Booking</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="peminjamanRuangUmum.php" class="nav-link <?php echo isActive(['peminjamanRuangUmum.php','peminjamanRuangForm.php','peminjamanRuangDetail.php']); ?>">
+                <i class="text-xs far fa-circle nav-icon"></i>
+                <p>Portal Booking Umum</p>
+              </a>
+            </li>
+          </ul>
         </li>
+        <?php } ?>
         <li class="nav-item <?php echo isOpen(['dtPinjamBarang.php','dtBarangKembali.php','dtBarangDipinjam.php','dtPinjamRuang.php','dtRuangKembali.php','dtRuangDipinjam.php']); ?>">
           <a href="#" class="nav-link <?php echo isActive(['dtPinjamBarang.php','dtBarangKembali.php','dtBarangDipinjam.php','dtPinjamRuang.php','dtRuangKembali.php','dtRuangDipinjam.php']); ?>">
             <i class="fas fa-retweet nav-icon"></i>
@@ -195,6 +220,12 @@
         </li>
       </ul>
       <ul class="nav nav-pills nav-sidebar flex-column">
+        <li class="nav-item">
+          <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
+            <i class="nav-icon fas fa-calendar-alt"></i>
+            <p>Kalender Kegiatan</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">
             <i class="fas fa-headset nav-icon"></i>

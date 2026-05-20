@@ -21,7 +21,7 @@
       
       // Get all reviewers for this kepakaran
       $reviewers = [];
-      $q_rev = mysqli_query($con, "SELECT r.nip, r.kuota_tambahan FROM bimtek_reviewer r JOIN dt_pegawai p ON r.nip = p.id WHERE r.id_periode='$id_periode' AND r.id_kepakaran='$id_kep' ORDER BY p.nama ASC");
+      $q_rev = mysqli_query($con, "SELECT r.nip, r.kuota_tambahan, r.kuota_maksimal FROM bimtek_reviewer r JOIN dt_pegawai p ON r.nip = p.id WHERE r.id_periode='$id_periode' AND r.id_kepakaran='$id_kep' ORDER BY p.nama ASC");
       while($dr = mysqli_fetch_assoc($q_rev)){
           $nip = $dr['nip'];
           
@@ -32,6 +32,9 @@
           }
           
           $total_kuota = $my_kuota_dasar + $dr['kuota_tambahan'];
+          if($dr['kuota_maksimal'] > 0) {
+              $total_kuota = $dr['kuota_maksimal'];
+          }
           
           // Get current plot count
           $q_plot = mysqli_query($con, "SELECT COUNT(*) as tot FROM bimtek_peserta bp JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id WHERE bp.id_bimtek='$id_periode' AND bp.id_reviewer='$nip'");
@@ -92,5 +95,6 @@
       }
   }
 
-  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&message=notifPlot");
+  $filter = isset($_GET['filter']) ? mysqli_real_escape_string($con, $_GET['filter']) : 'all';
+  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&filter=$filter&message=notifPlot");
 ?>

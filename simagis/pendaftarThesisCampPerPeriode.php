@@ -79,7 +79,7 @@
                         ?>
                       <tr>
                         <td class="text-center"><?php echo $no;?></td>
-                        <td><?php echo $dmhssw['nama'].' | '.$dmhssw['nim'].' | '.$data['tgl_daftar'];?></td>
+                        <td><?php echo $dmhssw['nama'].' | '.$dmhssw['nim'].' | '.$dmhssw['kntk'].' | '.$data['tgl_daftar'];?></td>
                         <td class="text-center"><?php echo $smt_mhs;?></td>
                         <td><?php echo $data['topik'];?></td>
                         <td><?php echo $data['dospem1'];?></td>

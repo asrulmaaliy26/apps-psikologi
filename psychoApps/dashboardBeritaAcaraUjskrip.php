@@ -90,13 +90,13 @@
                 <form method="post" action="dashboardBeritaAcaraUjskrip.php">
                   <?php  error_reporting(E_ALL & ~E_NOTICE);?>
                   <div class="input-group">
-                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo $_REQUEST['keyword'];?>" required>
+                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo isset($_REQUEST['keyword']) ? $_REQUEST['keyword'] : '';?>" required>
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-sm btn-default">
                       <i class="fa fa-search"></i>
                       </button>
                       <?php
-                        if($_REQUEST['keyword']<>""){
+                        if(isset($_REQUEST['keyword']) && $_REQUEST['keyword']<>""){
                         ?>
                       <a class="btn btn-sm btn-warning" title="Kembali" href="dashboardBeritaAcaraUjskrip.php"><i class="fas fa-sync"></i> Kembali</a>
                       <?php
@@ -181,7 +181,7 @@
                             $resp = mysqli_query($con,  $qruang )or die( mysqli_error($con) );
                             $druang = mysqli_fetch_assoc( $resp );
 
-                            $tanggal=date("d-m-Y", strtotime($djdwl['tgl_ujian']));
+                            $tanggal=date("d-m-Y", strtotime($data['tgl_ujian'] ?? ''));
                             $day = date('D', strtotime($tanggal));
                             $dayList = array(
                               'Sun' => 'Minggu',
@@ -198,7 +198,8 @@
                             $rnilai = mysqli_query($con, $qnilai);
                             $dnilai = mysqli_fetch_array($rnilai);
                             
-                            if($dnilai['nilai_ketua']=='0' && $dnilai['nilai_sekretaris']!='0' && $dnilai['nilai_utama']!='0') {
+                            if(empty($dnilai)) { $nilaiakhir = 0; }
+                            elseif($dnilai['nilai_ketua']=='0' && $dnilai['nilai_sekretaris']!='0' && $dnilai['nilai_utama']!='0') {
                             $nilaiakhir = ($dnilai['nilai_sekretaris'] + $dnilai['nilai_utama']) / 2;}
                             elseif($dnilai['nilai_ketua']=='0' && $dnilai['nilai_sekretaris']=='0' && $dnilai['nilai_utama']!='0') {
                             $nilaiakhir = ($dnilai['nilai_utama']) / 1;}
@@ -238,9 +239,9 @@
                             <td class="text-center pr-1">
                               <?php 
                                 if (empty($data['tgl_ujian']) && empty($data['jam_mulai']) && empty($data['jam_selesai']) && empty($data['ruang'])) { echo "<button role='button' class='btn btn-outline-secondary btn-xs btn-block' title='Belum terjadwal' disabled><span class='glyphicon glyphicon-ban-circle'></span> Belum Terjadwal</button>";}
-                                else if($dnilai['validasi']==1 && $data['sekretaris_penguji'] == $dtDosen['id']) { echo "<a href='baUjskripSekretaris.php?page=$page&id=$data[id]' role='button' class='btn btn-outline-secondary btn-xs btn-block'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
-                                else if($dnilai['validasi']==1 && $data['ketua_penguji'] == $dtDosen['id']) { echo "<a href='baUjskripKetua.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
-                                else if($dnilai['validasi']==1 && $data['penguji_utama'] == $dtDosen['id']) { echo "<a href='baUjskripUtama.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['sekretaris_penguji'] == $dtDosen['id']) { echo "<a href='baUjskripSekretaris.php?page=$page&id=$data[id]' role='button' class='btn btn-outline-secondary btn-xs btn-block'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['ketua_penguji'] == $dtDosen['id']) { echo "<a href='baUjskripKetua.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['penguji_utama'] == $dtDosen['id']) { echo "<a href='baUjskripUtama.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
                                 else { echo "<button class='btn btn-success btn-block btn-xs' title='Tervalidasi' disabled><span class='glyphicon glyphicon-check'></span> Tervalidasi</button>";}
                                 ?>                              
                             </td>

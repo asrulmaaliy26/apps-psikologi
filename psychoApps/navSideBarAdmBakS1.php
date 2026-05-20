@@ -90,9 +90,11 @@ $_semuaPendaftaran = array_merge($_pkl, $_sempro, $_kompre, $_ujskrip, $_bimtek)
                 <li class="nav-item"><a href="pndftrnPklAdm.php" class="nav-link <?php echo isActive('pndftrnPklAdm.php'); ?>"><i class="fas fa-ellipsis-v nav-icon"></i>
                     <p>Periode Pendaftaran</p>
                   </a></li>
+                 <?php if (isFeatureEnabled('plot_lembaga_pkl')) { ?>
                 <li class="nav-item"><a href="plotLembagaPklAdm.php" class="nav-link text-warning <?php echo isActive('plotLembagaPklAdm.php'); ?>"><i class="fas fa-ellipsis-v nav-icon"></i>
                     <p>Plotting Lembaga</p>
                   </a></li>
+                <?php } ?>
                 <li class="nav-item"><a href="rekapNilaiPklAdm.php" class="nav-link <?php echo isActive('rekapNilaiPklAdm.php'); ?>"><i class="fas fa-ellipsis-v nav-icon"></i>
                     <p>Rekap Nilai</p>
                   </a></li>
@@ -189,6 +191,7 @@ $_semuaPendaftaran = array_merge($_pkl, $_sempro, $_kompre, $_ujskrip, $_bimtek)
               </ul>
             </li>
           </ul>
+          <?php if (isFeatureEnabled('bimtek')) { ?>
           <ul class="nav nav-treeview" style="display: block;">
             <li class="nav-item <?php echo isOpen($_bimtek); ?>">
               <a href="#" class="nav-link <?php echo isActive($_bimtek); ?>">
@@ -208,9 +211,24 @@ $_semuaPendaftaran = array_merge($_pkl, $_sempro, $_kompre, $_ujskrip, $_bimtek)
               </ul>
             </li>
           </ul>
+          <?php } ?>
         </li>
       </ul>
       <ul class="nav nav-pills nav-sidebar flex-column">
+        <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
+        <li class="nav-item">
+          <a href="peminjamanRuangUmum.php" class="nav-link <?php echo isActive(['peminjamanRuangUmum.php','peminjamanRuangForm.php','peminjamanRuangDetail.php']); ?>">
+            <i class="nav-icon fas fa-calendar-check"></i>
+            <p>Peminjaman Ruangan</p>
+          </a>
+        </li>
+        <?php } ?>
+        <li class="nav-item">
+          <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
+            <i class="nav-icon fas fa-calendar-alt"></i>
+            <p>Kalender Kegiatan</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">
             <i class="fas fa-headset nav-icon"></i>

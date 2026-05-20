@@ -19,8 +19,28 @@ if (!function_exists('isActive')) {
             <p>Laporan Harian</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="profilKaryawan.php" class="nav-link text-warning <?php echo isActive('profilKaryawan.php'); ?>">
+            <i class="fas fa-user-circle nav-icon"></i>
+            <p>Profil Saya</p>
+          </a>
+        </li>
       </ul>
       <ul class="nav nav-pills nav-sidebar flex-column">
+        <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
+        <li class="nav-item">
+          <a href="peminjamanRuangUmum.php" class="nav-link <?php echo isActive(['peminjamanRuangUmum.php','peminjamanRuangForm.php','peminjamanRuangDetail.php']); ?>">
+            <i class="nav-icon fas fa-calendar-check"></i>
+            <p>Peminjaman Ruangan</p>
+          </a>
+        </li>
+        <?php } ?>
+        <li class="nav-item">
+          <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
+            <i class="nav-icon fas fa-calendar-alt"></i>
+            <p>Kalender Kegiatan</p>
+          </a>
+        </li>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">
             <i class="fas fa-headset nav-icon"></i>

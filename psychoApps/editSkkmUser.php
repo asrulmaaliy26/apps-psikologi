@@ -200,6 +200,21 @@
                             ?>
                         </div>
                       </div>
+                      <div class="form-group">
+                        <label for="bukti_fisik_file">Update Bukti Fisik (PDF/JPG/PNG, maks. 5MB)</label>
+                        <?php if (!empty($dataku['bukti_fisik_file'])): ?>
+                          <div class="mb-2">
+                            <a href="file_skkm/<?php echo $dataku['bukti_fisik_file']; ?>" target="_blank" class="btn btn-sm btn-outline-info">
+                              <i class="fas fa-file-alt"></i> Lihat Bukti Sebelumnya
+                            </a>
+                            <small class="text-muted ml-2">(Biarkan kosong jika tidak ingin mengganti)</small>
+                          </div>
+                        <?php endif; ?>
+                        <div class="custom-file">
+                          <input type="file" name="bukti_fisik_file" class="custom-file-input" id="bukti_fisik_file" accept=".pdf,.jpg,.jpeg,.png">
+                          <label class="custom-file-label" for="bukti_fisik_file">Pilih file baru...</label>
+                        </div>
+                      </div>
                       <input class="sr-only" type="text" name="id" value="<?php echo ($id);?>" required readonly>
                       <input type="text" name="unsur" class="sr-only" value="<?php echo $id;?>" required readonly>
                       <input class="sr-only" type="text" name="semester_edit" value="<?php if($monthnow <=6) { echo $jaraksemestergenap;} else { echo $jaraksemestergasal;}?>" required readonly>
@@ -360,6 +375,11 @@
       </div>
       <?php include( "footerAdm.php" );?>
       <?php include( "jsAdm.php" );?>
+      <script>
+        $(function () {
+          bsCustomFileInput.init();
+        });
+      </script>
     </body>
   </form>
 </html>

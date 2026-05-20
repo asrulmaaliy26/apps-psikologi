@@ -121,15 +121,18 @@
                             $rjdwl = mysqli_query($con, $qry_jdwl);
                             $djdwl = mysqli_fetch_assoc($rjdwl);
                             
-                            $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$djdwl[ruang]'";
+                            $ruang_id = isset($djdwl['ruang']) ? $djdwl['ruang'] : '';
+                            $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$ruang_id'";
                             $rruang = mysqli_query($con, $qry_ruang);
                             $druang = mysqli_fetch_assoc($rruang);
                             
-                            $qry_pengawas1 = "SELECT * FROM dt_pengawas_kompre WHERE id='$djdwl[pengawas1]'";
+                            $pengawas1_id = isset($djdwl['pengawas1']) ? $djdwl['pengawas1'] : '';
+                            $qry_pengawas1 = "SELECT * FROM dt_pengawas_kompre WHERE id='$pengawas1_id'";
                             $rpengawas1 = mysqli_query($con, $qry_pengawas1);
                             $dpengawas1 = mysqli_fetch_assoc($rpengawas1);
                             
-                            $qry_pengawas2 = "SELECT * FROM dt_pengawas_kompre WHERE id='$djdwl[pengawas2]'";
+                            $pengawas2_id = isset($djdwl['pengawas2']) ? $djdwl['pengawas2'] : '';
+                            $qry_pengawas2 = "SELECT * FROM dt_pengawas_kompre WHERE id='$pengawas2_id'";
                             $rpengawas2 = mysqli_query($con, $qry_pengawas2);
                             $dpengawas2 = mysqli_fetch_assoc($rpengawas2);
                             

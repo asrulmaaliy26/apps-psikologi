@@ -1,10 +1,11 @@
 <?php include( "contentsConAdm.php" );
   $username = $_SESSION['username'];
 
-  echo '<span data-toggle="tooltip" data-placement="bottom" title="'.$dpenguji2['nama'].'">';
-  if($dnilai['nilai_penguji2']=='0') { echo "0"." ";}
-  elseif($dnilai['nilai_penguji2'] <= $dt_grade['lt'] && $dnilai['nilai_penguji2'] >= $dt_grade['lb']) {
+  echo '<span data-toggle="tooltip" data-placement="bottom" title="'.(isset($dpenguji2['nama']) ? $dpenguji2['nama'] : '').'">';
+  if(empty($dnilai) || $dnilai['nilai_penguji2']=='0') { echo "0"." ";}
+  elseif(is_array($dt_grade) && $dnilai['nilai_penguji2'] <= $dt_grade['lt'] && $dnilai['nilai_penguji2'] >= $dt_grade['lb']) {
   echo number_format((float)$dnilai['nilai_penguji2'], 2, '.', '').' '.'<small>Lanjut</small>';}
-  elseif($dnilai['nilai_penguji2'] <= $dt_grade['lrt'] && $dnilai['nilai_penguji2'] >= $dt_grade['lrb']) { echo number_format((float)$dnilai['nilai_penguji2'], 2, '.', '').' '.'<small>Lanjut (Revisi)</small>';} 
-  elseif($dnilai['nilai_penguji2'] <= $dt_grade['sut'] && $dnilai['nilai_penguji2'] >= $dt_grade['sub']) { echo number_format((float)$dnilai['nilai_penguji2'], 2, '.', '').' '.'<small>Seminar Ulang</small>';}
+  elseif(is_array($dt_grade) && $dnilai['nilai_penguji2'] <= $dt_grade['lrt'] && $dnilai['nilai_penguji2'] >= $dt_grade['lrb']) { echo number_format((float)$dnilai['nilai_penguji2'], 2, '.', '').' '.'<small>Lanjut (Revisi)</small>';} 
+  elseif(is_array($dt_grade) && $dnilai['nilai_penguji2'] <= $dt_grade['sut'] && $dnilai['nilai_penguji2'] >= $dt_grade['sub']) { echo number_format((float)$dnilai['nilai_penguji2'], 2, '.', '').' '.'<small>Seminar Ulang</small>';}
+  elseif(!empty($dnilai['nilai_penguji2'])) { echo number_format((float)$dnilai['nilai_penguji2'], 2, '.', '');}
 echo '</span>';?>

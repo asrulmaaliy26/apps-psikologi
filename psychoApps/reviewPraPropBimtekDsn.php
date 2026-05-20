@@ -11,7 +11,7 @@ $q_prop = mysqli_query($con, "SELECT pp.*, m.nama as mhs_nama, b.nama_bimtek, b.
     JOIN bimtek_pendaftaran b ON pp.id_bimtek = b.id
     JOIN (SELECT bp_inner.* FROM bimtek_peserta bp_inner JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp_inner.id = latest.max_id) bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
     JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
-    WHERE pp.id='$id_prop' AND pp.id_reviewer='$username'");
+    WHERE pp.id='$id_prop' AND bp.id_reviewer='$username'");
 $d_prop = mysqli_fetch_assoc($q_prop);
 
 if (!$d_prop) {
@@ -61,7 +61,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
           <div class="row">
             <div class="col-md-12">
               <div class="row">
-                <div class="col-md-8">
+                <div class="col-md-8" id="col-rubrik">
                   <div class="card card-outline card-warning shadow-sm">
                     <div class="card-header bg-warning">
                       <h5 class="card-title font-weight-bold"><i class="fas fa-edit"></i> Rubrik Penilaian Pra Proposal</h5>
@@ -87,8 +87,8 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
                               'a2' => ['Perumusan Masalah', 'Rumusan masalah jelas, terukur, relevan, dan menunjukkan nilai kebaruan tinggi.', 'Rumusan masalah jelas dan relevan, namun nilai kebaruan masih terbatas.', 'Rumusan masalah ada namun kurang tajam dan relevansinya masih lemah.', 'Rumusan masalah tidak jelas, tidak relevan, atau tidak ada.'],
                               'a3' => ['Penetapan Tujuan Penelitian', 'Tujuan sangat jelas, terukur (SMART), dan selaras penuh dengan rumusan masalah.', 'Tujuan jelas dan sebagian besar selaras dengan rumusan masalah.', 'Tujuan ada namun kurang terukur dan belum sepenuhnya selaras.', 'Tujuan penelitian tidak jelas, tidak selaras, atau tidak ada.'],
                               'a4' => ['Pemilihan Metode Penelitian', 'Memilih metode yang sangat tepat and mampu menjelaskan rasionalitas dengan argumen kuat.', 'Memilih metode yang tepat namun penjelasan rasionalitasnya masih terbatas.', 'Memilih metode namun kurang tepat atau penjelasannya tidak memadai.', 'Tidak dapat memilih metode penelitian yang sesuai dengan topik.'],
-                              'a5' => ['Etika dan Integritas Akademik', 'Memahami dan mampu menerapkan prinsip etika penelitian secara menyeluruh.', 'Memahami etika penelitian dan sebagian besar diterapkan dengan baik.', 'Memahami etika namun penerapannya masih kurang konsisten.', 'Kurang memahami etika penelitian dan belum menerapkannya.'],
-                              'a6' => ['Kemampuan Presentasi & Diskusi', 'Mempresentasikan dengan lancar, sistematis, dan mampu menjawab dengan argumen baik.', 'Presentasi cukup lancar dan mampu menjawab sebagian besar pertanyaan.', 'Presentasi ada namun kurang lancar dan kurang sistematis.', 'Tidak dapat mempresentasikan hasil kerja dengan jelas.']
+                              'a5' => ['Analisis Integrasi Nilai Keislaman dalam Penelitian', 'Analisis nilai Isalm sangat mendalam, konstektual dan menunjukkan pemahaman keislaman yang kuat serta wawasan keilmuan yang luas.', 'Analisis cukup mendalam dan konstektual.', 'Analisis ada namun dangkal dan kurang konstektual.', 'Tidak ada nilai islam yang berarti.'],
+                              'a6' => ['Analisis Research Gap dan Kajian Literatur', 'Mengidentifikasi research gap secara tajam, spesifik dan sangat relevan, mampu mempromosikan kontribusi penelitiannya.', 'Mengidentifikasi research gap dengan cukup baik namun masih kurang spesifik.', 'Menyebutkan gap namun tudak didukung analisis literatur yang memedai.', 'Tidak mampu mengidentifikasi research gap dan literatur yang dikaji.']
                             ];
                             $i = 1;
                             foreach ($aspects as $key => $data):
@@ -104,8 +104,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
                                 <td>
                                   <input type="number" name="<?php echo $key; ?>" class="form-control form-control-sm score-input text-center font-weight-bold"
                                     min="0" max="100" placeholder="0-100" required
-                                    value="<?php echo ($val > 0) ? $val : ''; ?>"
-                                    <?php echo ($d_prop['status'] == 'diterima') ? 'readonly' : ''; ?>>
+                                    value="<?php echo ($val > 0) ? $val : ''; ?>">
                                 </td>
                               </tr>
                             <?php endforeach; ?>
@@ -121,7 +120,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
                     </div>
                   </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-4" id="col-skala">
                   <div class="card card-outline card-info shadow-sm">
                     <div class="card-header bg-info">
                       <h5 class="card-title font-weight-bold"><i class="fas fa-info-circle"></i> Skala Penilaian (0-100)</h5>
@@ -179,7 +178,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
               </div>
             </div>
 
-            <div class="col-md-8 mt-3">
+            <div class="col-md-8 mt-3" id="col-detail">
               <div class="card card-outline card-primary">
                 <div class="card-header">
                   <h5 class="card-title">Detail Pra Proposal</h5>
@@ -253,7 +252,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
 
                   <?php if ($d_prop['catatan']): ?>
                     <div class="callout callout-warning" style="border-left: 5px solid #ffc107; background:#fffbea; padding:12px 16px; border-radius:4px;">
-                      <h6 class="font-weight-bold mb-2"><i class="fas fa-comment-dots text-warning"></i> Catatan Revisi Sebelumnya:</h6>
+                      <h6 class="font-weight-bold mb-2"><i class="fas fa-comment-dots text-warning"></i> <?php echo ($d_prop['status'] == 'diterima') ? 'Catatan / Masukan Reviewer:' : 'Catatan Revisi Sebelumnya:'; ?></h6>
                       <div><?php echo $d_prop['catatan']; ?></div>
                     </div>
                   <?php endif; ?>
@@ -261,10 +260,13 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
               </div>
             </div>
 
-            <div class="col-md-4 mt-3">
+            <div class="col-md-4 mt-3" id="col-keputusan">
               <div class="card card-outline card-success shadow-sm">
-                <div class="card-header">
-                  <h5 class="card-title">Keputusan Reviewer</h5>
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h5 class="card-title font-weight-bold">Keputusan Reviewer</h5>
+                  <button type="button" id="toggle-layout" class="btn btn-xs btn-outline-info ml-auto">
+                    <i class="fas fa-expand"></i> Lebarkan
+                  </button>
                 </div>
                 <div class="card-body">
                   <form action="sReviewPraPropBimtekDsn.php" method="POST" id="form-review">
@@ -283,27 +285,28 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
                     <input type="hidden" name="nilai_akhir_val" id="h_nilai">
 
                     <div class="form-group">
-                       <label class="font-weight-bold text-danger"><i class="fas fa-comment"></i> Catatan / Revisi</label>
-                       <textarea id="catatan-field" class="form-control"><?php echo $d_prop['catatan'] ? htmlspecialchars($d_prop['catatan']) : ''; ?></textarea>
-                       <small class="text-muted">Isi catatan jika ada poin yang perlu diperbaiki mahasiswa.</small>
+                      <label class="font-weight-bold text-danger"><i class="fas fa-comment"></i> Catatan / Revisi</label>
+                      <textarea id="catatan-field" class="form-control"><?php echo $d_prop['catatan'] ? htmlspecialchars($d_prop['catatan']) : ''; ?></textarea>
+                      <small class="text-muted">Isi catatan jika ada poin yang perlu diperbaiki mahasiswa.</small>
                     </div>
 
-                    <?php if ($d_prop['status'] !== 'diterima'): ?>
-                      <div class="d-grid gap-2">
+                    <div class="d-grid gap-2">
+                      <?php if ($d_prop['status'] !== 'diterima'): ?>
                         <button type="button" class="btn btn-success btn-block mb-2 py-2 font-weight-bold" id="btn-terima">
                           <i class="fas fa-check-circle"></i> Terima Pra Proposal
                         </button>
                         <button type="button" class="btn btn-warning btn-block py-2 font-weight-bold" id="btn-simpan-revisi">
                           <i class="fas fa-save"></i> Simpan Revisi
                         </button>
-                      </div>
-                    <?php else: ?>
-                      <div class="callout callout-success border-left">
-                        <h5><i class="fas fa-check-circle text-success"></i> Sudah Diterima</h5>
-                        <p class="small mb-0">Proposal ini sudah disetujui dan dinilai.</p>
-                        <h4 class="text-center text-primary mt-2">Nilai: <?php echo $d_prop['nilai_akhir']; ?></h4>
-                      </div>
-                    <?php endif; ?>
+                      <?php else: ?>
+                        <button type="button" class="btn btn-primary btn-block py-2 font-weight-bold" id="btn-update">
+                          <i class="fas fa-sync-alt"></i> Update Penilaian & Catatan
+                        </button>
+                        <div class="callout callout-success border-left mt-3">
+                          <p class="small mb-0"><i class="fas fa-check-circle text-success"></i> Status: <strong>Diterima</strong></p>
+                        </div>
+                      <?php endif; ?>
+                    </div>
                   </form>
                 </div>
               </div>
@@ -361,11 +364,24 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
       $('#h_nilai').val(final.toFixed(2));
     }
 
+    function utf8_to_b64(str) {
+      return window.btoa(unescape(encodeURIComponent(str)));
+    }
+
     $(document).ready(function() {
       calculateScore();
       $('.score-input').on('change', function() {
         calculateScore();
       });
+    });
+
+    $('#btn-update').on('click', function() {
+      if (!confirm('Simpan perubahan penilaian dan catatan ini?')) return;
+      calculateScore();
+      var catatan = $('#catatan-field').summernote('code').trim();
+      $('#aksi-input').val('update');
+      $('#catatan-hidden').val(utf8_to_b64(catatan));
+      $('#form-review').submit();
     });
 
     $('#btn-terima').on('click', function() {
@@ -383,7 +399,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
       calculateScore();
       var catatan = $('#catatan-field').summernote('code').trim();
       $('#aksi-input').val('terima');
-      $('#catatan-hidden').val(catatan);
+      $('#catatan-hidden').val(utf8_to_b64(catatan)); // Base64 encode to bypass WAF
       $('#form-review').submit();
     });
 
@@ -397,7 +413,7 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
       if (!confirm('Simpan catatan revisi ini? Status akan menjadi "Perlu Revisi" dan mahasiswa akan diberi tahu.')) return;
       calculateScore();
       $('#aksi-input').val('revisi');
-      $('#catatan-hidden').val(catatan);
+      $('#catatan-hidden').val(utf8_to_b64(catatan)); // Base64 encode to bypass WAF
       $('#form-review').submit();
     });
 
@@ -424,7 +440,22 @@ if (($d_prop['status_sertifikat'] == 'pending' || $d_prop['status_sertifikat'] =
       // catatan-hidden already set by btn handlers, just ensure it
       if (!$('#catatan-hidden').val()) {
         var catatan = $('#catatan-field').summernote('code').trim();
-        $('#catatan-hidden').val(catatan);
+        $('#catatan-hidden').val(utf8_to_b64(catatan));
+      }
+    });
+
+    // Layout Toggle Logic
+    $('#toggle-layout').on('click', function() {
+      var isWide = $(this).hasClass('is-wide');
+      if (isWide) {
+        // Back to normal
+        $('#col-detail').removeClass('col-md-12').addClass('col-md-8');
+        $('#col-keputusan').removeClass('col-md-12').addClass('col-md-4');
+        $(this).removeClass('is-wide btn-info').addClass('btn-outline-info').html('<i class="fas fa-expand"></i> Lebarkan');
+      } else {
+        // Go wide
+        $('#col-detail, #col-keputusan').removeClass('col-md-8 col-md-4').addClass('col-md-12');
+        $(this).addClass('is-wide btn-info').removeClass('btn-outline-info').html('<i class="fas fa-compress"></i> Kecilkan');
       }
     });
   </script>

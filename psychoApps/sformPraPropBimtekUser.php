@@ -74,6 +74,7 @@ if ($d_exist) {
     }
     // Update existing record, reset status to proses, and status_sertifikat
     mysqli_query($con, "UPDATE bimtek_pra_proposal SET 
+        id_reviewer='$id_reviewer',
         judul='$judul', abstrak='$abstrak', file_proposal='$file_name', file_sertifikat='$sertifikat_name',
         status_sertifikat='$status_sertifikat', catatan_sertifikat='',
         status='proses', catatan='', tgl_update='$tgl'

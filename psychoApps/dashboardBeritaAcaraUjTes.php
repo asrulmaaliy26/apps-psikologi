@@ -106,13 +106,13 @@
                 <form method="post" action="dashboardBeritaAcaraUjTes.php">
                   <?php  error_reporting(E_ALL & ~E_NOTICE);?>
                   <div class="input-group">
-                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo $_REQUEST['keyword'];?>" required>
+                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo isset($_REQUEST['keyword']) ? $_REQUEST['keyword'] : '';?>" required>
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-sm btn-default">
                       <i class="fa fa-search"></i>
                       </button>
                       <?php
-                        if($_REQUEST['keyword']<>""){
+                        if(isset($_REQUEST['keyword']) && $_REQUEST['keyword']<>""){
                         ?>
                       <a class="btn btn-sm btn-warning" title="Kembali" href="dashboardBeritaAcaraUjTes.php"><i class="fas fa-sync"></i> Kembali</a>
                       <?php
@@ -219,7 +219,8 @@
                             $rnilai = mysqli_query($con, $qnilai);
                             $dnilai = mysqli_fetch_array($rnilai);
                             
-                            if($dnilai['mean_nilai_penguji1']=='0' && $dnilai['mean_nilai_penguji2']!='0' && $dnilai['mean_nilai_penguji3']!='0' && $dnilai['mean_nilai_penguji4']!='0') {
+                            if(empty($dnilai)) { $nilaiakhir = 0; }
+                            elseif($dnilai['mean_nilai_penguji1']=='0' && $dnilai['mean_nilai_penguji2']!='0' && $dnilai['mean_nilai_penguji3']!='0' && $dnilai['mean_nilai_penguji4']!='0') {
                             $nilaiakhir = ($dnilai['mean_nilai_penguji2'] + $dnilai['mean_nilai_penguji3'] + $dnilai['mean_nilai_penguji4']) / 3;}
                             elseif($dnilai['mean_nilai_penguji1']=='0' && $dnilai['mean_nilai_penguji2']=='0' && $dnilai['mean_nilai_penguji3']!='0' && $dnilai['mean_nilai_penguji4']!='0') {
                             $nilaiakhir = ($dnilai['mean_nilai_penguji3'] + $dnilai['mean_nilai_penguji4']) / 2;}
@@ -276,10 +277,10 @@
                                 else if($data['cekhadir3']==2 && $data['penguji3'] == $dtDosen['id']) { echo "<button class='btn btn-danger btn-block btn-sm' title='Anda tidak hadir dalam ujian ini' disabled><span class='glyphicon glyphicon-ban-circle'></span> Tidak Hadir</button>";}
                                 else if($data['cekhadir4']==2 && $data['penguji4'] == $dtDosen['id']) { echo "<button class='btn btn-danger btn-block btn-sm' title='Anda tidak hadir dalam ujian ini' disabled><span class='glyphicon glyphicon-ban-circle'></span> Tidak Hadir</button>";}
                                 else if (empty($data['tgl_ujian']) && empty($data['jam_mulai']) && empty($data['jam_selesai']) && empty($data['ruang'])) { echo "<button role='button' class='btn btn-outline-secondary btn-xs btn-block' title='Belum terjadwal' disabled><span class='glyphicon glyphicon-ban-circle'></span> Belum Terjadwal</button>";}
-                                else if($dnilai['validasi']==1 && $data['penguji3'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji3.php?page=$page&id=$data[id]' role='button' class='btn btn-outline-secondary btn-xs btn-block'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
-                                else if($dnilai['validasi']==1 && $data['penguji4'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji4.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
-                                else if($dnilai['validasi']==1 && $data['penguji1'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji1.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
-                                else if($dnilai['validasi']==1 && $data['penguji2'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji2.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['penguji3'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji3.php?page=$page&id=$data[id]' role='button' class='btn btn-outline-secondary btn-xs btn-block'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['penguji4'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji4.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['penguji1'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji1.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
+                                else if(isset($dnilai['validasi']) && $dnilai['validasi']==1 && $data['penguji2'] == $dtDosen['id']) { echo "<a href='ba1UjianTesisPenguji2.php?page=$page&id=$data[id]' class='btn btn-outline-secondary btn-block btn-xs' title='Isi atau edit berita acara'><span class='glyphicon glyphicon-list-alt'></span> Isi atau Edit</a>";}
                                 else { echo "<button class='btn btn-success btn-block btn-xs' title='Tervalidasi' disabled><span class='glyphicon glyphicon-check'></span> Tervalidasi</button>";}
                                 ?>                              
                             </td>

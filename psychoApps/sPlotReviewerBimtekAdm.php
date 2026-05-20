@@ -1,6 +1,7 @@
 <?php include( "contentsConAdm.php" );
   $id_periode = mysqli_real_escape_string($con, $_POST['id_periode']);
   $page = mysqli_real_escape_string($con, $_POST['page']);
+  $filter = isset($_POST['filter']) ? mysqli_real_escape_string($con, $_POST['filter']) : 'all';
   
   $id_pesertas = $_POST['id_peserta'];
   $id_reviewers = $_POST['id_reviewer'];
@@ -14,5 +15,5 @@
       mysqli_query($con, $sql);
   }
 
-  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&message=notifPlot");
+  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&filter=$filter&message=notifPlot");
 ?>

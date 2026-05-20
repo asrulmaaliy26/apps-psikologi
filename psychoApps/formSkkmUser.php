@@ -181,6 +181,13 @@
                           </select>
                         </div>
                       </div>
+                      <div class="form-group">
+                        <label for="bukti_fisik_file">Upload Bukti Fisik (PDF/JPG/PNG, maks. 5MB) <span class="text-danger">*</span></label>
+                        <div class="custom-file">
+                          <input type="file" name="bukti_fisik_file" class="custom-file-input" id="bukti_fisik_file" accept=".pdf,.jpg,.jpeg,.png" required>
+                          <label class="custom-file-label" for="bukti_fisik_file">Pilih file...</label>
+                        </div>
+                      </div>
                       <input type="text" name="nim" class="sr-only" value="<?php echo $dataku1['nim'];?>" required readonly>
                       <input type="text" name="unsur" class="sr-only" value="<?php echo $id;?>" required readonly>
                       <input class="sr-only" type="text" name="semester" value="<?php if($monthnow <=6) { echo $jaraksemestergenap;} else { echo $jaraksemestergasal;}?>" required readonly>
@@ -339,6 +346,11 @@
       </div>
       <?php include( "footerAdm.php" );?>
       <?php include( "jsAdm.php" );?>
+      <script>
+        $(function () {
+          bsCustomFileInput.init();
+        });
+      </script>
     </body>
   </form>
 </html>

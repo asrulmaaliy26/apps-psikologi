@@ -13,5 +13,6 @@
   }
 
   $notif = ($mode == 'all') ? 'notifResetAll' : 'notifReset';
-  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&message=$notif");
+  $filter = isset($_GET['filter']) ? mysqli_real_escape_string($con, $_GET['filter']) : 'all';
+  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&filter=$filter&message=$notif");
 ?>

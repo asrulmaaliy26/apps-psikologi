@@ -14,7 +14,7 @@ $_sql_create_pra_prop = "CREATE TABLE IF NOT EXISTS bimtek_pra_proposal (
   status_sertifikat ENUM('pending','valid','invalid','bypassed') DEFAULT 'pending',
   catatan_sertifikat TEXT,
   status ENUM('proses','revisi','diterima') DEFAULT 'proses',
-  catatan TEXT,
+  catatan MEDIUMTEXT,
   pembimbing_saran_1 VARCHAR(30),
   pembimbing_saran_2 VARCHAR(30),
   a1 INT DEFAULT 0,

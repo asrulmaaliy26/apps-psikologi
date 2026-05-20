@@ -40,7 +40,7 @@ if (isset($_SESSION['username'])) {
             <p>Dashboard</p>
           </a>
         </li>
-        <?php if ($isLabPsiko) { ?>
+        <?php if ($isLabPsiko && isFeatureEnabled('booking_lab')) { ?>
           <li class="nav-item">
             <a href="periodeBookingLabUser.php" class="nav-link <?php echo isActive('periodeBookingLabUser.php'); ?>">
               <i class="nav-icon fas fa-calendar-alt"></i>
@@ -98,24 +98,29 @@ if (isset($_SESSION['username'])) {
             </p>
           </a>
           <ul class="nav nav-treeview" style="display: block;">
+            <?php if (isFeatureEnabled('booking_lab')) { ?>
             <li class="nav-item">
               <a href="bookingLabUser.php" class="nav-link <?php echo isActive('bookingLabUser.php'); ?>">
                 <i class="fas fa-flask nav-icon"></i>
                 <p>Booking Layanan Lab</p>
               </a>
             </li>
+            <?php } ?>
             <li class="nav-item">
               <a href="prePendaftaranPklUser.php" class="nav-link <?php echo isActive('prePendaftaranPklUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Mendaftar PKL (Reguler)</p>
               </a>
             </li>
+            <?php if (isFeatureEnabled('plot_lembaga_pkl')) { ?>
             <li class="nav-item">
               <a href="plotLembagaPklUser.php" class="nav-link text-warning <?php echo isActive('plotLembagaPklUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Pilih Lembaga PKL</p>
               </a>
             </li>
+            <?php } ?>
+            <?php if (isFeatureEnabled('bimtek')) { ?>
             <li class="nav-item">
               <a href="prePendaftaranBimtekUser.php" class="nav-link <?php echo isActive('prePendaftaranBimtekUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
@@ -128,6 +133,7 @@ if (isset($_SESSION['username'])) {
                 <p>Pra Proposal Bimtek</p>
               </a>
             </li>
+            <?php } ?>
             <li class="nav-item">
               <a href="prePendaftaranSemproUser.php" class="nav-link <?php echo isActive('prePendaftaranSemproUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
@@ -147,6 +153,20 @@ if (isset($_SESSION['username'])) {
               </a>
             </li>
           </ul>
+        </li>
+        <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
+        <li class="nav-item">
+          <a href="peminjamanRuangUmum.php" class="nav-link <?php echo isActive(['peminjamanRuangUmum.php','peminjamanRuangForm.php','peminjamanRuangDetail.php']); ?>">
+            <i class="nav-icon fas fa-calendar-check"></i>
+            <p>Peminjaman Ruangan</p>
+          </a>
+        </li>
+        <?php } ?>
+        <li class="nav-item">
+          <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
+            <i class="nav-icon fas fa-calendar-alt"></i>
+            <p>Kalender Kegiatan</p>
+          </a>
         </li>
       </ul>
     </nav>

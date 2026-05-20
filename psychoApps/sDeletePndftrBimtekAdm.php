@@ -7,21 +7,20 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$nim = isset($_POST['nim']) ? mysqli_real_escape_string($con, $_POST['nim']) : '';
-$id_bimtek = isset($_POST['id_bimtek']) ? mysqli_real_escape_string($con, $_POST['id_bimtek']) : '';
+$id = isset($_POST['id']) ? mysqli_real_escape_string($con, $_POST['id']) : '';
 
-if (!$nim || !$id_bimtek) {
+if (!$id) {
     echo json_encode(['status' => 'error', 'message' => 'Parameter tidak lengkap.']);
     exit();
 }
 
 // 1. Ambil nama file untuk dihapus secara fisik jika perlu
-$q_file = mysqli_query($con, "SELECT file_outline, file_absensi_1, file_absensi_2, file_absensi_3, file_absensi_4 FROM bimtek_peserta WHERE nim='$nim' AND id_bimtek='$id_bimtek'");
+$q_file = mysqli_query($con, "SELECT file_outline, file_absensi_1, file_absensi_2, file_absensi_3, file_absensi_4 FROM bimtek_peserta WHERE id='$id'");
 $d_file = mysqli_fetch_assoc($q_file);
 
 if ($d_file) {
     // Hapus pendaftar
-    $sql = "DELETE FROM bimtek_peserta WHERE nim='$nim' AND id_bimtek='$id_bimtek'";
+    $sql = "DELETE FROM bimtek_peserta WHERE id='$id'";
     if (mysqli_query($con, $sql)) {
         // Hapus juga dari bimtek_pra_proposal jika ada (opsional, tergantung kebijakan)
         // mysqli_query($con, "DELETE FROM bimtek_pra_proposal WHERE nim='$nim' AND id_bimtek='$id_bimtek'");

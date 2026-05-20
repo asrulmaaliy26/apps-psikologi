@@ -33,7 +33,24 @@ if (!isset($roles[$role])) {
     exit;
 }
 
-$cfg    = $roles[$role];
+$cfg = $roles[$role];
+
+if (isset($cfg['static_users'])) {
+    $staticUsers = $cfg['static_users'];
+    $isSearch = ($rawQ !== '' && $rawQ !== '*');
+    if ($isSearch) {
+        $escQ = strtolower($rawQ);
+        $data = array_filter($staticUsers, function($u) use ($escQ) {
+            return strpos(strtolower($u['val']), $escQ) !== false || strpos(strtolower($u['text']), $escQ) !== false;
+        });
+        $data = array_values($data);
+        echo json_encode(['data' => $data, 'total' => count($data), 'page' => 1, 'pages' => 1, 'is_search' => true]);
+    } else {
+        echo json_encode(['data' => $staticUsers, 'total' => count($staticUsers), 'page' => 1, 'pages' => 1, 'is_search' => false]);
+    }
+    exit;
+}
+
 $table  = $cfg['db_table'];
 $valCol = $cfg['db_val'];
 $txtCol = $cfg['db_label'];

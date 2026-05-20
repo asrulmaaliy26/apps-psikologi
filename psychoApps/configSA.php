@@ -106,5 +106,32 @@ function sa_roles(): array
             'db_search'   => ['username', 'nm_person'],
             'db_where'    => "level='6'",
         ],
+        'karyawan' => [
+            'label'       => 'Karyawan',
+            'icon'        => '💼',
+            'module'      => 'psychoApps',
+            'redirect'    => 'laporanHarian.php',
+            'session_set' => ['username' => '{val}', 'status' => '1'],
+            'db_table'    => 'dt_all_adm',
+            'db_val'      => 'username',
+            'db_label'    => "CONCAT(username, ' — ', nm_person)",
+            'db_search'   => ['username', 'nm_person'],
+            'db_where'    => "level='11'",
+        ],
+        'admin_utama' => [
+            'label'       => 'Admin Utama',
+            'icon'        => '👑',
+            'module'      => 'psychoApps',
+            'redirect'    => 'dashboardAdminUtama.php',
+            'session_set' => [
+                'username'  => '{val}',
+                'level'     => 'adminutama',
+                'nm_person' => 'Admin Utama',
+                'status'    => '1',
+            ],
+            'static_users' => [
+                ['val' => 'admin@email.com', 'text' => 'admin@email.com — Admin Utama'],
+            ],
+        ],
     ];
 }

@@ -6,5 +6,6 @@
 
   mysqli_query($con, "DELETE FROM bimtek_peserta WHERE id='$id_peserta' AND id_bimtek='$id_periode'");
 
-  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&message=notifDeletePeserta");
+  $filter = isset($_GET['filter']) ? mysqli_real_escape_string($con, $_GET['filter']) : 'all';
+  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&filter=$filter&message=notifDeletePeserta");
 ?>

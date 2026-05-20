@@ -122,6 +122,45 @@ if (!function_exists('isActive')) {
             </li>
           </ul>
         </li>
+        <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
+        <li class="nav-header">BOOKING RUANGAN</li>
+        <li class="nav-item <?php echo isActive(['bmnBookingRuangan.php', 'bmnBookingPersetujuan.php', 'peminjamanRuangUmum.php']) ? 'menu-open' : ''; ?>">
+          <a href="#" class="nav-link <?php echo isActive(['bmnBookingRuangan.php', 'bmnBookingPersetujuan.php', 'peminjamanRuangUmum.php']); ?>">
+            <i class="nav-icon fas fa-calendar-check"></i>
+            <p>
+              Booking Ruangan BMN
+              <i class="right fas fa-angle-left"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="bmnBookingRuangan.php" class="nav-link <?php echo isActive('bmnBookingRuangan.php'); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Kelola Ruangan Booking</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="bmnBookingPersetujuan.php" class="nav-link <?php echo isActive('bmnBookingPersetujuan.php'); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Persetujuan Booking</p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="peminjamanRuangUmum.php" class="nav-link <?php echo isActive(['peminjamanRuangUmum.php','peminjamanRuangForm.php','peminjamanRuangDetail.php']); ?>">
+                <i class="far fa-circle nav-icon"></i>
+                <p>Portal Booking Umum</p>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <?php } ?>
+        <li class="nav-header">PENGATURAN SISTEM</li>
+        <li class="nav-item">
+          <a href="kelolaFiturAdm.php" class="nav-link <?php echo isActive('kelolaFiturAdm.php'); ?>">
+            <i class="nav-icon fas fa-toggle-on text-warning"></i>
+            <p>Manajemen Fitur</p>
+          </a>
+        </li>
         <li class="nav-header">LAINNYA</li>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">
@@ -129,6 +168,13 @@ if (!function_exists('isActive')) {
             <p>Layanan / Pengaduan</p>
           </a>
         </li>
+<li class="nav-header">KALENDAR</li>
+<li class="nav-item">
+  <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
+    <i class="nav-icon fas fa-calendar-alt"></i>
+    <p>Kalender Kegiatan</p>
+  </a>
+</li>
       </ul>
     </nav>
   </div>

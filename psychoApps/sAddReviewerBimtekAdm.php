@@ -1,10 +1,12 @@
 <?php include( "contentsConAdm.php" );
   $id_periode = mysqli_real_escape_string($con, $_POST['id_periode']);
   $page = mysqli_real_escape_string($con, $_POST['page']);
+  $filter = isset($_POST['filter']) ? mysqli_real_escape_string($con, $_POST['filter']) : 'all';
   
   $nips = $_POST['nip'];
   $id_kepakarans = $_POST['id_kepakaran'];
   $kuota_tambahans = $_POST['kuota_tambahan'];
+  $kuota_maksimals = $_POST['kuota_maksimal'];
 
   // Delete existing reviewers for this period to replace with new ones
   // Optional: We might lose plotting if we just delete and re-insert?
@@ -24,10 +26,11 @@
       $nip = mysqli_real_escape_string($con, $nips[$i]);
       $id_kep = mysqli_real_escape_string($con, $id_kepakarans[$i]);
       $kuota = mysqli_real_escape_string($con, $kuota_tambahans[$i]);
+      $kuota_max = mysqli_real_escape_string($con, $kuota_maksimals[$i]);
       
       if(!empty($id_kep)){
           $new_rev[] = $nip;
-          $sql = "INSERT INTO bimtek_reviewer (id_periode, nip, id_kepakaran, kuota_tambahan) VALUES ('$id_periode', '$nip', '$id_kep', '$kuota')";
+          $sql = "INSERT INTO bimtek_reviewer (id_periode, nip, id_kepakaran, kuota_tambahan, kuota_maksimal) VALUES ('$id_periode', '$nip', '$id_kep', '$kuota', '$kuota_max')";
           mysqli_query($con, $sql);
       }
   }
@@ -38,5 +41,5 @@
       mysqli_query($con, "UPDATE bimtek_peserta SET id_reviewer='' WHERE id_bimtek='$id_periode' AND id_reviewer='$rm_nip'");
   }
 
-  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&message=notifAdd");
+  header("location:plotReviewerBimtekAdm.php?id=$id_periode&page=$page&filter=$filter&message=notifAdd");
 ?>

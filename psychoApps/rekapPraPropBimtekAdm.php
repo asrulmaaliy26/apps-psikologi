@@ -72,8 +72,46 @@ include("initPraPropBimtek.php");
                     ?>
                   </select>
                 </div>
+                <div class="form-group mr-3">
+                  <label class="mr-2">Pembimbing:</label>
+                  <select name="pembimbing" class="form-control form-control-sm">
+                    <option value="">-- Semua --</option>
+                    <option value="sudah" <?php echo (isset($_GET['pembimbing']) && $_GET['pembimbing'] == 'sudah') ? 'selected' : ''; ?>>Sudah Pilih</option>
+                    <option value="belum" <?php echo (isset($_GET['pembimbing']) && $_GET['pembimbing'] == 'belum') ? 'selected' : ''; ?>>Belum Pilih</option>
+                  </select>
+                </div>
+                <div class="form-group mr-3">
+                  <label class="mr-2">Reviewer:</label>
+                  <select name="reviewer" class="form-control form-control-sm select2" style="max-width:200px;">
+                    <option value="">-- Semua Reviewer --</option>
+                    <option value="belum_diplot" <?php echo (isset($_GET['reviewer']) && $_GET['reviewer'] == 'belum_diplot') ? 'selected' : ''; ?>>[Belum Diplot]</option>
+                    <?php
+                    $qRev = mysqli_query($con, "SELECT DISTINCT bp.id_reviewer, p.nama FROM bimtek_peserta bp JOIN dt_pegawai p ON bp.id_reviewer = p.id WHERE bp.id_bimtek = '" . mysqli_real_escape_string($con, $current_id_bimtek) . "' ORDER BY p.nama ASC");
+                    while($rev = mysqli_fetch_assoc($qRev)) {
+                      $sel = (isset($_GET['reviewer']) && $_GET['reviewer'] == $rev['id_reviewer']) ? 'selected' : '';
+                      echo "<option value='".$rev['id_reviewer']."' $sel>".$rev['nama']."</option>";
+                    }
+                    ?>
+                  </select>
+                </div>
+                <div class="form-group mr-3">
+                  <label class="mr-2">Sort:</label>
+                  <select name="sort" class="form-control form-control-sm">
+                    <option value="terbaru" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'terbaru') ? 'selected' : ''; ?>>Terbaru (Default)</option>
+                    <option value="nim" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'nim') ? 'selected' : ''; ?>>NIM</option>
+                    <option value="reviewer" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'reviewer') ? 'selected' : ''; ?>>Reviewer</option>
+                    <option value="status" <?php echo (isset($_GET['sort']) && $_GET['sort'] == 'status') ? 'selected' : ''; ?>>Status</option>
+                  </select>
+                </div>
                 <button type="submit" class="btn btn-primary btn-sm"><i class="fas fa-search"></i> Filter</button>
                 <a href="rekapPraPropBimtekAdm.php" class="btn btn-secondary btn-sm ml-2"><i class="fas fa-times"></i> Reset</a>
+                <?php
+                // Build query string for export link based on current filters
+                $export_params = $_GET;
+                $export_params['id_bimtek'] = $current_id_bimtek; // ensure id_bimtek is included
+                $query_string = http_build_query($export_params);
+                ?>
+                <a href="exportPraPropBimtekExcel.php?<?php echo $query_string; ?>" class="btn btn-success btn-sm ml-2" target="_blank"><i class="fas fa-file-excel"></i> Export Excel</a>
               </form>
             </div>
           </div>
@@ -84,55 +122,115 @@ include("initPraPropBimtek.php");
               <h5 class="card-title">Daftar Pra Proposal Mahasiswa</h5>
             </div>
             <div class="card-body p-0">
-              <div class="table-responsive">
+              <form id="bulkForm" action="bulkValidasiSertifikatAdm.php" method="POST">
+                <div id="bulkActionArea" class="p-2 bg-light border-bottom align-items-center justify-content-between" style="display:none;">
+                  <div class="text-dark ml-2">
+                    <i class="fas fa-check-square mr-2 text-primary"></i>
+                    <span id="selectedCount" class="font-weight-bold">0</span> data terpilih
+                  </div>
+                  <div class="form-inline mr-2">
+                    <label class="mr-2 small font-weight-bold">Set Status Sertifikat:</label>
+                    <select name="status" class="form-control form-control-sm mr-2" required>
+                      <option value="pending">Pending</option>
+                      <option value="valid">Valid</option>
+                      <option value="invalid">Ditolak</option>
+                      <option value="bypassed">Bypassed</option>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-sm" onclick="return confirm('Terapkan perubahan status ke semua data terpilih?')">
+                      <i class="fas fa-save mr-1"></i> Terapkan
+                    </button>
+                  </div>
+                </div>
+                <div class="table-responsive">
                 <table class="table table-bordered table-hover table-sm text-center small">
                   <thead class="bg-secondary">
                     <tr>
-                      <th>No</th>
-                      <th>Periode</th>
-                      <th>NIM</th>
-                      <th>Nama Mahasiswa</th>
-                      <th>Peminatan</th>
-                      <th>Reviewer</th>
-                      <th>Judul</th>
-                      <!-- <th>Saran Pembimbing</th>
-                        <th>Status</th>
-                        <th>Sertifikat</th>
-                        <th>Tgl Submit</th>
-                        <th>Tgl Update</th>
-                        <th>Aksi</th> -->
+                      <th width="3%"><input type="checkbox" id="checkAll"></th>
+                      <th width="5%">No</th>
+                      <th width="10%">NIM</th>
+                      <th width="17%">Nama Mahasiswa</th>
+                      <th width="12%">Peminatan</th>
+                      <th width="18%">Reviewer</th>
+                      <th width="10%">Status</th>
+                      <th width="12%">Sertifikat</th>
+                      <th width="13%">Aksi</th>
                     </tr>
                   </thead>
                   <tbody>
                     <?php
                     $where = [];
-                    if (!empty($current_id_bimtek)) $where[] = "pp.id_bimtek='" . mysqli_real_escape_string($con, $current_id_bimtek) . "'";
+                    if (!empty($current_id_bimtek)) $where[] = "bp.id_bimtek='" . mysqli_real_escape_string($con, $current_id_bimtek) . "'";
                     if (!empty($_GET['status'])) $where[] = "pp.status='" . mysqli_real_escape_string($con, $_GET['status']) . "'";
+                    if (!empty($_GET['pembimbing'])) {
+                      if ($_GET['pembimbing'] == 'sudah') {
+                        $where[] = "(pp.pembimbing_saran_1 IS NOT NULL AND pp.pembimbing_saran_1 != '') OR (pp.pembimbing_saran_2 IS NOT NULL AND pp.pembimbing_saran_2 != '')";
+                      } else {
+                        $where[] = "(pp.pembimbing_saran_1 IS NULL OR pp.pembimbing_saran_1 = '') AND (pp.pembimbing_saran_2 IS NULL OR pp.pembimbing_saran_2 = '')";
+                      }
+                    }
                     $where_sql = $where ? "WHERE " . implode(' AND ', $where) : '';
 
-                    $q_list = mysqli_query($con, "SELECT pp.*, m.nama as mhs_nama, b.nama_bimtek, p.nama as rev_nama, o.nm as nm_pem,
+                    if (!empty($_GET['reviewer'])) {
+                        if ($_GET['reviewer'] == 'belum_diplot') {
+                            $where_sql .= ($where_sql ? " AND " : "WHERE ") . "(bp.id_reviewer IS NULL OR bp.id_reviewer = '')";
+                        } else {
+                            $where_sql .= ($where_sql ? " AND " : "WHERE ") . "bp.id_reviewer = '" . mysqli_real_escape_string($con, $_GET['reviewer']) . "'";
+                        }
+                    }
+
+                    $order_sql = "ORDER BY pp.tgl_submit DESC, bp.id DESC";
+                    if (isset($_GET['sort'])) {
+                        if ($_GET['sort'] == 'nim') {
+                            $order_sql = "ORDER BY bp.nim ASC";
+                        } else if ($_GET['sort'] == 'reviewer') {
+                            $order_sql = "ORDER BY rev_nama ASC, bp.nim ASC";
+                        } else if ($_GET['sort'] == 'status') {
+                            $order_sql = "ORDER BY pp.status ASC, bp.nim ASC";
+                        }
+                    }
+
+                    $q_list = mysqli_query($con, "SELECT bp.nim, bp.id_bimtek, bp.id_reviewer as bp_rev_id, m.nama as mhs_nama, b.nama_bimtek, 
+                            p.nama as rev_nama, o.nm as nm_pem, pp.*, pp.id as pp_id,
                             d1.nama as saran1_nama, d2.nama as saran2_nama
-                            FROM bimtek_pra_proposal pp
-                            LEFT JOIN dt_mhssw m ON pp.nim = m.nim
-                            LEFT JOIN bimtek_pendaftaran b ON pp.id_bimtek = b.id
-                            LEFT JOIN dt_pegawai p ON pp.id_reviewer = p.id
+                            FROM bimtek_peserta bp
+                            JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp.id = latest.max_id
+                            LEFT JOIN bimtek_pra_proposal pp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
+                            LEFT JOIN dt_mhssw m ON bp.nim = m.nim
+                            LEFT JOIN bimtek_pendaftaran b ON bp.id_bimtek = b.id
+                            LEFT JOIN dt_pegawai p ON bp.id_reviewer = p.id
                             LEFT JOIN dt_pegawai d1 ON pp.pembimbing_saran_1 = d1.id
                             LEFT JOIN dt_pegawai d2 ON pp.pembimbing_saran_2 = d2.id
-                            LEFT JOIN (SELECT bp_inner.* FROM bimtek_peserta bp_inner JOIN (SELECT MAX(id) as max_id FROM bimtek_peserta GROUP BY nim, id_bimtek) latest ON bp_inner.id = latest.max_id) bp ON bp.nim = pp.nim AND bp.id_bimtek = pp.id_bimtek
                             LEFT JOIN opsi_bidang_skripsi o ON bp.peminatan = o.id
                             $where_sql
-                            ORDER BY pp.tgl_submit DESC");
+                            $order_sql");
                     $no = 1;
                     while ($d = mysqli_fetch_assoc($q_list)):
                       $badge = ['proses' => 'badge-warning', 'revisi' => 'badge-danger', 'diterima' => 'badge-success'];
                       $label = ['proses' => 'Diproses', 'revisi' => 'Revisi', 'diterima' => 'Diterima'];
                     ?>
                       <tr data-widget="expandable-table" aria-expanded="false" style="cursor:pointer;">
+                        <td onclick="event.stopPropagation();">
+                          <?php if ($d['pp_id'] && $d['file_sertifikat']): ?>
+                            <input type="checkbox" name="ids[]" value="<?php echo $d['pp_id']; ?>" class="row-check">
+                          <?php else: ?>
+                            <i class="fas fa-minus text-muted small"></i>
+                          <?php endif; ?>
+                        </td>
                         <td><?php echo $no++; ?></td>
                         <td><?php echo $d['nim']; ?></td>
                         <td class="text-left"><?php echo $d['mhs_nama']; ?></td>
                         <td><?php echo $d['nm_pem']; ?></td>
-                        <td><span class="badge <?php echo $badge[$d['status']]; ?>"><?php echo $label[$d['status']]; ?></span></td>
+                        <td class="text-left"><?php echo $d['rev_nama'] ?: '<span class="text-muted"><i>Belum Diplot</i></span>'; ?></td>
+                        <td>
+                          <?php if ($d['status']): ?>
+                            <span class="badge <?php echo $badge[$d['status']]; ?>"><?php echo $label[$d['status']]; ?></span>
+                            <?php if (!empty($d['pembimbing_saran_1']) || !empty($d['pembimbing_saran_2'])): ?>
+                              <br><span class="badge badge-primary mt-1" style="font-size: 85%;"><i class="fas fa-user-check"></i> Pilih Pembimbing</span>
+                            <?php endif; ?>
+                          <?php else: ?>
+                            <span class="badge badge-secondary">Belum Upload</span>
+                          <?php endif; ?>
+                        </td>
                         <td>
                           <?php if ($d['file_sertifikat']): ?>
                             <?php
@@ -148,15 +246,27 @@ include("initPraPropBimtek.php");
                           <?php endif; ?>
                         </td>
                         <td>
-                          <a href="hapusPraPropBimtekAdm.php?id=<?php echo $d['id']; ?>" class="btn btn-xs btn-danger" onclick="return confirm('Yakin ingin menghapus?')">
-                            <i class="fas fa-trash"></i>
-                          </a>
+                          <?php if ($d['pp_id']): ?>
+                            <div class="btn-group">
+                              <a href="hapusPraPropBimtekAdm.php?id=<?php echo $d['pp_id']; ?>" class="btn btn-xs btn-warning font-weight-bold" onclick="return confirm('Yakin ingin mereset data pra proposal ini? Mahasiswa harus mengunggah ulang.')" title="Reset Proposal / Upload Ulang">
+                                <i class="fas fa-sync-alt"></i> Reset Prop
+                              </a>
+                              <?php if ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']): ?>
+                                <a href="resetSaranPembimbingAdm.php?id=<?php echo $d['pp_id']; ?>" class="btn btn-xs btn-danger font-weight-bold" onclick="return confirm('Yakin ingin mereset pilihan pembimbing? Mahasiswa akan bisa memilih kembali.')" title="Reset Pilihan Pembimbing">
+                                  <i class="fas fa-user-slash"></i> Reset Pemb.
+                                </a>
+                              <?php endif; ?>
+                            </div>
+                          <?php else: ?>
+                            -
+                          <?php endif; ?>
                         </td>
                       </tr>
                       <tr class="expandable-body d-none">
-                        <td colspan="7">
+                        <td colspan="9">
                           <div class="p-0 text-left">
-                            <div class="card card-widget widget-user-2 shadow-none mb-0 bg-light">
+                            <?php if ($d['pp_id']): ?>
+                              <div class="card card-widget widget-user-2 shadow-none mb-0 bg-light">
                               <div class="card-footer p-0">
                                 <div class="row no-gutters">
                                   <div class="col-md-4 p-4 border-right">
@@ -265,20 +375,27 @@ include("initPraPropBimtek.php");
                                 </div>
                               </div>
                             </div>
+                          <?php else: ?>
+                            <div class="alert alert-light text-center py-4 mb-0">
+                                <i class="fas fa-info-circle text-info fa-2x mb-3"></i>
+                                <p class="mb-0 text-muted">Mahasiswa ini belum mengunggah pra proposal.</p>
+                            </div>
+                          <?php endif; ?>
                           </div>
                         </td>
                       </tr>
                     <?php endwhile; ?>
                     <?php if (mysqli_num_rows($q_list) == 0): ?>
                       <tr>
-                        <td colspan="7" class="text-center text-muted">Belum ada data pra proposal.</td>
+                        <td colspan="9" class="text-center text-muted">Belum ada pendaftar di periode ini.</td>
                       </tr>
                     <?php endif; ?>
                   </tbody>
                 </table>
               </div>
-            </div>
+            </form>
           </div>
+        </div>
 
         </div>
       </section>
@@ -350,8 +467,39 @@ include("initPraPropBimtek.php");
         });
       <?php elseif ($_GET['msg'] == 'notfound'): ?>
         Swal.fire('Gagal!', 'Data tidak ditemukan.', 'error');
+      <?php elseif ($_GET['msg'] == 'bulk_success'): ?>
+        Swal.fire('Berhasil!', 'Status sertifikat terpilih berhasil diperbarui.', 'success');
+      <?php elseif ($_GET['msg'] == 'reset_pembimbing'): ?>
+        Swal.fire('Berhasil!', 'Pilihan pembimbing mahasiswa telah di-reset. Mahasiswa kini dapat memilih kembali.', 'success');
       <?php endif; ?>
     <?php endif; ?>
+
+    $(function() {
+      // Check All logic
+      $('#checkAll').on('click', function() {
+        $('.row-check').prop('checked', this.checked);
+        updateBulkActionArea();
+      });
+
+      $('.row-check').on('change', function() {
+        updateBulkActionArea();
+        if ($('.row-check:checked').length == $('.row-check').length) {
+          $('#checkAll').prop('checked', true);
+        } else {
+          $('#checkAll').prop('checked', false);
+        }
+      });
+
+      function updateBulkActionArea() {
+        var count = $('.row-check:checked').length;
+        $('#selectedCount').text(count);
+        if (count > 0) {
+          $('#bulkActionArea').css('display', 'flex');
+        } else {
+          $('#bulkActionArea').css('display', 'none');
+        }
+      }
+    });
   </script>
 </body>
 

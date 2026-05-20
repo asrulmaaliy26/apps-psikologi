@@ -94,7 +94,7 @@
           OR dp1.nama LIKE '%$keyword%'
           OR dp2.id LIKE '%$keyword%'
           OR dp2.nama LIKE '%$keyword%'
-          ORDER BY mpdt.verifikasi_admin ASC";
+          ORDER BY STR_TO_DATE(mpdt.tgl_pengajuan, '%d-%m-%Y') DESC, mpdt.id DESC";
           
           $result = mysqli_query($con, $sql);
           }else{
@@ -135,7 +135,7 @@
           ON mpdt.nip_dospem_tesis1=dp1.id
           LEFT JOIN dt_pegawai dp2
           ON mpdt.nip_dospem_tesis2=dp2.id
-          ORDER BY mpdt.verifikasi_admin ASC";
+          ORDER BY STR_TO_DATE(mpdt.tgl_pengajuan, '%d-%m-%Y') DESC, mpdt.id DESC";
           
           $result = mysqli_query($con, $sql);
           }
@@ -222,9 +222,30 @@
                             <td class="text-center pl-1"><?php echo ++$no_urut;?></td>
                             <td class="text-left"><?php echo $data['nmMhssw'].' ['.$data['nim'].']';?></td>
                             <td class="text-center"><?php echo $data['tgl_pengajuan'];?></td>
-                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="<?php echo $data['nmDospem1'];?>"><?php echo $dOpsiPersetujuan1['nm'];?></td>
-                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="<?php echo $data['nmDospem2'];?>"><?php echo $dOpsiPersetujuan2['nm'];?></td>
-                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="Judul tidak dimuat disini. Silahkan pilih menu Opsi atau tekan pada kolom ini untuk lebih detailnya..."><?php echo $dOpsiPersetujuanJudul['nm'];?></td>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="<?php echo $data['nmDospem1'];?>">
+                              <?php 
+                                if($data['cek1'] == 2) echo '<span class="badge badge-info">'.$dOpsiPersetujuan1['nm'].'</span>';
+                                elseif($data['cek1'] == 1) echo '<span class="badge badge-warning">'.$dOpsiPersetujuan1['nm'].'</span>';
+                                elseif($data['cek1'] == 3) echo '<span class="badge badge-danger">'.$dOpsiPersetujuan1['nm'].'</span>';
+                                else echo $dOpsiPersetujuan1['nm'];
+                              ?>
+                            </td>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="<?php echo $data['nmDospem2'];?>">
+                              <?php 
+                                if($data['cek2'] == 2) echo '<span class="badge badge-info">'.$dOpsiPersetujuan2['nm'].'</span>';
+                                elseif($data['cek2'] == 1) echo '<span class="badge badge-warning">'.$dOpsiPersetujuan2['nm'].'</span>';
+                                elseif($data['cek2'] == 3) echo '<span class="badge badge-danger">'.$dOpsiPersetujuan2['nm'].'</span>';
+                                else echo $dOpsiPersetujuan2['nm'];
+                              ?>
+                            </td>
+                            <td class="text-center" data-toggle="tooltip" data-placement="top" title="Judul tidak dimuat disini. Silahkan pilih menu Opsi atau tekan pada kolom ini untuk lebih detailnya...">
+                              <?php 
+                                if($data['cekjudul'] == 2) echo '<span class="badge badge-info">'.$dOpsiPersetujuanJudul['nm'].'</span>';
+                                elseif($data['cekjudul'] == 1) echo '<span class="badge badge-warning">'.$dOpsiPersetujuanJudul['nm'].'</span>';
+                                elseif($data['cekjudul'] == 3) echo '<span class="badge badge-danger">'.$dOpsiPersetujuanJudul['nm'].'</span>';
+                                else echo $dOpsiPersetujuanJudul['nm'];
+                              ?>
+                            </td>
                             <td class="text-center pr-1"> <?php if($data['verifikasi_admin']=='2') { echo '<a class="btn btn-outline-secondary btn-xs btn-block" onclick="return confirm(\'Tidak bisa diedit. Persetujuan telah diverifikasi oleh admin.\')" title="Tidak bisa diedit. Persetujuan telah diverifikasi oleh admin." disabled>Telah diverifikasi</a>';} else { echo '<a class="btn btn-outline-secondary btn-xs btn-block" title="Edit Persetujuan" href="verPengDospemPerId.php?id='.$data['idPersonal'].'&page='.$page.'">Edit Persetujuan</a>';}?> </td>
                           </tr>
                           <tr class="expandable-body">

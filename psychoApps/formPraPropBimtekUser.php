@@ -121,7 +121,9 @@ $errors_map = [
                     <h5 class="card-title text-danger"><i class="fas fa-comment-dots"></i> Catatan / Revisi dari Reviewer</h5>
                   </div>
                   <div class="card-body">
-                    <?php echo $d_prop['catatan']; ?>
+                    <div style="width: 100%; word-break: break-word; padding-right: 10px;">
+                      <?php echo $d_prop['catatan']; ?>
+                    </div>
                   </div>
                 </div>
               <?php endif; ?>
@@ -144,6 +146,83 @@ $errors_map = [
                   <h5><i class="fas fa-check-circle"></i> Pra Proposal Anda Telah Diterima!</h5>
                   <p class="mb-0">Reviewer telah menyetujui pra proposal Anda. Selamat!</p>
                 </div>
+
+                <!-- Saran Dosen Pembimbing -->
+                <?php 
+                $has_selected = (!empty($d_prop['pembimbing_saran_1']) || !empty($d_prop['pembimbing_saran_2']));
+                ?>
+                <div class="card card-outline card-warning shadow-sm mb-4">
+                  <div class="card-header">
+                    <h5 class="card-title text-warning font-weight-bold">
+                      <i class="fas fa-user-friends"></i> Saran Dosen Pembimbing
+                      <?php if ($has_selected): ?>
+                        <span class="badge badge-success ml-2"><i class="fas fa-check-circle"></i> Sudah Dipilih</span>
+                      <?php endif; ?>
+                    </h5>
+                  </div>
+                  <div class="card-body">
+                    <form action="simpanSaranPembimbingUser.php" method="POST">
+                      <input type="hidden" name="id_prop" value="<?php echo $d_prop['id']; ?>">
+                      <input type="hidden" name="id_bimtek" value="<?php echo $id_bimtek; ?>">
+                      <input type="hidden" name="redirect_detail" value="1">
+                      <input type="hidden" class="peminatan-val" value="<?php echo $mhs_peminatan; ?>">
+
+                      <div class="callout callout-info py-2 px-3 mb-3 border-left" style="border-left-width: 4px !important;">
+                        <i class="fas fa-info-circle mr-1 text-info"></i> <strong>Disclaimer:</strong> Pemilihan ini bersifat aspirasi untuk pertimbangan plotting dan tidak bersifat mengikat.
+                        <?php if ($has_selected): ?>
+                          <br><span class="text-danger font-weight-bold"><i class="fas fa-lock"></i> Pilihan sudah disimpan dan tidak dapat dirubah kembali.</span>
+                        <?php endif; ?>
+                      </div>
+
+                      <div class="row align-items-end">
+                        <div class="col-md-4">
+                          <div class="custom-control custom-checkbox mb-3">
+                            <input type="checkbox" class="custom-control-input toggle-rumpun" id="toggle_rumpun" <?php echo $has_selected ? 'disabled' : ''; ?>>
+                            <label class="custom-control-label font-weight-bold" for="toggle_rumpun">Tampilkan dosen luar rumpun</label>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group mb-md-0">
+                            <label class="small font-weight-bold">Pilihan 1</label>
+                            <select name="pembimbing_saran_1" class="form-control select2-dosen" <?php echo $has_selected ? 'disabled' : ''; ?> required>
+                              <option value="">-- Pilih Dosen 1 --</option>
+                              <?php foreach ($lecturers as $l):
+                                $is_same = ($l['kepakaran_mayor'] == $mhs_peminatan);
+                              ?>
+                                <option value="<?php echo $l['id']; ?>" data-rumpun="<?php echo $l['kepakaran_mayor']; ?>" <?php echo ($d_prop['pembimbing_saran_1'] == $l['id']) ? 'selected' : ''; ?>>
+                                  <?php echo $l['nama'] . (!$is_same ? ' (Luar Rumpun)' : ''); ?>
+                                </option>
+                              <?php endforeach; ?>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-3">
+                          <div class="form-group mb-md-0">
+                            <label class="small font-weight-bold">Pilihan 2</label>
+                            <select name="pembimbing_saran_2" class="form-control select2-dosen" <?php echo $has_selected ? 'disabled' : ''; ?>>
+                              <option value="">-- Pilih Dosen 2 --</option>
+                              <?php foreach ($lecturers as $l):
+                                $is_same = ($l['kepakaran_mayor'] == $mhs_peminatan);
+                              ?>
+                                <option value="<?php echo $l['id']; ?>" data-rumpun="<?php echo $l['kepakaran_mayor']; ?>" <?php echo ($d_prop['pembimbing_saran_2'] == $l['id']) ? 'selected' : ''; ?>>
+                                  <?php echo $l['nama'] . (!$is_same ? ' (Luar Rumpun)' : ''); ?>
+                                </option>
+                              <?php endforeach; ?>
+                            </select>
+                          </div>
+                        </div>
+                        <div class="col-md-2">
+                          <?php if (!$has_selected): ?>
+                            <button type="submit" class="btn btn-warning btn-block font-weight-bold shadow-sm"><i class="fas fa-save"></i> Simpan</button>
+                          <?php else: ?>
+                            <button type="button" class="btn btn-secondary btn-block disabled font-weight-bold" disabled><i class="fas fa-lock"></i> Terkunci</button>
+                          <?php endif; ?>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+
                 <div class="card card-outline card-success">
                   <div class="card-header">
                     <h5>Detail Pra Proposal</h5>
@@ -292,10 +371,38 @@ $errors_map = [
     $(document).ready(function() {
       bsCustomFileInput.init();
 
+      $('.toggle-rumpun').on('change', function() {
+        var showAll = $(this).is(':checked');
+        var peminatan = $('.peminatan-val').val();
+        $('.select2-dosen option').each(function() {
+          var lecturerRumpun = $(this).data('rumpun');
+          var isSame = (lecturerRumpun == peminatan);
+          var val = $(this).val();
+          if (showAll || isSame || val == "") {
+            $(this).show().prop('disabled', false);
+          } else {
+            $(this).hide().prop('disabled', true);
+            if ($(this).is(':selected')) $(this).parent().val("");
+          }
+        });
+      });
+
+      // Initial state
+      var hasOutside = false;
+      $('.select2-dosen option:selected').each(function() {
+        if ($(this).val() != "" && $(this).data('rumpun') != $('.peminatan-val').val()) hasOutside = true;
+      });
+      if (hasOutside) $('#toggle_rumpun').prop('checked', true);
+      $('.toggle-rumpun').trigger('change');
+
       <?php
       $err = $_GET['error'] ?? '';
       if (isset($errors_map[$err])): ?>
         Swal.fire('Gagal!', '<?php echo $errors_map[$err]; ?>', 'error');
+      <?php endif; ?>
+
+      <?php if (!empty($_GET['msg']) && $_GET['msg'] == 'pembimbing_saved'): ?>
+        Swal.fire('Berhasil!', 'Pilihan dosen pembimbing berhasil disimpan.', 'success');
       <?php endif; ?>
     });
   </script>
