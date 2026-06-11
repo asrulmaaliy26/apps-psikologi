@@ -31,8 +31,8 @@ mysqli_begin_transaction($con);
 
 try {
    // Insert ke peserta_sempro
-   $q1 = "INSERT INTO peserta_sempro(id_sempro,nim,angkatan,judul_prop,pembimbing1,pembimbing2,tgl_pengajuan,thn_pengajuan,val_adm,statusform)
-           VALUES('$id_sempro','$nim','$angkatan','$judul_prop','$pembimbing1','$pembimbing2','$tgl_pengajuan','$thn_pengajuan','$val_adm','$statusform')";
+   $q1 = "INSERT INTO peserta_sempro(id_sempro,nim,angkatan,judul_prop,pembimbing1,pembimbing2,tgl_pengajuan,thn_pengajuan,val_adm,statusform,id_jdwl,file_prop,file_skkm,tgl_validasi,catatan,rekom,id_reg)
+           VALUES('$id_sempro','$nim','$angkatan','$judul_prop','$pembimbing1','$pembimbing2','$tgl_pengajuan','$thn_pengajuan','$val_adm','$statusform','0','','','','','','')";
    if (!mysqli_query($con, $q1)) throw new Exception(mysqli_error($con));
 
    // Ambil ID yang baru saja diinsert
@@ -46,8 +46,8 @@ try {
    if (!mysqli_query($con, $q2)) throw new Exception(mysqli_error($con));
 
    // Insert ke jadwal_sempro
-   $q3 = "INSERT INTO jadwal_sempro(id_sempro,id_pendaftaran,penguji1)
-           VALUES('$id_sempro','$id','$pembimbing1')";
+   $q3 = "INSERT INTO jadwal_sempro(id_sempro,id_pendaftaran,penguji1,penguji2,tgl_seminar,jam_mulai,jam_selesai,ruang)
+           VALUES('$id_sempro','$id','$pembimbing1','','','','','')";
    if (!mysqli_query($con, $q3)) throw new Exception(mysqli_error($con));
    $idJdwl = mysqli_insert_id($con);
 
@@ -56,8 +56,8 @@ try {
    if (!mysqli_query($con, $q4)) throw new Exception(mysqli_error($con));
 
    // Insert ke nilai_sempro
-   $q5 = "INSERT INTO nilai_sempro(id_sempro,nim,angkatan,id_pendaftaran,validasi)
-           VALUES('$id_sempro','$nim','$angkatan','$id','1')";
+   $q5 = "INSERT INTO nilai_sempro(id_sempro,nim,angkatan,id_pendaftaran,validasi,catatan_narsum1,catatan_narsum2,nilai_narsum1,nilai_narsum2,mean_nilai,rekom)
+           VALUES('$id_sempro','$nim','$angkatan','$id','1','','','0','0','0','')";
    if (!mysqli_query($con, $q5)) throw new Exception(mysqli_error($con));
 
    // Commit transaksi

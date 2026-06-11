@@ -34,6 +34,7 @@ $RECYCLE.BIN/
 !/psychoApps/file_*/index.php
 !/psychoApps/file_*/.htaccess
 !/psychoApps/file_*/.gitkeep
+/psychoApps/kalender_kegiatan_files/*
 
 /psychoApps/photo_*/*
 !/psychoApps/photo_*/index.php

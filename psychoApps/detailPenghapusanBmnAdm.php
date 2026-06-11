@@ -21,11 +21,20 @@
     <div class="content-wrapper">
       <div class="content-header">
         <div class="container-fluid">
+          <?php if (isset($_GET['message']) && $_GET['message'] == 'notifDelete') { ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+              Barang berhasil dibatalkan dari daftar pengajuan.
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+          <?php } ?>
           <div class="row mb-2">
             <div class="col-sm-6">
               <h1 class="m-0">Detail Pengajuan #<?php echo $d['no_pengajuan']; ?></h1>
             </div>
             <div class="col-sm-6 text-right">
+              <a href="cetakPenghapusanBmnAdm.php?id=<?php echo $d['id']; ?>" target="_blank" class="btn btn-primary btn-sm mr-1"><i class="fas fa-print"></i> Cetak PDF</a>
               <a href="rekapPenghapusanBmnAdm.php" class="btn btn-secondary btn-sm"><i class="fas fa-arrow-left"></i> Kembali</a>
             </div>
           </div>
@@ -109,6 +118,9 @@
                         <th>Merk</th>
                         <th>Kondisi</th>
                         <th width="10%" class="text-center">Foto</th>
+                        <?php if($d['status'] == 'Diajukan' || $d['status'] == 'Draft') { ?>
+                        <th width="10%" class="text-center">Aksi</th>
+                        <?php } ?>
                       </tr>
                     </thead>
                     <tbody>
@@ -134,6 +146,11 @@
                               <i class="fas fa-image"></i>
                             </a>
                           </td>
+                          <?php if($d['status'] == 'Diajukan' || $d['status'] == 'Draft') { ?>
+                          <td class="text-center">
+                            <a href="hapusItemPenghapusanBmnAdm.php?id_pengajuan=<?php echo $id; ?>&id_barang=<?php echo $dd['id']; ?>" class="btn btn-xs btn-outline-danger" onclick="return confirm('Yakin ingin membatalkan pengajuan barang ini?')"><i class="fas fa-times"></i> Hapus</a>
+                          </td>
+                          <?php } ?>
                         </tr>
                       <?php } ?>
                     </tbody>

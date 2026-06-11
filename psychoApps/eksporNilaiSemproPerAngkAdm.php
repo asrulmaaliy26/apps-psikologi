@@ -32,6 +32,10 @@
   $reskddekanat1=mysqli_query($con, $qkddekanat1) or die (mysqli_error($con));
   $dkddekanat1=mysqli_fetch_assoc($reskddekanat1);
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Data Nilai Seminar Proposal Angkatan '.$angkatan.'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -55,10 +59,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Data Nilai Seminar Proposal Angkatan '.$angkatan.'.xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">
@@ -129,27 +130,30 @@
                             
           $qry_jdwl = "SELECT * FROM jadwal_sempro WHERE id_sempro='$data[id_sempro]' AND id='$data[id_jdwl]'";
           $res_jdwl = mysqli_query($con, $qry_jdwl);
-          $dt_jdwl = mysqli_fetch_assoc($res_jdwl);
+          $dt_jdwl = mysqli_fetch_assoc($res_jdwl) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-          $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji1]'";
+          $penguji1 = $dt_jdwl['penguji1'] ?? '';
+          $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$penguji1'";
           $res_p1 = mysqli_query($con, $qry_p1);
-          $dt_p1 = mysqli_fetch_assoc($res_p1);
+          $dt_p1 = mysqli_fetch_assoc($res_p1) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-          $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji2]'";
+          $penguji2 = $dt_jdwl['penguji2'] ?? '';
+          $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$penguji2'";
           $res_p2 = mysqli_query($con, $qry_p2);
-          $dt_p2 = mysqli_fetch_assoc($res_p2);
+          $dt_p2 = mysqli_fetch_assoc($res_p2) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-          $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$dt_jdwl[ruang]'";
+          $ruang = $dt_jdwl['ruang'] ?? '';
+          $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$ruang'";
           $res_ruang = mysqli_query($con, $qry_ruang);
-          $dt_ruang = mysqli_fetch_assoc($res_ruang);
+          $dt_ruang = mysqli_fetch_assoc($res_ruang) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_nilai = "SELECT * FROM nilai_sempro WHERE id_pendaftaran='$data[id]'";
           $res_nilai = mysqli_query($con, $qry_nilai);
-          $dt_nilai = mysqli_fetch_assoc($res_nilai);
+          $dt_nilai = mysqli_fetch_assoc($res_nilai) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_grade = "SELECT * FROM grade_sempro WHERE id_sempro='$data[id_sempro]'";
           $res_grade = mysqli_query($con, $qry_grade);
-          $dt_grade = mysqli_fetch_assoc($res_grade);
+          $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
           $qdt_cek = "SELECT * FROM opsi_validasi WHERE id='$data[val_adm]'";
           $hdt_cek = mysqli_query($con, $qdt_cek);
@@ -165,11 +169,11 @@
           <td style="text-align:left;"> <?php if(empty($dt_jdwl['tgl_seminar'])) { echo "Belum ada";} else { echo $dt_jdwl['tgl_seminar'];}?> </td>
           <td style="text-align:left;"> <?php if(empty($dt_jdwl['jam_mulai']) && empty($dt_jdwl['jam_selesai'])) { echo "Belum ada";} else { echo $dt_jdwl['jam_mulai'].' - '.$dt_jdwl['jam_selesai'];}?> </td>
           <td style="text-align:left;"> <?php if(empty($dt_jdwl['ruang'])) { echo "Belum ada";} else { echo $dt_ruang['nm'];}?> </td>
-          <td style="text-align:center;"> <?php include("nilaiNarsum1PesSemproAdm.php");?> </td>
+          <td style="text-align:center;"> <?php include("nilaiNarsum1PesSemproUser.php");?> </td>
           <td style="text-align:center;"> <?php if(empty($data['catatan_narsum1'])) { echo "Tidak ada";} else { echo nl2br($data['catatan_narsum1']);}?> </td>
-          <td style="text-align:center;"> <?php include("nilaiNarsum2PesSemproAdm.php");?> </td>
+          <td style="text-align:center;"> <?php include("nilaiNarsum2PesSemproUser.php");?> </td>
           <td style="text-align:center;"> <?php if(empty($data['catatan_narsum2'])) { echo "Tidak ada";} else { echo nl2br($data['catatan_narsum2']);}?> </td>
-          <td style="text-align:center;"> <?php include ("nilaiPesSemproAdm.php");?> </td>
+          <td style="text-align:center;"> <?php include ("nilaiPesSemproUser.php");?> </td>
         </tr>
         <?php
           }

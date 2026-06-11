@@ -42,7 +42,8 @@ if (!function_exists('isActive')) {
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="<?php echo isActive('dashboardUser.php'); ?>"><a href="dashboardUser.php">Biodata <span class="sr-only">(current)</span></a></li>
+        <li class="<?php echo isActive('homeUser.php'); ?>"><a href="homeUser.php">Dashboard <span class="sr-only">(current)</span></a></li>
+        <li class="<?php echo isActive('dashboardUser.php'); ?>"><a href="dashboardUser.php">Biodata</a></li>
         <li class="dropdown <?php echo isActive(['formSowam.php','formSipt.php']); ?>">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Permohonan Surat <span class="caret"></span></a>
           <ul class="dropdown-menu">
@@ -56,6 +57,17 @@ if (!function_exists('isActive')) {
             <li class="<?php echo isActive('formPengajuanPrp.php'); ?>"><a href="formPengajuanPrp.php">Peminatan Rumpun Psikologi</a></li>
             <li class="<?php echo isActive('formPengajuanAc.php'); ?>"><a href="formPengajuanAc.php">Academic Coach</a></li>
             <li class="<?php echo isActive('formPengajuanPt.php'); ?>"><a href="formPengajuanPt.php">Pembimbing Tesis</a></li>
+          </ul>
+        </li>
+        <li class="dropdown <?php echo isActive(['formPendSempro.php','formPendUjTes.php','formThesisCamp.php','formRevisiSempro.php','formRevisiTesis.php']); ?>">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pendaftaran <span class="caret"></span></a>
+          <ul class="dropdown-menu">
+            <li class="<?php echo isActive('formPendSempro.php'); ?>"><a href="formPendSempro.php">Seminar Proposal</a></li>
+            <li class="<?php echo isActive('formPendUjTes.php'); ?>"><a href="formPendUjTes.php">Ujian Tesis</a></li>
+            <li class="<?php echo isActive('formThesisCamp.php'); ?>"><a href="formThesisCamp.php">Thesis Camp</a></li>
+            <li role="separator" class="divider"></li>
+            <li class="<?php echo isActive('formRevisiSempro.php'); ?>"><a href="formRevisiSempro.php">Upload Revisi Seminar Proposal</a></li>
+            <li class="<?php echo isActive('formRevisiTesis.php'); ?>"><a href="formRevisiTesis.php">Upload Revisi Ujian Tesis</a></li>
           </ul>
         </li>
         <li class="dropdown <?php echo isActive(['downloadUser.php','judulTesisUser.php','variabelxyUser.php']); ?>">

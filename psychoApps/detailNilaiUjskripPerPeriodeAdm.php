@@ -111,31 +111,35 @@
                             
                             $qry_jdwl = "SELECT * FROM jadwal_ujskrip WHERE id_ujskrip='$data[id_ujskrip]' AND id='$data[id_jdwl]'";
                             $res_jdwl = mysqli_query($con, $qry_jdwl);
-                            $dt_jdwl = mysqli_fetch_assoc($res_jdwl);
+                            $dt_jdwl = mysqli_fetch_assoc($res_jdwl) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-                            $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[sekretaris_penguji]'";
+                            $sekretaris = $dt_jdwl['sekretaris_penguji'] ?? '';
+                            $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$sekretaris'";
                             $res_p1 = mysqli_query($con, $qry_p1);
-                            $dt_p1 = mysqli_fetch_assoc($res_p1);
+                            $dt_p1 = mysqli_fetch_assoc($res_p1) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-                            $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[ketua_penguji]'";
+                            $ketua = $dt_jdwl['ketua_penguji'] ?? '';
+                            $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$ketua'";
                             $res_p2 = mysqli_query($con, $qry_p2);
-                            $dt_p2 = mysqli_fetch_assoc($res_p2);
+                            $dt_p2 = mysqli_fetch_assoc($res_p2) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-                            $qry_p3 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji_utama]'";
+                            $utama = $dt_jdwl['penguji_utama'] ?? '';
+                            $qry_p3 = "SELECT * FROM dt_pegawai WHERE id='$utama'";
                             $res_p3 = mysqli_query($con, $qry_p3);
-                            $dt_p3 = mysqli_fetch_assoc($res_p3);
+                            $dt_p3 = mysqli_fetch_assoc($res_p3) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
-                            $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$dt_jdwl[ruang]'";
+                            $ruang = $dt_jdwl['ruang'] ?? '';
+                            $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$ruang'";
                             $res_ruang = mysqli_query($con, $qry_ruang);
-                            $dt_ruang = mysqli_fetch_assoc($res_ruang);
+                            $dt_ruang = mysqli_fetch_assoc($res_ruang) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
                             $qry_nilai = "SELECT * FROM nilai_ujskrip WHERE id_pendaftaran='$data[id]'";
                             $res_nilai = mysqli_query($con, $qry_nilai);
-                            $dt_nilai = mysqli_fetch_assoc($res_nilai);
+                            $dt_nilai = mysqli_fetch_assoc($res_nilai) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
                             $qry_grade = "SELECT * FROM grade_ujskrip WHERE id_ujskrip='$data[id_ujskrip]'";
                             $res_grade = mysqli_query($con, $qry_grade);
-                            $dt_grade = mysqli_fetch_assoc($res_grade);
+                            $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
                             $qdt_cek = "SELECT * FROM opsi_validasi WHERE id='$data[val_adm]'";
                             $hdt_cek = mysqli_query($con, $qdt_cek);
@@ -147,10 +151,10 @@
                             <td class="text-left"> <?php echo $dmhssw['nama'].' / '.$dmhssw['nim'];?> </td>
                             <td class="text-left"> <?php echo $data['judul_skripsi']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $data['judul_skripsi']);?> </td>
                             <td class="text-center"> <?php echo $data['tgl_pengajuan'];?> </td>
-                            <td class="text-center"> <span data-toggle="tooltip" data-placement="top" title="<?php echo $dt_p1['nama'];?>"><?php include("nilaiSekretarisPesUjskripAdm.php");?></span> </td>
-                            <td class="text-center"> <span data-toggle="tooltip" data-placement="top" title="<?php echo $dt_p2['nama'];?>"><?php include("nilaiKetuaPesUjskripAdm.php");?></span> </td>
-                            <td class="text-center"> <span data-toggle="tooltip" data-placement="top" title="<?php echo $dt_p3['nama'];?>"><?php include("nilaiUtamaPesUjskripAdm.php");?></span> </td>
-                            <td class="text-center pr-1"> <?php include("meanNilaiPesUjskripAdm.php");?> </td>
+                            <td class="text-center"> <span data-toggle="tooltip" data-placement="top" title="<?php echo $dt_p1['nama'];?>"><?php include("nilaiSekretarisPesUjskripUser.php");?></span> </td>
+                            <td class="text-center"> <span data-toggle="tooltip" data-placement="top" title="<?php echo $dt_p2['nama'];?>"><?php include("nilaiKetuaPesUjskripUser.php");?></span> </td>
+                            <td class="text-center"> <span data-toggle="tooltip" data-placement="top" title="<?php echo $dt_p3['nama'];?>"><?php include("nilaiUtamaPesUjskripUser.php");?></span> </td>
+                            <td class="text-center pr-1"> <?php include("nilaiPesUjskripUser.php");?> </td>
                           </tr>
                           <tr class="expandable-body">
                             <td colspan="8"> <?php include("detailPesUjskripAdm.php");?> </td>

@@ -52,6 +52,13 @@
         </div>
       </div>
       <div class="form-group">
+        <label for="batas_revisi">Batas Akhir Revisi (Upload Tesis):</label>
+        <div class="input-group input-append date" id="datetimepicker5">
+          <input type="text" class="form-control" name="batas_revisi" value="<?php echo (!empty($djdwl['batas_revisi']) && $djdwl['batas_revisi'] != '0000-00-00') ? date('d-m-Y', strtotime($djdwl['batas_revisi'])) : ''; ?>" placeholder="Default: 30 hari setelah tanggal ujian">
+          <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+        </div>
+      </div>
+      <div class="form-group">
         <label for="ruang">Ruang:</label>
         <?php
           echo "<select class='form-control' id='ruang' name='ruang' required>";
@@ -158,6 +165,13 @@
   
   $(document).ready(function() {
   $('#datetimepicker4')
+  .datetimepicker({
+  format: 'DD-MM-YYYY'
+  });
+  });
+
+  $(document).ready(function() {
+  $('#datetimepicker5')
   .datetimepicker({
   format: 'DD-MM-YYYY'
   });

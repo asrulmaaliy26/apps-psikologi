@@ -1,5 +1,9 @@
 <?php include( "contentsConAdm.php" );
   $tahun=mysqli_real_escape_string($con, $_GET['tahun']);?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Data Surat Perjalanan Dinas Tahun '.$tahun.'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,10 +22,7 @@
     <?php
       include( "kopPotret.php" );
       ?>
-      <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Data Surat Perjalanan Dinas Tahun '.$tahun.'.xls');
-      ?>
+      
     <p><strong>Data Surat Perjalanan Dinas Tahun <?php echo $tahun;?></strong></p>
     <table width="100%">
       <thead>

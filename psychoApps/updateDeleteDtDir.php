@@ -1,7 +1,8 @@
 <?php
    include("contentsConAdm.php");
    
-   $jumlah = count($_POST["item"]);
+   $items = $_POST["item"] ?? [];
+   $jumlah = count($items);
    for($i=0; $i < $jumlah; $i++)
    {
    $id=$_POST["item"][$i];

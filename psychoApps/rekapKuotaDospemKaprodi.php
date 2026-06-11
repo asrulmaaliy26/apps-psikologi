@@ -1,10 +1,10 @@
 <?php include( "contentsConAdm.php" );
   $username = $_SESSION['username'];
   
-  // Validasi Kaprodi
+  // Validasi Kaprodi & Sekprodi
   $q_me = mysqli_query($con, "SELECT * FROM dt_pegawai WHERE id='$username'");
   $dMe = mysqli_fetch_assoc($q_me);
-  if ($dMe['jabatan_instansi'] != '47') {
+  if ($dMe['jabatan_instansi'] != '47' && $dMe['jabatan_instansi'] != '46') {
     header("location:dashboardAdm.php");
     exit();
   }

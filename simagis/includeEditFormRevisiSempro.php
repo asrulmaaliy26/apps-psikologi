@@ -38,7 +38,7 @@
                   <input type="file" name="file_prop" class="form-control" id="file_prop" required>
                   <p class="help-text small"><code>* Dijadikan satu file berbentuk PDF dan harus sudah bertandatangan sah dari dosen penguji seminar proposal tesis</code>.</p>';}
                   else {
-                  echo '<label for="file_prop">File proposal tesis (setelah direvisi)<code> telah terupload!</code>. Ganti:</label>
+                  echo '<label for="file_prop">File proposal tesis (setelah direvisi)<code> telah terupload!</code> <a href="'.$dt['file_prop'].'" target="_blank" class="btn btn-info btn-xs">Lihat File</a> Ganti:</label>
                   <input type="file" name="file_prop" class="form-control" id="file_prop">
                   <p class="help-text small"><code>* Dijadikan satu file berbentuk PDF dan telah direvisi</code>.</p>';
                   }
@@ -50,7 +50,7 @@
                   <input type="file" name="file_form_revisi" class="form-control" id="file_form_revisi" required>
                   <p class="help-text small"><code>* Dijadikan satu file berbentuk PDF dan telah ditandatangani dosen penguji seminar proposal tesis</code>.</p>';}
                   else {
-                  echo '<label for="file_form_revisi">File form revisi seminar proposal tesis<code> telah terupload!</code>. Ganti:</label>
+                  echo '<label for="file_form_revisi">File form revisi seminar proposal tesis<code> telah terupload!</code> <a href="'.$dt['file_form_revisi'].'" target="_blank" class="btn btn-info btn-xs">Lihat File</a> Ganti:</label>
                   <input type="file" name="file_form_revisi" class="form-control" id="file_form_revisi">
                   <p class="help-text small"><code>* Dijadikan satu file berbentuk PDF dan telah ditandatangani dosen penguji seminar proposal tesis</code>.</p>';
                   }

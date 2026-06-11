@@ -31,6 +31,7 @@ $urutan12 = "12";
 $nim = mysqli_real_escape_string($con, $_POST['nim']);
 $lembaga_tujuan_surat = mysqli_real_escape_string($con, $_POST['lembaga_tujuan_surat']);
 $alamat_lengkap_lts = mysqli_real_escape_string($con, $_POST['alamat_lengkap_lts']);
+$lokasi = mysqli_real_escape_string($con, $_POST['lokasi']);
 $sebutan_pimpinan = mysqli_real_escape_string($con, $_POST['sebutan_pimpinan']);
 $kota_lts = mysqli_real_escape_string($con, $_POST['kota_lts']);
 $jenis_pkl = mysqli_real_escape_string($con, $_POST['jenis_pkl']);
@@ -111,8 +112,8 @@ if ($jenis_berkas != "application/pdf") {
     $dta_active = mysqli_fetch_assoc($rta_active);
     $ta_id = $dta_active['id'];
 
-    $query = mysqli_query($con, "INSERT INTO sitp(no_agenda_surat,nim,lembaga_tujuan_surat,alamat_lengkap_lts,kota_lts,sebutan_pimpinan,tgl_pengajuan,bln_pengajuan,jenis_pkl,tgl_mulai_pkl,tgl_selesai_pkl,ta,thn_pengajuan,wd1,statusform,tgl_proses,tgl_selesai,tgl_dikeluarkan,tembusan,catatan,executor,editor,file_persetujuan)" .
-        "VALUES('','$nim','$lembaga_tujuan_surat','$alamat_lengkap_lts','$kota_lts','$sebutan_pimpinan','$tgl_pengajuan','$bln_pengajuan','$jenis_pkl','$tgl_mulai_pkl','$tgl_selesai_pkl','$ta_id','$thn_pengajuan','$wd1','$statusform','','',NULL,'','','','','$berkas')")  or die(mysqli_error($con));
+    $query = mysqli_query($con, "INSERT INTO sitp(no_agenda_surat,nim,lembaga_tujuan_surat,alamat_lengkap_lts,lokasi,kota_lts,sebutan_pimpinan,tgl_pengajuan,bln_pengajuan,jenis_pkl,tgl_mulai_pkl,tgl_selesai_pkl,ta,thn_pengajuan,wd1,statusform,tgl_proses,tgl_selesai,tgl_dikeluarkan,tembusan,catatan,executor,editor,file_persetujuan)" .
+        "VALUES('','$nim','$lembaga_tujuan_surat','$alamat_lengkap_lts','$lokasi','$kota_lts','$sebutan_pimpinan','$tgl_pengajuan','$bln_pengajuan','$jenis_pkl','$tgl_mulai_pkl','$tgl_selesai_pkl','$ta_id','$thn_pengajuan','$wd1','$statusform','','',NULL,'','','','','$berkas')")  or die(mysqli_error($con));
 
     $qry = mysqli_query($con, "SELECT id FROM sitp ORDER BY id DESC");
     $ambil = mysqli_fetch_assoc($qry);

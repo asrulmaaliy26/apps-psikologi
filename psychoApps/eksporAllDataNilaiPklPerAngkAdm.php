@@ -32,6 +32,10 @@
   $reskddekanat1=mysqli_query($con, $qkddekanat1) or die (mysqli_error($con));
   $dkddekanat1=mysqli_fetch_assoc($reskddekanat1);
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=>Data Nilai PKL Angkatan '.$angkatan.'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -55,10 +59,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=>Data Nilai PKL Angkatan '.$angkatan.'.xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">
@@ -125,7 +126,7 @@
 
           $qry_grade = "SELECT * FROM grade_pkl WHERE id_pkl='$data[id_pkl]'";
           $res_grade = mysqli_query($con, $qry_grade);
-          $dt_grade = mysqli_fetch_assoc($res_grade);
+          $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
           $qdt_cek = "SELECT * FROM opsi_validasi WHERE id='$data[val_adm]'";
           $hdt_cek = mysqli_query($con, $qdt_cek);

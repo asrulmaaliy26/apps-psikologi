@@ -39,6 +39,13 @@ if ($hasSession && !empty($_SESSION['username'])) {
     }
 }
 
+function formatBookingDateRange($startDate, $endDate) {
+    if (!empty($endDate) && $endDate !== '0000-00-00' && $endDate !== $startDate) {
+        return date('d-m-Y', strtotime($startDate)) . ' s.d. ' . date('d-m-Y', strtotime($endDate));
+    }
+    return date('d-m-Y', strtotime($startDate));
+}
+
 // Proses Aksi User Menerima atau Menolak Usulan Perubahan
 $post_action_message = "";
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action']) && !empty($token)) {
@@ -271,7 +278,7 @@ if (!empty($token)) {
                             <p class="text-secondary small font-italic mb-3">"<?php echo htmlspecialchars($mb['kegiatan']); ?>"</p>
                             
                             <div class="small text-muted mb-4" style="line-height: 1.6;">
-                              <div><i class="far fa-calendar-alt mr-2 text-info"></i><?php echo date('d-m-Y', strtotime($mb['tanggal'])); ?></div>
+                              <div><i class="far fa-calendar-alt mr-2 text-info"></i><?php echo formatBookingDateRange($mb['tanggal'], $mb['tanggal_akhir']); ?></div>
                               <div><i class="far fa-clock mr-2 text-info"></i><?php echo substr($mb['jam_mulai'], 0, 5) . ' - ' . substr($mb['jam_selesai'], 0, 5); ?> WIB</div>
                               <div><i class="fas fa-users mr-2 text-info"></i><?php echo htmlspecialchars($mb['nama_organisasi']); ?> &bull; Unit: <?php echo htmlspecialchars($mb['unit']); ?></div>
                             </div>
@@ -458,7 +465,7 @@ if (!empty($token)) {
                           <div class="small mb-2">
                             <span class="text-muted d-block">Tanggal Baru:</span>
                             <span class="<?php echo ($booking['tanggal'] != $booking['original_tanggal']) ? 'highlight-change' : ''; ?>">
-                              <?php echo date('d-m-Y', strtotime($booking['tanggal'])); ?>
+                              <?php echo formatBookingDateRange($booking['tanggal'], $booking['tanggal_akhir']); ?>
                             </span>
                           </div>
                           
@@ -526,7 +533,7 @@ if (!empty($token)) {
                     <div class="row mb-3">
                       <div class="col-4 text-muted small">Tanggal Peminjaman</div>
                       <div class="col-8">
-                        <strong><?php echo date('d-m-Y', strtotime($booking['tanggal'])); ?></strong>
+                        <strong><?php echo formatBookingDateRange($booking['tanggal'], $booking['tanggal_akhir']); ?></strong>
                       </div>
                     </div>
                     

@@ -42,7 +42,8 @@ if (!function_exists('isActive')) {
     </div>
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="<?php echo isActive('dashboardUser.php'); ?>"><a href="dashboardUser.php">Biodata <span class="sr-only">(current)</span></a></li>
+        <li class="<?php echo isActive('homeUser.php'); ?>"><a href="homeUser.php">Dashboard <span class="sr-only">(current)</span></a></li>
+        <li class="<?php echo isActive('dashboardUser.php'); ?>"><a href="dashboardUser.php">Biodata</a></li>
         <li class="dropdown <?php echo isActive(['formSowam.php','formSipt.php']); ?>">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Permohonan Surat <span class="caret"></span></a>
           <ul class="dropdown-menu">

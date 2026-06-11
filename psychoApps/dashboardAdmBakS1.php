@@ -448,31 +448,31 @@
                           $h4 = mysqli_query($con,  $q4 )or DIE( mysqli_error($con) );
                           $dt4 = mysqli_fetch_assoc( $h4 );
                           
-                          $q5 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE nilai_ketua = '' OR nilai_sekretaris = '' OR nilai_utama = ''";
+                          $q5 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE nilai_ketua IN ('', '0') OR nilai_ketua IS NULL OR nilai_sekretaris IN ('', '0') OR nilai_sekretaris IS NULL OR nilai_utama IN ('', '0') OR nilai_utama IS NULL";
                           $h5 = mysqli_query($con,  $q5 )or DIE( mysqli_error($con) );
                           $dt5 = mysqli_fetch_assoc( $h5 );
                           
-                          $q6 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE (nilai_ketua + nilai_sekretaris + nilai_utama / 3) >= '85' AND (nilai_ketua + nilai_sekretaris + nilai_utama / 3) <= '100'";
+                          $q6 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE mean_nilai >= 85 AND mean_nilai <= 100";
                           $h6 = mysqli_query($con,  $q6 )or DIE( mysqli_error($con) );
                           $dt6 = mysqli_fetch_assoc( $h6 );
                           
-                          $q7 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE (nilai_ketua + nilai_sekretaris + nilai_utama / 3) >= '75' AND (nilai_ketua + nilai_sekretaris + nilai_utama / 3) <= '84'";
+                          $q7 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE mean_nilai >= 75 AND mean_nilai < 85";
                           $h7 = mysqli_query($con,  $q7 )or DIE( mysqli_error($con) );
                           $dt7 = mysqli_fetch_assoc( $h7 );
                           
-                          $q8 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE (nilai_ketua + nilai_sekretaris + nilai_utama / 3) >= '70' AND (nilai_ketua + nilai_sekretaris + nilai_utama / 3) <= '64'";
+                          $q8 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE mean_nilai >= 70 AND mean_nilai < 75";
                           $h8 = mysqli_query($con,  $q8 )or DIE( mysqli_error($con) );
                           $dt8 = mysqli_fetch_assoc( $h8 );
                           
-                          $q9 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE (nilai_ketua + nilai_sekretaris + nilai_utama / 3) >= '65' AND (nilai_ketua + nilai_sekretaris + nilai_utama / 3) <= '69'";
+                          $q9 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE mean_nilai >= 65 AND mean_nilai < 70";
                           $h9 = mysqli_query($con,  $q9 )or DIE( mysqli_error($con) );
                           $dt9 = mysqli_fetch_assoc( $h9 );
                           
-                          $q10 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE (nilai_ketua + nilai_sekretaris + nilai_utama / 3) >= '60' AND (nilai_ketua + nilai_sekretaris + nilai_utama / 3) <= '64'";
+                          $q10 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE mean_nilai >= 60 AND mean_nilai < 65";
                           $h10 = mysqli_query($con,  $q10 )or DIE( mysqli_error($con) );
                           $dt10 = mysqli_fetch_assoc( $h10 );
                           
-                          $q11 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE (nilai_ketua + nilai_sekretaris + nilai_utama / 3) < '60'";
+                          $q11 = "SELECT COUNT(id) AS jumData FROM nilai_ujskrip WHERE mean_nilai < 60 AND mean_nilai > 0";
                           $h11 = mysqli_query($con,  $q11 )or DIE( mysqli_error($con) );
                           $dt11 = mysqli_fetch_assoc( $h11 );
                           

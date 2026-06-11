@@ -86,7 +86,7 @@
                             
                       $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$data[ruang]'";
                       $res_ruang = mysqli_query($con, $qry_ruang);
-                      $dt_ruang = mysqli_fetch_assoc($res_ruang);
+                      $dt_ruang = mysqli_fetch_assoc($res_ruang) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                       include("tableHariRuangSempro.php");
                       include("extConJadSempro.php");'
                       ';}?>

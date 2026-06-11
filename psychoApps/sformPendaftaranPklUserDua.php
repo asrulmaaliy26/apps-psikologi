@@ -1,9 +1,7 @@
 <?php include( "contentsConAdm.php" );
 $id = mysqli_real_escape_string($con, $_POST['id']);
 $id_pkl = mysqli_real_escape_string($con, $_POST['id_pkl']);
-$file_transkrip = mysqli_real_escape_string($con, $_POST['file_transkrip']);
-
-$j_ftpd = $_FILES['file_transkrip']['type'];
+$j_ftpd = $_FILES['file_transkrip']['type'] ?? '';
 
 $myquery = "SELECT * FROM peserta_pkl WHERE id='$id'";
 $r = mysqli_query($con,  $myquery )or die( mysqli_error($con) );

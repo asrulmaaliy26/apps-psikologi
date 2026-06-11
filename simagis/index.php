@@ -386,7 +386,7 @@ include("koneksiExt.php");
         cache: false,
         success: function(data) {
           console.log(data);
-          modal.find('.isiModalDetail').html(data);
+          modal.find('.isiModalPengumuman').html(data);
         },
         error: function(err) {
           console.log(err);

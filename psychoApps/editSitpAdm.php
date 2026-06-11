@@ -328,6 +328,12 @@ $dNoAsm = mysqli_fetch_assoc($rNoAsm);
                         <input type="text" name="alamat_lengkap_lts" class="form-control form-control-sm" value="<?php echo $dSurat['alamat_lengkap_lts']; ?>" required>
                       </div>
                     </div>
+                    <div class="row">
+                      <div class="form-group col-12">
+                        <label>Lokasi PKL (Ditampilkan di Surat)</label>
+                        <input type="text" name="lokasi" class="form-control form-control-sm" value="<?php echo $dSurat['lokasi']; ?>" placeholder="Jika kosong, akan mengambil gabungan Instansi dan Kota Instansi">
+                      </div>
+                    </div>
                     <hr>
                     <h5 class="text-success"><i class="fas fa-building mr-1"></i> Detail Instansi</h5>
                     <div class="row">

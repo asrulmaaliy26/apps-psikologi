@@ -127,6 +127,7 @@
               <div class="col-md-12" style="margin-bottom:10px;">
                 <ul class="nav nav-tabs">
                   <li role="presentation" class="active"><a>Periode Pendaftaran</a></li>
+                  <li role="presentation"><a href="semuaPendaftarUjtesAdm.php">Semua Pendaftar</a></li>
                   <button role="presentation" class="btn btn-primary pull-right" title="Input periode baru" data-toggle="modal" data-target="#modalInput"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Input Periode Baru</button>
                 </ul>
               </div>

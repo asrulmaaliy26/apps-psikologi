@@ -11,6 +11,19 @@ if ($_SESSION['level'] != '5' && $_SESSION['level'] != '10') {
 $q_pending_count = mysqli_query($con, "SELECT COUNT(id) AS tot FROM bmn_peminjaman_ruangan WHERE status='pending'");
 $d_pending_count = mysqli_fetch_assoc($q_pending_count);
 $pending_count = $d_pending_count['tot'];
+
+// Count for each status
+$q_approved = mysqli_query($con, "SELECT COUNT(id) AS tot FROM bmn_peminjaman_ruangan WHERE status IN ('approved', 'accepted_change')");
+$d_approved = mysqli_fetch_assoc($q_approved);
+$approved_count = $d_approved['tot'];
+
+$q_proposed = mysqli_query($con, "SELECT COUNT(id) AS tot FROM bmn_peminjaman_ruangan WHERE status = 'proposed'");
+$d_proposed = mysqli_fetch_assoc($q_proposed);
+$proposed_count = $d_proposed['tot'];
+
+$q_rejected = mysqli_query($con, "SELECT COUNT(id) AS tot FROM bmn_peminjaman_ruangan WHERE status IN ('rejected', 'declined_change')");
+$d_rejected = mysqli_fetch_assoc($q_rejected);
+$rejected_count = $d_rejected['tot'];
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -138,13 +151,13 @@ $pending_count = $d_pending_count['tot'];
                       </a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Disetujui / Aktif</a>
+                        <a class="nav-link" id="approved-tab" data-toggle="tab" href="#approved" role="tab" aria-controls="approved" aria-selected="false">Disetujui / Aktif<?php if ($approved_count > 0) { ?> <span class="badge badge-success ml-1 px-2"><?php echo $approved_count; ?></span><?php } ?></a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="proposed-tab" data-toggle="tab" href="#proposed" role="tab" aria-controls="proposed" aria-selected="false">Usulan Perubahan</a>
+                        <a class="nav-link" id="proposed-tab" data-toggle="tab" href="#proposed" role="tab" aria-controls="proposed" aria-selected="false">Usulan Perubahan<?php if ($proposed_count > 0) { ?> <span class="badge badge-warning ml-1 px-2"><?php echo $proposed_count; ?></span><?php } ?></a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Ditolak / Batal</a>
+                        <a class="nav-link" id="history-tab" data-toggle="tab" href="#history" role="tab" aria-controls="history" aria-selected="false">Ditolak / Batal<?php if ($rejected_count > 0) { ?> <span class="badge badge-danger ml-1 px-2"><?php echo $rejected_count; ?></span><?php } ?></a>
                     </li>
                   </ul>
                 </div>
@@ -458,7 +471,9 @@ $pending_count = $d_pending_count['tot'];
         // Ambil data ruangan yang aktif untuk opsi
         $optRooms = "";
         $q_rooms = mysqli_query($con, "SELECT id, nama_ruangan, kapasitas FROM bmn_ruangan_booking WHERE status_aktif = 1 ORDER BY nama_ruangan ASC");
-        while ($r = mysqli_fetch_array($q_rooms)) {
+        
+
+while ($r = mysqli_fetch_array($q_rooms)) {
             $selected = $r['id'] == $d['ruangan_id'] ? 'selected' : '';
             $optRooms .= '<option value="' . $r['id'] . '" ' . $selected . '>' . htmlspecialchars($r['nama_ruangan']) . ' (Kapasitas: ' . $r['kapasitas'] . ')</option>';
         }

@@ -1,5 +1,9 @@
 <?php include( "contentsConAdm.php" );
   $thn_pengajuan=mysqli_real_escape_string($con, $_GET['tahun']);?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=>Data Surat Izin Penelitian Skripsi Tahun '.$thn_pengajuan.'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,10 +22,7 @@
     <?php
       include( "kopPotret.php" );
       ?>
-      <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=>Data Surat Izin Penelitian Skripsi Tahun '.$thn_pengajuan.'.xls');
-      ?>
+      
     <p><strong>Data Surat Izin Penelitian Skripsi Tahun <?php echo $thn_pengajuan;?></strong></p>
     <table width="100%">
       <thead>

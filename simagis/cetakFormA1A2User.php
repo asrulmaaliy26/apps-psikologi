@@ -323,27 +323,27 @@
           <tr>
             <td>Tanggal Pelaksanaan Ujian</td>
             <td align="center">:</td>
-            <td><?php echo bulanIndo($djdwl['tgl_ujian']);?></td>
+            <td><?php echo !empty($djdwl['tgl_ujian']) && $djdwl['tgl_ujian'] != '0000-00-00' ? bulanIndo($djdwl['tgl_ujian']) : '-';?></td>
           </tr>
           <tr>
             <td>Waktu Pelaksanaan Ujian</td>
             <td align="center">:</td>
-            <td><?php echo $djdwl['jam_mulai'].' s.d '.$djdwl['jam_selesai'];?> WIB.</td>
+            <td><?php echo !empty($djdwl['jam_mulai']) ? $djdwl['jam_mulai'].' s.d '.$djdwl['jam_selesai'].' WIB.' : '-';?></td>
           </tr>
           <tr>
             <td>Ruang Pelaksanaan Ujian</td>
             <td align="center">:</td>
-            <td><?php echo $druang['nm'];?></td>
+            <td><?php echo !empty($druang['nm']) ? $druang['nm'] : '-';?></td>
           </tr>
           <tr>
             <td>Penguji Utama</td>
             <td align="center">:</td>
-            <td><?php echo $dp3['nama'];?></td>
+            <td><?php echo !empty($dp3['nama']) ? $dp3['nama'] : '-';?></td>
           </tr>
           <tr>
             <td>Ketua Penguji</td>
             <td align="center">:</td>
-            <td><?php echo $dp4['nama'];?></td>
+            <td><?php echo !empty($dp4['nama']) ? $dp4['nama'] : '-';?></td>
           </tr>
           <tr>
             <td>Pembimbing I</td>
@@ -358,7 +358,7 @@
           <tr>
             <td>Nilai Ujian</td>
             <td align="center">:</td>
-            <td><?php echo $nilaibulat;?> (<?php if($nilaibulat >=85 && $nilaibulat <= 100) { echo 'A';} if($nilaibulat >=75 && $nilaibulat <= 84) { echo 'B+';} if($nilaibulat >=70 && $nilaibulat <= 74) { echo 'B';} if($nilaibulat >=65 && $nilaibulat <= 69) { echo 'C+';} if($nilaibulat >=60 && $nilaibulat <= 64) { echo 'C';} if($nilaibulat < 60) { echo 'D';}?>)</td>
+            <td><?php if ($nilaibulat > 0) { echo $nilaibulat;?> (<?php if($nilaibulat >=85 && $nilaibulat <= 100) { echo 'A';} if($nilaibulat >=75 && $nilaibulat <= 84) { echo 'B+';} if($nilaibulat >=70 && $nilaibulat <= 74) { echo 'B';} if($nilaibulat >=65 && $nilaibulat <= 69) { echo 'C+';} if($nilaibulat >=60 && $nilaibulat <= 64) { echo 'C';} if($nilaibulat < 60) { echo 'D';}?>)<?php } else { echo '-'; } ?></td>
           </tr>
         </table>
       </div>
@@ -411,7 +411,10 @@
           <tr>
             <td>Judul Tesis Setelah Revisi</td>
             <td align="center">:</td>
-            <td><?php echo $drevisi['judul_tesis']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $drevisi['judul_tesis']);?></td>
+            <td><?php 
+            $judul_tesis_cetak = !empty($drevisi['judul_tesis']) ? $drevisi['judul_tesis'] : $dt['judul_tesis'];
+            echo preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $judul_tesis_cetak);
+            ?></td>
           </tr>
           <tr>
             <td>Dosen Pembimbing Tesis I</td>
@@ -532,12 +535,15 @@
           <tr>
             <td>Judul Tesis Setelah Revisi</td>
             <td align="center">:</td>
-            <td><?php echo $drevisi['judul_tesis']=preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $drevisi['judul_tesis']);?></td>
+            <td><?php 
+            $judul_tesis_cetak = !empty($drevisi['judul_tesis']) ? $drevisi['judul_tesis'] : $dt['judul_tesis'];
+            echo preg_replace('/<p[^>]*>(.*)<\/p[^>]*>/i', '$1', $judul_tesis_cetak);
+            ?></td>
           </tr>
           <tr>
             <td>Nilai Ujian</td>
             <td align="center">:</td>
-            <td><?php echo $nilaibulat;?> (<?php if($nilaibulat >=85 && $nilaibulat <= 100) { echo 'A';} if($nilaibulat >=75 && $nilaibulat <= 84) { echo 'B+';} if($nilaibulat >=70 && $nilaibulat <= 74) { echo 'B';} if($nilaibulat >=65 && $nilaibulat <= 69) { echo 'C+';} if($nilaibulat >=60 && $nilaibulat <= 64) { echo 'C';} if($nilaibulat < 60) { echo 'D';}?>)</td>
+            <td><?php if ($nilaibulat > 0) { echo $nilaibulat;?> (<?php if($nilaibulat >=85 && $nilaibulat <= 100) { echo 'A';} if($nilaibulat >=75 && $nilaibulat <= 84) { echo 'B+';} if($nilaibulat >=70 && $nilaibulat <= 74) { echo 'B';} if($nilaibulat >=65 && $nilaibulat <= 69) { echo 'C+';} if($nilaibulat >=60 && $nilaibulat <= 64) { echo 'C';} if($nilaibulat < 60) { echo 'D';}?>)<?php } else { echo '-'; } ?></td>
           </tr>
           <tr>
             <td>Tempat, Tanggal Lahir</td>
@@ -574,7 +580,7 @@
       <br />
       <br />
       <div class="right-ttd" style="margin-bottom:20px;">
-        Malang, <?php echo bulanIndo($drevisi['tgl_upload']);?>
+        Malang, <?php echo bulanIndo(!empty($drevisi['tgl_upload']) ? $drevisi['tgl_upload'] : date('Y-m-d'));?>
         <br />
         <br />
         <br />

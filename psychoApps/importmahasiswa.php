@@ -2,7 +2,7 @@
 //koneksi ke database, username,password  dan nama database menyesuaikan 
 
 require_once __DIR__ . '/db_env.php';
-list($dbserver, $dbusername, $dbpassword, $dbname) = psycho_db_config('db_apps-psi');
+list($dbserver, $dbusername, $dbpassword, $dbname) = psycho_db_config();
 
 error_reporting(E_ALL ^ E_DEPRECATED);
 ($con = mysqli_connect( $dbserver,  $dbusername,  $dbpassword ))or die( mysqli_error($con) );

@@ -199,7 +199,7 @@ if (!function_exists('isOpen')) {
             </ul>
           </li>
         <?php } ?>
-        <?php if ($dtDosen['jabatan_instansi'] == '47') { ?>
+        <?php if ($dtDosen['jabatan_instansi'] == '47' || $dtDosen['jabatan_instansi'] == '46') { ?>
           <li class="nav-item <?php echo isOpen(['rekapSaranPembimbingBimtekKaprodi.php', 'rekapKuotaDospemKaprodi.php', 'rekapPembimbinganKaprodi.php', 'allPembPerAngkKaprodi.php']); ?>">
             <a href="#" class="nav-link text-warning <?php echo isActive(['rekapSaranPembimbingBimtekKaprodi.php', 'rekapKuotaDospemKaprodi.php', 'rekapPembimbinganKaprodi.php', 'allPembPerAngkKaprodi.php']); ?>">
               <i class="fas fa-user-friends nav-icon"></i>
@@ -263,12 +263,14 @@ if (!function_exists('isOpen')) {
           </a>
         </li>
         <?php } ?>
+        <?php if (isFeatureEnabled('kalender_kegiatan')) { ?>
         <li class="nav-item">
           <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
             <i class="nav-icon fas fa-calendar-alt"></i>
             <p>Kalender Kegiatan</p>
           </a>
         </li>
+        <?php } ?>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">
             <i class="fas fa-headset nav-icon"></i>

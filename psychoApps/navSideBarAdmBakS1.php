@@ -223,12 +223,15 @@ $_semuaPendaftaran = array_merge($_pkl, $_sempro, $_kompre, $_ujskrip, $_bimtek)
           </a>
         </li>
         <?php } ?>
+        
+        <?php if (isFeatureEnabled('kalender_kegiatan')) { ?>
         <li class="nav-item">
           <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
             <i class="nav-icon fas fa-calendar-alt"></i>
             <p>Kalender Kegiatan</p>
           </a>
         </li>
+        <?php } ?>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">
             <i class="fas fa-headset nav-icon"></i>

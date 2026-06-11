@@ -85,29 +85,32 @@
                             
                             $qry_jdwl = "SELECT * FROM jadwal_sempro WHERE id_sempro='$data[id_sempro]' AND id='$data[id_jdwl]'";
                             $res_jdwl = mysqli_query($con, $qry_jdwl);
-                            $dt_jdwl = mysqli_fetch_assoc($res_jdwl);
-                            $oldDateJad = $dt_jdwl['tgl_seminar'];
-                            $newDateJad = date("d-m-Y", strtotime($oldDateJad));
+                            $dt_jdwl = $res_jdwl ? mysqli_fetch_assoc($res_jdwl) : null;
+                            $oldDateJad = $dt_jdwl['tgl_seminar'] ?? '';
+                            $newDateJad = !empty($oldDateJad) ? date("d-m-Y", strtotime($oldDateJad)) : '';
 
-                            $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji1]'";
+                            $p1 = $dt_jdwl['penguji1'] ?? '';
+                            $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$p1'";
                             $res_p1 = mysqli_query($con, $qry_p1);
-                            $dt_p1 = mysqli_fetch_assoc($res_p1);
+                            $dt_p1 = $res_p1 ? mysqli_fetch_assoc($res_p1) : null;
                             
-                            $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji2]'";
+                            $p2 = $dt_jdwl['penguji2'] ?? '';
+                            $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$p2'";
                             $res_p2 = mysqli_query($con, $qry_p2);
-                            $dt_p2 = mysqli_fetch_assoc($res_p2);
+                            $dt_p2 = $res_p2 ? mysqli_fetch_assoc($res_p2) : null;
                             
-                            $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$dt_jdwl[ruang]'";
+                            $ruang = $dt_jdwl['ruang'] ?? '';
+                            $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$ruang'";
                             $res_ruang = mysqli_query($con, $qry_ruang);
-                            $dt_ruang = mysqli_fetch_assoc($res_ruang);
+                            $dt_ruang = $res_ruang ? mysqli_fetch_assoc($res_ruang) : null;
                             
                             $qry_nilai = "SELECT * FROM nilai_sempro WHERE id_pendaftaran='$data[id]'";
                             $res_nilai = mysqli_query($con, $qry_nilai);
-                            $dt_nilai = mysqli_fetch_assoc($res_nilai);
+                            $dt_nilai = mysqli_fetch_assoc($res_nilai) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
                             $qry_grade = "SELECT * FROM grade_sempro WHERE id_sempro='$data[id_sempro]'";
                             $res_grade = mysqli_query($con, $qry_grade);
-                            $dt_grade = mysqli_fetch_assoc($res_grade);
+                            $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
                             $qdt_cek = "SELECT * FROM opsi_validasi WHERE id='$data[val_adm]'";
                             $hdt_cek = mysqli_query($con, $qdt_cek);

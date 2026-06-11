@@ -83,6 +83,14 @@
                         ?>
                       </select>
                     </div>
+                    <div class="form-group">
+                      <label for="lokasi_kampus">Lokasi Kampus</label>
+                      <select name="lokasi_kampus" class="form-control form-control-sm" required>
+                        <option value="Kampus 1" <?php if($d_ruang['lokasi_kampus'] == 'Kampus 1') echo 'selected'; ?>>Kampus 1</option>
+                        <option value="Kampus 2" <?php if($d_ruang['lokasi_kampus'] == 'Kampus 2') echo 'selected'; ?>>Kampus 2</option>
+                        <option value="Kampus 3" <?php if($d_ruang['lokasi_kampus'] == 'Kampus 3') echo 'selected'; ?>>Kampus 3</option>
+                      </select>
+                    </div>
                   </div>
                   <div class="card-footer">
                     <button type="submit" class="btn btn-outline-primary btn-sm float-left">Update</button>

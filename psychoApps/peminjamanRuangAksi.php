@@ -36,7 +36,12 @@ $kegiatan = mysqli_real_escape_string($con, $_POST['kegiatan']);
 $kapasitas = intval($_POST['kapasitas']);
 $keterangan = mysqli_real_escape_string($con, $_POST['keterangan']);
 
-if ($ruangan_id <= 0 || empty($nama_organisasi) || empty($unit) || empty($email) || empty($tanggal) || empty($jam_mulai) || empty($jam_selesai) || empty($kegiatan) || $kapasitas <= 0) {
+if ($ruangan_id <= 0 || empty($nama_organisasi) || empty($unit) || empty($email) || empty($tanggal_mulai) || empty($tanggal_akhir) || empty($jam_mulai) || empty($jam_selesai) || empty($kegiatan) || $kapasitas <= 0) {
+    header("location:peminjamanRuangUmum.php");
+    exit();
+}
+
+if (strtotime($tanggal_akhir) < strtotime($tanggal_mulai)) {
     header("location:peminjamanRuangUmum.php");
     exit();
 }
@@ -59,9 +64,9 @@ $booking_token = generateUniqueToken($con);
 
 // Masukkan data ke DB
 $query = "INSERT INTO bmn_peminjaman_ruangan (
-            ruangan_id, nama_organisasi, unit, email, tanggal, jam_mulai, jam_selesai, kegiatan, kapasitas, keterangan, status, booking_token
+            ruangan_id, nama_organisasi, unit, email, tanggal, tanggal_akhir, jam_mulai, jam_selesai, kegiatan, kapasitas, keterangan, status, booking_token
           ) VALUES (
-            $ruangan_id, '$nama_organisasi', '$unit', '$email', '$tanggal', '$jam_mulai', '$jam_selesai', '$kegiatan', $kapasitas, '$keterangan', 'pending', '$booking_token'
+            $ruangan_id, '$nama_organisasi', '$unit', '$email', '$tanggal_mulai', '$tanggal_akhir', '$jam_mulai', '$jam_selesai', '$kegiatan', $kapasitas, '$keterangan', 'pending', '$booking_token'
           )";
 
 if (mysqli_query($con, $query)) {

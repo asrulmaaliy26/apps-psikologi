@@ -304,7 +304,7 @@ $errors_map = [
                     </h5>
                   </div>
                   <div class="card-body">
-                    <form action="sformPraPropBimtekUser.php" method="POST" enctype="multipart/form-data">
+                    <form id="formUploadProposal" action="sformPraPropBimtekUser.php" method="POST" enctype="multipart/form-data">
                       <input type="hidden" name="id_bimtek" value="<?php echo $id_bimtek; ?>">
                       <input type="hidden" name="id_reviewer" value="<?php echo $d_peserta['id_reviewer']; ?>">
 
@@ -371,6 +371,25 @@ $errors_map = [
     $(document).ready(function() {
       bsCustomFileInput.init();
 
+      $('#formUploadProposal').on('submit', function(e) {
+        e.preventDefault();
+        var form = this;
+        Swal.fire({
+          title: 'Konfirmasi Upload',
+          text: 'Apakah Anda yakin ingin mengirim file ini? Pastikan file yang diupload sudah benar dan diperbarui.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Ya, Kirim!',
+          cancelButtonText: 'Batal'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      });
+
       $('.toggle-rumpun').on('change', function() {
         var showAll = $(this).is(':checked');
         var peminatan = $('.peminatan-val').val();
@@ -403,6 +422,10 @@ $errors_map = [
 
       <?php if (!empty($_GET['msg']) && $_GET['msg'] == 'pembimbing_saved'): ?>
         Swal.fire('Berhasil!', 'Pilihan dosen pembimbing berhasil disimpan.', 'success');
+      <?php endif; ?>
+
+      <?php if (!empty($_GET['message']) && $_GET['message'] == 'success'): ?>
+        Swal.fire('Berhasil!', 'Data Pra Proposal berhasil dikirim/diperbarui.', 'success');
       <?php endif; ?>
     });
   </script>

@@ -11,7 +11,7 @@
       $_SESSION['level'] = 'adminutama';
       $_SESSION['nm_person'] = 'Admin Utama';
       $_SESSION['status'] = '1';
-      header("location:dashboardAdminUtama.php");
+      header("location:../simagis/homeUser.php");
       exit();
   }
 
@@ -41,11 +41,11 @@
         header("location:dashboardAdmBakS1.php");
           }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="8" && $_SESSION['status']=="1"){
-        header("location:../simagis/dashboardAdm.php");
+        header("location:../simagis/homeUser.php");
           }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="3" && $_SESSION['status']=="1"){
         $_SESSION['nim'] = $c['username'];
-        header("location:../simagis/dashboardUser.php");
+        header("location:../simagis/homeUser.php");
           }
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['level']=="2" && $_SESSION['status']=="1"){
         header("location:dashboardUserS1.php");

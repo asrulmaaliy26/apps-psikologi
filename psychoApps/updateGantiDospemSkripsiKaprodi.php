@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $new_dospem_id = mysqli_real_escape_string($con, $_POST['new_dospem_id']);
 
     if (!empty($id_pengajuan) && !empty($new_dospem_id) && !empty($target)) {
-        
+
         $q_mhs = mysqli_query($con, "SELECT nim, dospem_skripsi1, dospem_skripsi2 FROM pengelompokan_dospem_skripsi WHERE id='$id_pengajuan'");
         $d_mhs = mysqli_fetch_assoc($q_mhs);
         $nim = $d_mhs['nim'];
@@ -28,24 +28,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($target == '1') {
             $qry = "UPDATE pengelompokan_dospem_skripsi SET dospem_skripsi1='$new_dospem_id', cek1='2', status = IF(status='1', '2', status) WHERE id='$id_pengajuan'";
             mysqli_query($con, $qry) or die(mysqli_error($con));
-            
+
             // Sinkronisasi ke Sempro dan Ujian Skripsi
             mysqli_query($con, "UPDATE peserta_sempro SET pembimbing1='$new_dospem_id' WHERE nim='$nim'");
             mysqli_query($con, "UPDATE peserta_ujskrip SET pembimbing1='$new_dospem_id' WHERE nim='$nim'");
-            
+
             // Sinkronisasi Penguji jika yang menguji adalah Dospem lama
             mysqli_query($con, "UPDATE jadwal_sempro js JOIN peserta_sempro ps ON js.id_pendaftaran = ps.id SET js.penguji1='$new_dospem_id' WHERE ps.nim='$nim' AND js.penguji1='$old_dospem'");
             mysqli_query($con, "UPDATE jadwal_ujskrip ju JOIN peserta_ujskrip pu ON ju.id_pendaftaran = pu.id SET ju.sekretaris_penguji='$new_dospem_id' WHERE pu.nim='$nim' AND ju.sekretaris_penguji='$old_dospem'");
-            
         } else if ($target == '2') {
             $qry = "UPDATE pengelompokan_dospem_skripsi SET dospem_skripsi2='$new_dospem_id', cek2='2', status = IF(status='1', '2', status) WHERE id='$id_pengajuan'";
             mysqli_query($con, $qry) or die(mysqli_error($con));
-            
+
             // Sinkronisasi ke Sempro dan Ujian Skripsi
             mysqli_query($con, "UPDATE peserta_sempro SET pembimbing2='$new_dospem_id' WHERE nim='$nim'");
             mysqli_query($con, "UPDATE peserta_ujskrip SET pembimbing2='$new_dospem_id' WHERE nim='$nim'");
         }
-        
+
         if (isset($qry)) {
             mysqli_query($con, $qry) or die(mysqli_error($con));
             header("location:allPembPerAngkKaprodi.php?angkatan=$angkatan&page=$page&message=notifEdit");
@@ -59,4 +58,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     header("location:rekapPembimbinganKaprodi.php");
     exit();
 }
-?>

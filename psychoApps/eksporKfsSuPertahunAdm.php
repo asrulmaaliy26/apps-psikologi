@@ -1,5 +1,9 @@
 <?php include( "contentsConAdm.php" );
   $thn_upload=mysqli_real_escape_string($con, $_GET['thn_upload']);?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Data Kirim File Surat Undangan Tahun '.$thn_upload.'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,10 +22,7 @@
     <?php
       include( "kopPotret.php" );
       ?>
-      <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Data Kirim File Surat Undangan Tahun '.$thn_upload.'.xls');
-      ?>
+      
     <p><strong>Data Kirim File Surat Undangan Tahun <?php echo $thn_upload;?></strong></p>
     <table width="100%">
       <thead>

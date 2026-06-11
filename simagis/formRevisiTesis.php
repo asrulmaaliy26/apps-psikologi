@@ -83,9 +83,21 @@
                     $res = mysqli_query($GLOBALS["___mysqli_ston"], $qry_jadwal);
                     $djadwal = mysqli_fetch_assoc($res);
                     $batas_revisi = $djadwal['batas_revisi'];
-                    $timestamp = strtotime($batas_revisi);
-                    $tgl_bts_rev_konv = date("d-m-Y", $timestamp);
+                    if (empty($batas_revisi) || $batas_revisi == '0000-00-00') {
+                        if (!empty($djadwal['tgl_ujian']) && $djadwal['tgl_ujian'] != '0000-00-00') {
+                            $batas_revisi = date('Y-m-d', strtotime($djadwal['tgl_ujian'] . ' + 30 days'));
+                        } else {
+                            $batas_revisi = '0000-00-00';
+                        }
+                    }
                     
+                    if ($batas_revisi != '0000-00-00') {
+                        $timestamp = strtotime($batas_revisi);
+                        $tgl_bts_rev_konv = date("d-m-Y", $timestamp);
+                    } else {
+                        $tgl_bts_rev_konv = "-";
+                    }
+
                     $qry_moment = "SELECT * FROM mag_periode_pendaftaran_ujtes WHERE id='$md[id_ujtes]'";
                     $hasil = mysqli_query($GLOBALS["___mysqli_ston"], $qry_moment);
                     $data = mysqli_fetch_assoc($hasil);
@@ -121,28 +133,35 @@
                     $res = mysqli_query($GLOBALS["___mysqli_ston"], $qry_cek_daftar);
                     $dcek = mysqli_fetch_assoc($res);
                     $jum=$dcek['jum'];
-                       if(date('Y-m-d') > $djadwal['batas_revisi']) {
-                        echo '<span class="btn btn-danger btn-sm btn-block disabled" title="Kadaluarsa"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Kadaluarsa</span>';
+                       if($batas_revisi != '0000-00-00' && date('Y-m-d') > $batas_revisi) {
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <span class="btn btn-danger btn-sm disabled" title="Kadaluarsa"><span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Kadaluarsa</span>';
                         }
-                        else if(empty($djadwal['tgl_ujian'])) { echo '<a role="button" class="btn btn-warning btn-block btn-sm" title="Belum terjadwal" disabled><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Belum terjadwal</a>';}
-
-                        else if($dvalnilai==1) { echo '<a role="button" class="btn btn-warning btn-block btn-sm" title="Nilai belum lengkap" disabled><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Nilai belum lengkap</a>';}                        
+                        else if(empty($djadwal['tgl_ujian'])) { 
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <span class="btn btn-warning btn-sm disabled" title="Belum terjadwal"><span class="glyphicon glyphicon-calendar" aria-hidden="true"></span> Belum terjadwal</span>';
+                        }
+                        else if($dvalnilai==1) { 
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <span class="btn btn-warning btn-sm disabled" title="Nilai belum lengkap"><span class="glyphicon glyphicon-th" aria-hidden="true"></span> Nilai belum lengkap</span>';
+                        }                        
                         else if($jum>0) { 
                         $qry_val = "SELECT * FROM mag_revisi_tesis WHERE id_peserta='$id' AND id_ujtes='$id_ujtes' AND nim='$dataku[nim]'";
                         $resval = mysqli_query($GLOBALS["___mysqli_ston"], $qry_val);
                         $dval = mysqli_fetch_assoc($resval);
                         if($dval['cek']==2) {
-                        echo '<a role="button" href="cetakFormA1A2User.php?id='.$dval['id'].'&id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
                         <a role="button" class="btn btn-primary btn-sm" title="Telah diverifikasi" disabled><span class="glyphicon glyphicon-check" aria-hidden="true"></span> Telah diverifikasi</a>';}
                         else if($dval['cek']==1) {
-                        echo '<a role="button" class="btn btn-default" title="Belum dapat dicetak karena belum disetujui" disabled><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
                         <a role="button" href="includeEditFormRevisiUjtes.php?id='.$dval['id'].'&id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-success btn-sm" title="Edit upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Edit upload revisi</a>';}
                         else if($dval['cek']==3) {
-                        echo '<a role="button" class="btn btn-default" title="Tidak dapat dicetak karena ditolak" disabled><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
                         <a role="button" href="includeEditFormRevisiUjtes.php?id='.$dval['id'].'&id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-success btn-sm" title="Edit upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Edit upload revisi</a>';}
                         }
                         else {
-                        echo '<a role="button" href="includeFormRevisiUjtes.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-primary btn-sm btn-block" title="Upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload revisi</a>';}
+                        echo '<a role="button" href="cetakFormA1A2User.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-default" title="Cetak Form A1 dan A2" target="_blank"><span class="glyphicon glyphicon-print" aria-hidden="true"></span></a>
+                        <a role="button" href="includeFormRevisiUjtes.php?id_ujtes='.$md['id_ujtes'].'&id_pendaftaran='.$md['id'].'" class="btn btn-primary btn-sm" title="Upload revisi"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Upload revisi</a>';}
                         ?>
                     </td>
                   </tr>

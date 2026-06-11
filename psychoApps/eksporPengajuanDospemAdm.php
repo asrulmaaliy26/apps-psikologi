@@ -23,6 +23,10 @@
   $dsemester = mysqli_fetch_assoc($h);
   $namasemester = $dsemester['nama'];
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=pengajuan_dospem__tahap_'.$namatahap.'_'.$namasemester.'_'.$namata.'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -40,10 +44,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=pengajuan_dospem__tahap_'.$namatahap.'_'.$namasemester.'_'.$namata.'.xls');
-      ?> 
+     
     <table style="border:none;">
       <thead>
         <tr style="border:none;">

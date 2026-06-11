@@ -223,11 +223,18 @@ if ($hasSession) {
                   
                   <div class="col-md-4">
                     <div class="form-group mb-4">
-                      <label class="font-weight-bold small text-muted text-uppercase">Tanggal Peminjaman <span class="text-danger">*</span></label>
-                      <input type="date" name="tanggal" class="form-control form-control-premium" min="<?php echo date('Y-m-d'); ?>" required>
+                      <label class="font-weight-bold small text-muted text-uppercase">Tanggal Mulai <span class="text-danger">*</span></label>
+                      <input type="date" id="tanggal_mulai" name="tanggal_mulai" class="form-control form-control-premium" min="<?php echo date('Y-m-d'); ?>" required>
                     </div>
                   </div>
                   
+                  <div class="col-md-4">
+                    <div class="form-group mb-4">
+                      <label class="font-weight-bold small text-muted text-uppercase">Tanggal Akhir <span class="text-danger">*</span></label>
+                      <input type="date" id="tanggal_akhir" name="tanggal_akhir" class="form-control form-control-premium" min="<?php echo date('Y-m-d'); ?>" required>
+                    </div>
+                  </div>
+
                   <div class="col-md-4">
                     <div class="form-group mb-4">
                       <label class="font-weight-bold small text-muted text-uppercase">Jam Mulai <span class="text-danger">*</span></label>
@@ -299,5 +306,21 @@ if ($hasSession) {
   <?php include("jsAdm.php"); ?>
 <?php } ?>
 
-</body>
-</html>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var startInput = document.getElementById('tanggal_mulai');
+    var endInput = document.getElementById('tanggal_akhir');
+
+    if (startInput && endInput) {
+      startInput.addEventListener('change', function () {
+        if (this.value) {
+          endInput.min = this.value;
+          if (endInput.value && endInput.value < this.value) {
+            endInput.value = this.value;
+          }
+        }
+      });
+    }
+  });
+</script>
+

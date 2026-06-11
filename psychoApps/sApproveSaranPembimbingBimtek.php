@@ -7,10 +7,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$nim = mysqli_real_escape_string($con, $_POST['nim']);
-$saran1 = mysqli_real_escape_string($con, $_POST['saran1']);
-$saran2 = mysqli_real_escape_string($con, $_POST['saran2']);
-$id_bimtek = mysqli_real_escape_string($con, $_POST['id_bimtek']);
+$nim = mysqli_real_escape_string($con, $_POST['nim'] ?? '');
+$saran1 = mysqli_real_escape_string($con, $_POST['saran1'] ?? '');
+$saran2 = mysqli_real_escape_string($con, $_POST['saran2'] ?? '');
+$id_bimtek = mysqli_real_escape_string($con, $_POST['id_bimtek'] ?? '');
+
+if (!empty($saran1) && !empty($saran2) && $saran1 == $saran2) {
+    echo json_encode(['status' => 'error', 'message' => 'Dosen Pembimbing 1 dan Dosen Pembimbing 2 tidak boleh sama.']);
+    exit();
+}
 
 // 1. Dapatkan data mahasiswa
 $q_mhs = mysqli_query($con, "SELECT angkatan FROM dt_mhssw WHERE nim='$nim'");
@@ -74,12 +79,13 @@ if (!$d_per) {
 $tgl_now = date('d-m-Y');
 $thn_now = date('Y');
 
-// 5. Cek apakah sudah ada record di pengelompokan_dospem_skripsi untuk NIM dan Periode ini
-$q_check = mysqli_query($con, "SELECT id FROM pengelompokan_dospem_skripsi WHERE nim='$nim' AND id_periode='$id_periode'");
+// 5. Cek apakah sudah ada record di pengelompokan_dospem_skripsi untuk NIM
+$q_check = mysqli_query($con, "SELECT id FROM pengelompokan_dospem_skripsi WHERE nim='$nim'");
 
 if (mysqli_num_rows($q_check) > 0) {
-    // Update data yang sudah ada
+    // Update data yang sudah ada (termasuk mengganti id_periode jika berbeda)
     $sql = "UPDATE pengelompokan_dospem_skripsi SET 
+            id_periode = '$id_periode',
             dospem_skripsi1 = '$saran1', 
             dospem_skripsi2 = '$saran2', 
             judul_skripsi = '$judul', 
@@ -95,7 +101,7 @@ if (mysqli_num_rows($q_check) > 0) {
             cekberkas4 = '2',
             cekberkas5 = '2',
             catatan = 'Disetujui melalui Bimtek'
-            WHERE nim='$nim' AND id_periode='$id_periode'";
+            WHERE nim='$nim'";
 } else {
     // Insert record baru dengan semua field mandatory NOT NULL
     $sql = "INSERT INTO pengelompokan_dospem_skripsi (
@@ -120,6 +126,9 @@ if (mysqli_num_rows($q_check) > 0) {
 }
 
 if (mysqli_query($con, $sql)) {
+    // Update juga tabel bimtek_pra_proposal agar sinkron jika ada perubahan saat klik Setujui & Data
+    mysqli_query($con, "UPDATE bimtek_pra_proposal SET pembimbing_saran_1='$saran1', pembimbing_saran_2='$saran2' WHERE nim='$nim' AND id_bimtek='$id_bimtek'");
+
     // 6. Otomatis daftarkan dosen ke tabel kuota (dospem_skripsi) jika belum ada
     // Dan sesuaikan kuota agar selalu mencukupi jumlah bimbingan yang ada
     $dosen_roles = [

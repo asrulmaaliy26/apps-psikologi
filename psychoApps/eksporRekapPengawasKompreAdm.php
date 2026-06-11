@@ -64,6 +64,10 @@
    return $split[2] . ' ' . $bulan[ (int)$split[1] ] . ' ' . $split[0];
    }
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Rekap Pengawas Ujian Komprehensif '.$dataku['nm'].'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -87,10 +91,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Rekap Pengawas Ujian Komprehensif '.$dataku['nm'].'.xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">

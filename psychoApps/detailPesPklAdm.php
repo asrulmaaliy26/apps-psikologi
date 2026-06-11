@@ -1,5 +1,8 @@
 <?php include( "contentsConAdm.php" );
-  error_reporting(E_ALL & ~E_NOTICE);?>
+  error_reporting(E_ALL & ~E_NOTICE);
+  $djp = $djp ?? [];
+  $dt_opsi_dpl = $dt_opsi_dpl ?? [];
+?>
 <section class="content pt-2">
   <div class="container-fluid">
     <div class="row">
@@ -31,28 +34,28 @@
           <div class="card-body text-left pb-0">
             <dl class="row">
               <dt class="col-sm-5">Pendaftaran Ke</dt>
-              <dd class="col-sm-7"><?php echo $dfrek['jumData'];?></dd>
+              <dd class="col-sm-7"><?php echo $dfrek['jumData'] ?? '';?></dd>
               <dt class="col-sm-5">Tanggal Pendaftaran</dt>
-              <dd class="col-sm-7"><?php echo $data['tgl_pengajuan'];?></dd>
+              <dd class="col-sm-7"><?php echo $data['tgl_pengajuan'] ?? '';?></dd>
               <dt class="col-sm-5">Periode Pendaftaran</dt>
-              <dd class="col-sm-7"><?php echo 'Tahap '.$dthp['tahap'].' <span class="small text-secondary">'.$djp['nm'].'</span> '.$dsemester['nama'].' '.$dnta['ta'].'';?></dd>
+              <dd class="col-sm-7"><?php echo 'Tahap '.($dthp['tahap'] ?? '').' <span class="small text-secondary">'.($djp['nm'] ?? '').'</span> '.($dsemester['nama'] ?? '').' '.($dnta['ta'] ?? '').'';?></dd>
               <dt class="col-sm-5">SKS Terakhir</dt>
-              <dd class="col-sm-7"><?php echo $data['sks_diambil'];?></dd>
+              <dd class="col-sm-7"><?php echo $data['sks_diambil'] ?? '';?></dd>
               <dt class="col-sm-5">Lampiran File</dt>
               <dd class="col-sm-7"><?php if(empty($data['file_transkrip'])) { echo '<a class="btn btn-outline-secondary btn-flat btn-xs" title="Tidak ada file" disabled><i class="fas fa-download"></i> Kosong</a>';} else { echo '<a class="btn btn-outline-primary btn-flat btn-xs" title="Lihat/download" href="'.$data['file_transkrip'].'" target="_blank"><i class="fas fa-download"></i> Transkrip Nilai</a>';}?></dd>
               <dt class="col-sm-5">Riwayat Penyakit</dt>
-              <dd class="col-sm-7"><?php echo $data['riwayat_penyakit'];?></dd>
+              <dd class="col-sm-7"><?php echo $data['riwayat_penyakit'] ?? '';?></dd>
               <dt class="col-sm-5">Status Verifikasi</dt>
-              <dd class="col-sm-7"><?php if($data['val_adm']==1) { echo '<span class="bg-warning">'.$dcek['nm'].'</span>';} elseif($data['val_adm']==2) { echo '<span class="bg-primary">'.$dcek['nm'].'</span>';} elseif($data['val_adm']==3) { echo '<span class="bg-danger">'.$dcek['nm'].'</span>';} elseif($data['val_adm']==4) { echo '<span class="bg-danger">'.$dcek['nm'].'<br/> Tanggal Verifikasi: <span class="text-secondary">'.$data['tgl_validasi'].'</span>';}?>
+              <dd class="col-sm-7"><?php if(($data['val_adm'] ?? 0)==1) { echo '<span class="bg-warning">'.($dcek['nm'] ?? '').'</span>';} elseif(($data['val_adm'] ?? 0)==2) { echo '<span class="bg-primary">'.($dcek['nm'] ?? '').'</span>';} elseif(($data['val_adm'] ?? 0)==3) { echo '<span class="bg-danger">'.($dcek['nm'] ?? '').'</span>';} elseif(($data['val_adm'] ?? 0)==4) { echo '<span class="bg-danger">'.($dcek['nm'] ?? '').'<br/> Tanggal Verifikasi: <span class="text-secondary">'.($data['tgl_validasi'] ?? '').'</span>';}?>
                 <br/>
-                Tanggal Verifikasi: <span class="text-secondary"><?php echo $data['tgl_validasi'];?></span>
+                Tanggal Verifikasi: <span class="text-secondary"><?php echo $data['tgl_validasi'] ?? '';?></span>
               </dd>
               <dt class="col-sm-5">Catatan</dt>
               <dd class="col-sm-7"><?php if(empty($data['catatan'])) { echo "Tidak ada";} else { echo nl2br($data['catatan']);}?></dd>
               <dt class="col-sm-5">DPL</dt>
-              <dd class="col-sm-7"><?php if(empty($dt_opsi_dpl['nip'])) { echo "Belum ada";} else { echo $dt_dpl['nama'];}?></dd>
+              <dd class="col-sm-7"><?php if(empty($dt_opsi_dpl['nip'])) { echo "Belum ada";} else { echo $dt_dpl['nama'] ?? '';}?></dd>
               <dt class="col-sm-5">Lokasi PKL</dt>
-              <dd class="col-sm-7"><?php if(empty($dt_opsi_dpl['lokasi'])) { echo "Belum ada";} else { echo $dt_opsi_dpl['lokasi'];}?></dd>
+              <dd class="col-sm-7"><?php if(empty($dt_opsi_dpl['lokasi'])) { echo "Belum ada";} else { echo $dt_opsi_dpl['lokasi'] ?? '';}?></dd>
               <dt class="col-sm-5">Nilai</dt>
               <dd class="col-sm-7"><?php include "nilaiPesPklAdm.php";?></dd>
             </dl>

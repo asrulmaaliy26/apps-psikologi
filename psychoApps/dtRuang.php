@@ -97,13 +97,13 @@
                 <form method="post" action="dtRuang.php">
                   <?php  error_reporting(E_ALL & ~E_NOTICE);?>
                   <div class="input-group">
-                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo $_REQUEST['keyword'];?>" required>
+                    <input type="search" name="keyword" class="form-control form-control-sm" placeholder="Kata kunci pencarian..." value="<?php echo isset($_REQUEST['keyword']) ? $_REQUEST['keyword'] : '';?>" required>
                     <div class="input-group-append">
                       <button type="submit" class="btn btn-sm btn-default">
                       <i class="fa fa-search"></i>
                       </button>
                       <?php
-                        if($_REQUEST['keyword']<>""){
+                        if(isset($_REQUEST['keyword']) && $_REQUEST['keyword']<>""){
                         ?>
                       <a class="btn btn-sm btn-warning" title="Kembali" href="dtRuang.php"><i class="fas fa-sync"></i> Kembali</a>
                       <?php
@@ -217,6 +217,14 @@
                       echo "<option value='$c[id]'>$c[nm]</option>";
                     }
                     ?>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="lokasi_kampus">Lokasi Kampus</label>
+                <select name="lokasi_kampus" class="form-control form-control-sm" required>
+                  <option value="Kampus 1">Kampus 1</option>
+                  <option value="Kampus 2">Kampus 2</option>
+                  <option value="Kampus 3">Kampus 3</option>
                 </select>
               </div>
             </div>

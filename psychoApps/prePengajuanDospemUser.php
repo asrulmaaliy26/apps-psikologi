@@ -23,7 +23,7 @@ $qry_nm_smt = "SELECT * FROM opsi_nama_semester WHERE id='$dnta[semester]'";
 $h = mysqli_query($con, $qry_nm_smt);
 $dsemester = mysqli_fetch_assoc($h);
 
-$DATE_NOW = date("Y-m-d H:m:s");
+$DATE_NOW = date("Y-m-d H:i:s");
 $START_DATE = date($data['start_datetime']);
 $END_DATE = date($data['end_datetime']);
 

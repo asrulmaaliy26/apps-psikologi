@@ -77,7 +77,7 @@ if ($d_exist) {
         id_reviewer='$id_reviewer',
         judul='$judul', abstrak='$abstrak', file_proposal='$file_name', file_sertifikat='$sertifikat_name',
         status_sertifikat='$status_sertifikat', catatan_sertifikat='',
-        status='proses', catatan='', tgl_update='$tgl'
+        status='proses', tgl_update='$tgl'
         WHERE id='" . $d_exist['id'] . "'");
 } else {
     // Insert new record

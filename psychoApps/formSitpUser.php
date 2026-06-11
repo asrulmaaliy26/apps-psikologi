@@ -226,6 +226,12 @@ $dnotif = mysqli_fetch_assoc($rnotif);
                         <input type="text" class="form-control form-control-sm" name="alamat_lengkap_lts" placeholder="Alamat harus ditulis lengkap. Misal: Jalan, Nomor/Blok, RT., RW., Desa/Kelurahan, Kecamatan dan Kabupaten." required>
                       </div>
                     </div>
+                    <div class="form-row">
+                      <div class="form-group col-sm-12">
+                        <label for="lokasi">Lokasi PKL (Ditampilkan di Surat)</label>
+                        <input type="text" class="form-control form-control-sm" name="lokasi" placeholder="Jika kosong, akan mengambil gabungan Instansi dan Kota Instansi">
+                      </div>
+                    </div>
                     <hr>
                     <h5 class="text-success"><i class="fas fa-building mr-1"></i> Detail Instansi & Jenis PKL</h5>
                     <div class="form-row">

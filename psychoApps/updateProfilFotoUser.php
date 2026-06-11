@@ -1,6 +1,5 @@
 <?php include( "contentsConAdm.php" );
   $nim=mysqli_real_escape_string($con, $_POST['nim']);
-  $photo=mysqli_real_escape_string($con, $_POST['photo']);
 
 $jenis_berkas = $_FILES['photo']['type'];
   if ($jenis_berkas == "image/jpg" || $jenis_berkas == "image/jpeg" || $jenis_berkas == "image/png") {

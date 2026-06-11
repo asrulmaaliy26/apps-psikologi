@@ -27,5 +27,21 @@
 $sql2="UPDATE nilai_sempro SET mean_nilai='$mean_nilai' WHERE id='$id' AND id_pendaftaran='$id_pendaftaran' LIMIT 1";
 $result2 = mysqli_query($con, $sql2) or die(mysqli_error($con));
 
+if($mean_nilai >= 75) {
+  $rekom = '1';
+} elseif($mean_nilai >= 60 && $mean_nilai < 75) {
+  $rekom = '2';
+} elseif($mean_nilai > 0 && $mean_nilai < 60) {
+  $rekom = '3';
+} else {
+  $rekom = '';
+}
+
+if($rekom != '') {
+  $sql3="UPDATE nilai_sempro SET rekom='$rekom' WHERE id='$id' AND id_pendaftaran='$id_pendaftaran' LIMIT 1";
+  $result3 = mysqli_query($con, $sql3) or die(mysqli_error($con));
+}
+
+
 header("location:baSemproSkripsiPenguji1.php?page=$page&id=$id_pendaftaran");
 ?>

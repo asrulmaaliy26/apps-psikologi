@@ -24,5 +24,5 @@
   $myqry1="UPDATE sitp SET statusform='$statusform' WHERE id='$id' LIMIT 1";
   mysqli_query($con, $myqry1) or die(mysqli_error($con));
   }
-  header("location:rekapSitpAdm.php?date=$tahun&page=$page&message=notifEdit");
+  header("location:rekapSitpAdm.php?date=$date&page=$page&message=notifEdit");
   ?>

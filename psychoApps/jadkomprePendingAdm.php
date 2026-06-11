@@ -110,7 +110,7 @@
                             
                             $qry_grade = "SELECT * FROM grade_kompre WHERE id_kompre='$id'";
                             $res_grade = mysqli_query($con, $qry_grade);
-                            $dt_grade = mysqli_fetch_assoc($res_grade);
+                            $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
                             $qry_jdwl = "SELECT * FROM jadwal_kompre WHERE id='$data[id_jdwl]'";
                             $rjdwl = mysqli_query($con, $qry_jdwl);

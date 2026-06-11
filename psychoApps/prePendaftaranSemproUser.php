@@ -24,7 +24,7 @@ $qry_nm_smt = "SELECT * FROM opsi_nama_semester WHERE id='$dnta[semester]'";
 $h = mysqli_query($con, $qry_nm_smt);
 $dsemester = mysqli_fetch_assoc($h);
 
-$DATE_NOW = date("Y-m-d H:m:s");
+$DATE_NOW = date("Y-m-d H:i:s");
 $START_DATE = date($data['start_datetime']);
 $END_DATE = date($data['end_datetime']);
 
@@ -95,12 +95,16 @@ $timeEnd = date_format($SPLIT_END_DATE, "H:i");
                   $cek_pes_pkl = "SELECT * FROM peserta_pkl WHERE nim='$dataku[nim]' ORDER BY id DESC";
                   $res = mysqli_query($con, $cek_pes_pkl)  or die(mysqli_error($con));
                   $dt_pes_pkl = mysqli_fetch_assoc($res);
+                  $id_pkl = $dt_pes_pkl['id_pkl'] ?? '';
 
-                  $qry_grade_pkl = "SELECT * FROM grade_pkl WHERE id_pkl='$dt_pes_pkl[id_pkl]'";
+                  $qry_grade_pkl = "SELECT * FROM grade_pkl WHERE id_pkl='$id_pkl'";
                   $res_grade_pkl = mysqli_query($con, $qry_grade_pkl);
-                  $dt_grade_pkl = mysqli_fetch_assoc($res_grade_pkl);
+                  $dt_grade_pkl = $res_grade_pkl ? mysqli_fetch_assoc($res_grade_pkl) : null;
+                  
+                  $dt_val = $dt_grade_pkl['dt'] ?? '';
+                  $db_val = $dt_grade_pkl['db'] ?? '';
 
-                  $cek_pkl = "SELECT COUNT(nim) AS jumData FROM peserta_pkl WHERE (nim='$dataku[nim]' AND id_pkl='$dt_pes_pkl[id_pkl]') AND (nilai <= '$dt_grade_pkl[dt]' AND nilai >= '$dt_grade_pkl[db]') ORDER BY id DESC";
+                  $cek_pkl = "SELECT COUNT(nim) AS jumData FROM peserta_pkl WHERE (nim='$dataku[nim]' AND id_pkl='$id_pkl') AND (nilai <= '$dt_val' AND nilai >= '$db_val') ORDER BY id DESC";
                   $res = mysqli_query($con, $cek_pkl)  or die(mysqli_error($con));
                   $dt = mysqli_fetch_assoc($res);
 

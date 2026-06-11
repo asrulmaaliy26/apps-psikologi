@@ -7,7 +7,7 @@ if (!function_exists('psycho_db_config')) {
      *
      * @return array{0: string, 1: string, 2: string, 3: string} server, user, password, database
      */
-    function psycho_db_config(string $dbname): array
+    function psycho_db_config(?string $dbname = null): array
     {
         $dbserver = getenv('DB_HOST');
         $dbserver = ($dbserver === false || $dbserver === '') ? 'localhost' : $dbserver;
@@ -19,6 +19,11 @@ if (!function_exists('psycho_db_config')) {
             $dbpassword = (string) getenv('DB_PASSWORD');
         } else {
             $dbpassword = '';
+        }
+        
+        if ($dbname === null) {
+            $env_dbname = getenv('DB_NAME');
+            $dbname = ($env_dbname === false || $env_dbname === '') ? 'db_apps-psi_backup' : $env_dbname;
         }
 
         return [$dbserver, $dbusername, $dbpassword, $dbname];

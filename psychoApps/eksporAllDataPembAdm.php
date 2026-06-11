@@ -40,6 +40,10 @@
    }
   ?>
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Data Pengajuan Dosen Pembimbing Skripsi.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -57,10 +61,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Data Pengajuan Dosen Pembimbing Skripsi.xls');
-      ?> 
+     
     <table style="border:none;">
       <thead>
         <tr style="border:none;">

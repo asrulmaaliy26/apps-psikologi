@@ -19,7 +19,7 @@ if($op=="in"){
         $_SESSION['nim'] = $c['nim'];
 		$_SESSION['status'] = $c['status'];
 		if($c['status']=="1"){
-            header("location:dashboardUser.php");
+            header("location:homeUser.php");
         } else if($c['status']=="2"){
             header("location:http://psikologi.uin-malang.ac.id/ikapsi/index_alumni.php");
         }

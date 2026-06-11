@@ -130,8 +130,8 @@
                             ?> 
                           <tr>
                             <td class="text-center pl-1"> <?php echo $no;?> </td>
-                            <td class="text-left"> <?php echo $dt_dpl['nama_tg'];?> </td>
-                            <td class="text-left"> <?php echo $data['lokasi'];?> </td>
+                            <td class="text-left"> <?php echo $dt_dpl['nama_tg'] ?? '';?> </td>
+                            <td class="text-left"> <?php echo $data['lokasi'] ?? '';?> </td>
                             <td class="text-center"> <?php if($data1['jumData']==0) { echo '<a type="button" class="btn btn-outline-secondary btn-flat btn-xs btn-block" onclick="return confirm(\'Tidak ada data\')" title="Tidak ada data">'.$data1['jumData'].'</a>';} else { echo '<a href="pesPklPerDplAdm.php?id='.$id_dpl.'&id_pkl='.$id_pkl.'&page='.$page.'" type="button" class="btn btn-outline-primary btn-flat btn-xs btn-block" title="Lihat data">'.$data1['jumData'].'</a>';} ?> </td>
                             <td class="text-center pl-1" width="10%"> <?php if($data2['jumData']==0) { echo '<a type="button" class="btn btn-outline-secondary btn-flat btn-xs btn-block" onclick="return confirm(\'Tidak ada data\')" title="Tidak ada data"><i class="fas fa-user-plus"></i> Input Peserta</a>';} else { echo '<a href="inputDplPesertaPklAdm.php?id='.$id_dpl.'&id_pkl='.$id_pkl.'&page='.$page.'" class="btn btn-outline-danger btn-flat btn-xs btn-block" title="Input peserta kompre"><i class="fas fa-user-plus"></i> Input Peserta</a>';}?> </td>
                             <td class="text-center" width="4%"> <a href="cetakPesPklPerDplAdm.php?id=<?php echo $id_dpl;?>&page=<?php echo $page;?>" target="_blank" class="btn btn-outline-success btn-flat btn-xs btn-block" title="Cetak Data"><i class="fas fa-print"></i></a> </td>

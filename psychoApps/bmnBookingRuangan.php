@@ -11,6 +11,13 @@ $qry_jum = "SELECT COUNT(id) AS jumData FROM bmn_ruangan_booking";
 $r_jum = mysqli_query($con, $qry_jum) or die(mysqli_error($con));
 $d_jum = mysqli_fetch_assoc($r_jum);
 ?>
+<?php
+$roomsResult = mysqli_query($con, "SELECT id, nm, lokasi_kampus FROM dt_ruang ORDER BY nm ASC");
+$rooms = [];
+while ($row = mysqli_fetch_assoc($roomsResult)) {
+    $rooms[] = $row;
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <?php include("headAdm.php"); ?>
@@ -160,12 +167,12 @@ $d_jum = mysqli_fetch_assoc($r_jum);
                                     <div class="row">
                                       <div class="col-md-6">
                                         <div class="form-group">
-                                          <label class="font-weight-bold">Nama Ruangan</label>
+                  
                                           <input type="text" name="nama_ruangan" class="form-control form-control-sm" value="' . htmlspecialchars($d['nama_ruangan']) . '" required>
                                         </div>
                                         <div class="form-group">
                                           <label class="font-weight-bold">Kondisi Ruangan</label>
-                                          <input type="text" name="kondisi" class="form-control form-control-sm" value="' . htmlspecialchars($d['kondisi']) . '" placeholder="Contoh: Sangat Baik / Layak Pakai" required>
+                                           <input type="text" name="kondisi" id="kondisiInput" class="form-control form-control-sm" value="' . htmlspecialchars($d['kondisi']) . '" placeholder="Contoh: Sangat Baik / Layak Pakai" required>
                                         </div>
                                         <div class="form-group">
                                           <label class="font-weight-bold">Lokasi</label>
@@ -232,16 +239,27 @@ $d_jum = mysqli_fetch_assoc($r_jum);
               <div class="row">
                 <div class="col-md-6">
                   <div class="form-group">
-                    <label class="font-weight-bold">Nama Ruangan</label>
-                    <input type="text" name="nama_ruangan" class="form-control form-control-sm" placeholder="Contoh: Aula Gedung C S1" required>
+                    <label class="font-weight-bold">Pilih Ruangan (atau Isi Manual)</label>
+                    <div class="custom-control custom-checkbox mb-2">
+                      <input type="checkbox" class="custom-control-input" id="filterKampus3" checked>
+                      <label class="custom-control-label font-weight-normal text-muted" for="filterKampus3" style="cursor: pointer;">Hanya tampilkan ruang di Kampus 3</label>
+                    </div>
+                    <select id="existingRoomSelect" class="form-control form-control-sm">
+                      <option value="">-- Pilih dari daftar --</option>
+                      <!-- Options will be populated by JS -->
+                    </select>
                   </div>
                   <div class="form-group">
-                    <label class="font-weight-bold">Kondisi Ruangan</label>
-                    <input type="text" name="kondisi" class="form-control form-control-sm" placeholder="Contoh: Sangat Baik / Bersih" required>
+                      <label class="font-weight-bold">Nama Ruangan (Jika custom)</label>
+                      <input type="text" id="customNamaRuangan" name="nama_ruangan" class="form-control form-control-sm" placeholder="Masukkan nama ruangan (atau pilih di atas)">
+                  </div>
+                  <div class="form-group">
+                      <label class="font-weight-bold">Kondisi Ruangan</label>
+                      <input type="text" id="kondisiInput" name="kondisi" class="form-control form-control-sm" placeholder="Contoh: Sangat Baik / Bersih">
                   </div>
                   <div class="form-group">
                     <label class="font-weight-bold">Lokasi</label>
-                    <input type="text" name="lokasi" class="form-control form-control-sm" placeholder="Contoh: Gedung C Lantai 3" required>
+                    <input type="text" id="lokasiInput" name="lokasi" class="form-control form-control-sm" placeholder="Contoh: Gedung C Lantai 3" required>
                   </div>
                 </div>
                 <div class="col-md-6">
@@ -279,6 +297,16 @@ $d_jum = mysqli_fetch_assoc($r_jum);
 
     <?php echo $modals; ?>
 
+<!-- Modal Image Preview -->
+<div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content bg-transparent border-0">
+      <div class="modal-body p-0">
+        <img id="bigImage" src="" class="img-fluid rounded">
+      </div>
+    </div>
+  </div>
+</div>
     <!-- Modal Notification Centered -->
     <?php if (!empty($msg_title)) { ?>
     <div class="modal fade" id="modalNotification" tabindex="-1" role="dialog" aria-hidden="true">
@@ -298,15 +326,68 @@ $d_jum = mysqli_fetch_assoc($r_jum);
       </div>
     </div>
     <script>
-      window.onload = function() {
-        $('#modalNotification').modal('show');
-        window.history.replaceState({}, document.title, window.location.pathname);
-      };
-    </script>
+  window.onload = function() {
+    $('#modalNotification').modal('show');
+    window.history.replaceState({}, document.title, window.location.pathname);
+  };
+</script>
     <?php } ?>
 
     <?php include("footerAdm.php"); ?>
     <?php include("jsAdm.php"); ?>
+    <script>
+      var roomsData = <?php echo json_encode($rooms); ?>;
+      
+      function populateRooms() {
+        var showOnlyKampus3 = $('#filterKampus3').is(':checked');
+        var select = $('#existingRoomSelect');
+        select.empty();
+        select.append('<option value="">-- Pilih dari daftar --</option>');
+        
+        roomsData.forEach(function(room) {
+          if (!showOnlyKampus3 || room.lokasi_kampus === 'Kampus 3') {
+            select.append($('<option>', {
+              value: room.id,
+              'data-nama': room.nm,
+              text: room.nm
+            }));
+          }
+        });
+      }
+
+      $('#filterKampus3').on('change', populateRooms);
+      
+      // Initialize on load
+      populateRooms();
+
+      // Image click to preview larger version
+      $(document).on('click', '.room-img-preview', function(){
+        var src = $(this).attr('src');
+        $('#bigImage').attr('src', src);
+        $('#imageModal').modal('show');
+      });
+
+      // Existing room selection auto-fill
+      $(document).on('change', '#existingRoomSelect', function(){
+        var selected = $(this).find('option:selected');
+        var nama = selected.data('nama') || '';
+        $('#customNamaRuangan').val(nama);
+        if (selected.val()) {
+          $('#customNamaRuangan').prop('readonly', true);
+        } else {
+          $('#customNamaRuangan').prop('readonly', false);
+        }
+      });
+
+      // Clear modal on hidden
+      $('#modalAdd').on('hidden.bs.modal', function () {
+        $(this).find('form')[0].reset();
+        $('#filterKampus3').prop('checked', true); // reset checkbox
+        populateRooms(); // rebuild options
+        $('#existingRoomSelect').val('');
+        $('#customNamaRuangan').prop('readonly', false);
+      });
+    </script>
   </div>
 </body>
 </html>

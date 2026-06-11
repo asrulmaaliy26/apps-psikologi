@@ -22,8 +22,8 @@
      }
    }
    */
-   $query = mysqli_query($con, "INSERT INTO dpl_pkl(id_pkl,nip,lokasi,kuota)" .
-   "VALUES('$id','$nip','$lokasi','$kuota')") or DIE(mysqli_error($con));
+   $query = mysqli_query($con, "INSERT INTO dpl_pkl(id_pkl,nip,lokasi,kuota,terisi)" .
+   "VALUES('$id','$nip','$lokasi','$kuota','0')") or DIE(mysqli_error($con));
    if ($query) {
    header("location:dplPerPeriodeAdm.php?id=$id&page=$page&message=notifInput");
      }

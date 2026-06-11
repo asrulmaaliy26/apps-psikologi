@@ -38,7 +38,7 @@
         <?php
           include 'pagination.php';
            $reload = "inputJdwlUjskripAdm.php?pagination=true";
-           $sql = "SELECT * FROM jadwal_ujskrip GROUP BY id_ujskrip ORDER BY id DESC";
+           $sql = "SELECT * FROM jadwal_ujskrip WHERE id IN (SELECT MAX(id) FROM jadwal_ujskrip GROUP BY id_ujskrip) ORDER BY id DESC";
            $result = mysqli_query($con, $sql);
            
            $rpp = 10;
@@ -90,18 +90,22 @@
                             $qidper = "SELECT * FROM pendaftaran_skripsi WHERE id='$data[id_ujskrip]'";
                             $ridper = mysqli_query($con, $qidper)or die( mysqli_error($con));
                             $didper = mysqli_fetch_assoc($ridper);
+                            
+                            $tahap = $didper['tahap'] ?? '';
+                            $ta = $didper['ta'] ?? '';
 
-                            $qry_thp = "SELECT * FROM opsi_tahap_ujprop_ujskrip WHERE id='$didper[tahap]'";
+                            $qry_thp = "SELECT * FROM opsi_tahap_ujprop_ujskrip WHERE id='$tahap'";
                             $hasil = mysqli_query($con, $qry_thp);
-                            $dthp = mysqli_fetch_assoc($hasil);
+                            $dthp = $hasil ? mysqli_fetch_assoc($hasil) : null;
                             
-                            $qry_nm_ta = "SELECT * FROM dt_ta WHERE id='$didper[ta]'";
+                            $qry_nm_ta = "SELECT * FROM dt_ta WHERE id='$ta'";
                             $hasil = mysqli_query($con, $qry_nm_ta);
-                            $dnta = mysqli_fetch_assoc($hasil);
+                            $dnta = $hasil ? mysqli_fetch_assoc($hasil) : null;
                             
-                            $qry_nm_smt = "SELECT * FROM opsi_nama_semester WHERE id='$dnta[semester]'";
+                            $semester = $dnta['semester'] ?? '';
+                            $qry_nm_smt = "SELECT * FROM opsi_nama_semester WHERE id='$semester'";
                             $h = mysqli_query($con, $qry_nm_smt);
-                            $dsemester = mysqli_fetch_assoc($h);
+                            $dsemester = $h ? mysqli_fetch_assoc($h) : null;
                             
                             $qry1 = "SELECT COUNT(id) AS jumData FROM peserta_ujskrip WHERE id_ujskrip='$id_ujskrip' AND statusform='1'";
                             $has1 = mysqli_query($con,  $qry1 )or DIE( mysqli_error($con) );
@@ -117,9 +121,9 @@
                             ?> 
                           <tr>
                             <td class="text-center pl-1"> <?php echo ++$no_urut;?> </td>
-                            <td class="text-left"> <?php echo 'Tahap '.$dthp['tahap'].' '.$dsemester['nama'].' '.$dnta['ta'].'';?> </td>
-                            <td class="text-center"> <?php echo $didper['start_datetime'];?> </td>
-                            <td class="text-center"> <?php echo $didper['end_datetime'];?> </td>
+                            <td class="text-left"> <?php echo 'Tahap '.($dthp['tahap'] ?? '').' '.($dsemester['nama'] ?? '').' '.($dnta['ta'] ?? '');?> </td>
+                            <td class="text-center"> <?php echo $didper['start_datetime'] ?? '';?> </td>
+                            <td class="text-center"> <?php echo $didper['end_datetime'] ?? '';?> </td>
                             <td class="text-center"> <?php if($data1['jumData']==0) { echo '<a type="button" class="btn btn-outline-secondary btn-flat btn-xs btn-block" onclick="return confirm(\'Tidak ada data\')" title="Tidak ada data">'.$data1['jumData'].'</a>';} else { echo '<a href="jadUjskripPendingInputAdm.php?id='.$id_ujskrip.'&page='.$page.'" type="button" class="btn btn-outline-primary btn-flat btn-xs btn-block" title="Lihat data">'.$data1['jumData'].'</a>';} ?> </td>
                             <td class="text-center"> <?php if($data2['jumData']==0) { echo '<a type="button" class="btn btn-outline-secondary btn-flat btn-xs btn-block" onclick="return confirm(\'Tidak ada data\')" title="Tidak ada data">'.$data2['jumData'].'</a>';} else { echo '<a href="jadUjskripSelesaiInputAdm.php?id='.$id_ujskrip.'&page='.$page.'" type="button" class="btn btn-outline-primary btn-flat btn-xs btn-block" title="Lihat data">'.$data2['jumData'].'</a>';} ?> </td>
                             <td class="text-center"> <?php if($data3['jumData']==0) { echo '<a type="button" class="btn btn-outline-secondary btn-flat btn-xs btn-block" onclick="return confirm(\'Tidak ada data\')" title="Tidak ada data">'.$data3['jumData'].'</a>';} else { echo '<a href="rekapPesUjskripPerPeriodeJadInputAdm.php?id='.$id_ujskrip.'&page='.$page.'" type="button" class="btn btn-outline-primary btn-flat btn-xs btn-block" title="Lihat data">'.$data3['jumData'].'</a>';} ?> </td>

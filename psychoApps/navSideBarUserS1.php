@@ -1,173 +1,300 @@
 <?php include("contentsConAdm.php"); ?>
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
+
 if (!function_exists('isActive')) {
   function isActive($page)
   {
     global $currentPage;
+
     if (is_array($page)) {
       return in_array($currentPage, $page) ? 'active bg-primary' : '';
     }
+
     return ($currentPage === $page) ? 'active bg-primary' : '';
   }
 }
+
 if (!function_exists('isOpen')) {
   function isOpen($pages)
   {
-    return 'menu-open';
+    global $currentPage;
+
+    return array_intersect((array)$pages, [$currentPage]) ? 'menu-open' : '';
   }
 }
 
 $isLabPsiko = false;
+
 if (isset($_SESSION['username'])) {
   $us_check = mysqli_real_escape_string($con, $_SESSION['username']);
-  $q_check = mysqli_query($con, "SELECT p.id FROM org_mhs_personalia p 
-                                  JOIN org_mhs_kat k ON p.kat_id = k.id 
-                                  WHERE p.nim = '$us_check' AND k.nm = 'Lab. Psikodiagnostik' LIMIT 1");
+
+  $q_check = mysqli_query(
+    $con,
+    "SELECT p.id 
+     FROM org_mhs_personalia p 
+     JOIN org_mhs_kat k ON p.kat_id = k.id 
+     WHERE p.nim = '$us_check' 
+     AND k.nm = 'Lab. Psikodiagnostik' 
+     LIMIT 1"
+  );
+
   if ($q_check && mysqli_num_rows($q_check) > 0) {
     $isLabPsiko = true;
   }
 }
 ?>
+
 <aside <?php include("main-sidebar-style.php") ?>>
   <?php include("brandNavAdm.php"); ?>
+
   <div class="sidebar text-sm">
     <nav class="mt-2">
-      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-legacy nav-compact" data-widget="treeview" role="menu" data-accordion="false">
+
+      <ul class="nav nav-pills nav-sidebar flex-column nav-child-indent nav-legacy nav-compact"
+        data-widget="treeview"
+        role="menu"
+        data-accordion="false">
+
+        <!-- Dashboard -->
         <li class="nav-item">
-          <a href="dashboardUserS1.php" class="nav-link <?php echo isActive('dashboardUserS1.php'); ?>">
+          <a href="dashboardUserS1.php"
+            class="nav-link <?php echo isActive('dashboardUserS1.php'); ?>">
             <i class="nav-icon fas fa-house-user"></i>
             <p>Dashboard</p>
           </a>
         </li>
-        <?php if ($isLabPsiko && isFeatureEnabled('booking_lab')) { ?>
-          <li class="nav-item">
-            <a href="periodeBookingLabUser.php" class="nav-link <?php echo isActive('periodeBookingLabUser.php'); ?>">
-              <i class="nav-icon fas fa-calendar-alt"></i>
-              <p>Periode Booking Lab</p>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="ruanganBookingLabUser.php" class="nav-link <?php echo isActive('ruanganBookingLabUser.php'); ?>">
-              <i class="nav-icon fas fa-door-open"></i>
-              <p>Data Ruangan Lab</p>
-            </a>
-          </li>
-        <?php } ?>
+
+        <!-- Profil -->
         <li class="nav-item">
-          <a href="profilAkademikUser.php" class="nav-link <?php echo isActive(['profilAkademikUser.php', 'profilPribadiUser.php', 'profilOrtuUser.php', 'profilFotoUser.php']); ?>">
+          <a href="profilAkademikUser.php"
+            class="nav-link <?php echo isActive([
+                                  'profilAkademikUser.php',
+                                  'profilPribadiUser.php',
+                                  'profilOrtuUser.php',
+                                  'profilFotoUser.php'
+                                ]); ?>">
             <i class="nav-icon far fa-user-circle"></i>
             <p>Profil</p>
           </a>
         </li>
+
+        <!-- Permohonan Surat -->
         <li class="nav-item">
-          <a href="permohonanSuratUser.php" class="nav-link <?php echo isActive('permohonanSuratUser.php'); ?>">
+          <a href="permohonanSuratUser.php"
+            class="nav-link <?php echo isActive('permohonanSuratUser.php'); ?>">
             <i class="nav-icon fas fa-envelope-open-text"></i>
             <p>Permohonan Surat</p>
           </a>
         </li>
+
+        <!-- Booking & Peminjaman -->
+        <?php if (isFeatureEnabled('booking_lab') || isFeatureEnabled('peminjaman_ruangan')) { ?>
+
+          <li class="nav-item <?php echo isOpen([
+                                'periodeBookingLabUser.php',
+                                'ruanganBookingLabUser.php',
+                                'bookingLabUser.php',
+                                'peminjamanRuangUmum.php',
+                                'peminjamanRuangForm.php',
+                                'peminjamanRuangDetail.php'
+                              ]); ?>">
+
+            <a href="#"
+              class="nav-link <?php echo isActive([
+                                        'periodeBookingLabUser.php',
+                                        'ruanganBookingLabUser.php',
+                                        'bookingLabUser.php',
+                                        'peminjamanRuangUmum.php',
+                                        'peminjamanRuangForm.php',
+                                        'peminjamanRuangDetail.php'
+                                      ]); ?>">
+
+              <i class="nav-icon fas fa-calendar-check"></i>
+
+              <p>
+                Booking & Ruangan
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+
+            <ul class="nav nav-treeview" style="display: block;">
+
+              <?php if ($isLabPsiko && isFeatureEnabled('booking_lab')) { ?>
+
+                <li class="nav-item">
+                  <a href="periodeBookingLabUser.php"
+                    class="nav-link <?php echo isActive('periodeBookingLabUser.php'); ?>">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Periode Booking Lab</p>
+                  </a>
+                </li>
+
+                <li class="nav-item">
+                  <a href="ruanganBookingLabUser.php"
+                    class="nav-link <?php echo isActive('ruanganBookingLabUser.php'); ?>">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Data Ruangan Lab</p>
+                  </a>
+                </li>
+
+              <?php } ?>
+
+              <?php if (isFeatureEnabled('booking_lab')) { ?>
+
+                <li class="nav-item">
+                  <a href="bookingLabUser.php"
+                    class="nav-link <?php echo isActive('bookingLabUser.php'); ?>">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Booking Layanan Lab</p>
+                  </a>
+                </li>
+
+              <?php } ?>
+
+              <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
+
+                <li class="nav-item">
+                  <a href="peminjamanRuangUmum.php"
+                    class="nav-link <?php echo isActive([
+                                              'peminjamanRuangUmum.php',
+                                              'peminjamanRuangForm.php',
+                                              'peminjamanRuangDetail.php'
+                                            ]); ?>">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Peminjaman Ruangan</p>
+                  </a>
+                </li>
+
+              <?php } ?>
+
+            </ul>
+          </li>
+
+        <?php } ?>
+
+        <!-- Pengajuan Dospem -->
+        <?php /*
         <li class="nav-item">
-          <a href="prePengajuanDospemUser.php" class="nav-link <?php echo isActive(['prePengajuanDospemUser.php', 'riwayatPengajuanDospemUser.php']); ?>">
+          <a href="prePengajuanDospemUser.php"
+            class="nav-link <?php echo isActive([
+                                  'prePengajuanDospemUser.php',
+                                  'riwayatPengajuanDospemUser.php'
+                                ]); ?>">
             <i class="nav-icon fas fa-people-arrows"></i>
             <p>Pengajuan Dospem Skripsi</p>
           </a>
         </li>
-        <li class="nav-item <?php echo isOpen(['unsurSkkmUser.php']); ?>">
-          <a href="#" class="nav-link <?php echo isActive(['unsurSkkmUser.php']); ?>">
-            <i class="fas fa-file-alt nav-icon"></i>
-            <p>
-              Pengisian
-              <i class="fas fa-angle-left right"></i>
-            </p>
+        */ ?>
+
+        <!-- SKKM -->
+        <li class="nav-item">
+          <a href="unsurSkkmUser.php"
+            class="nav-link <?php echo isActive('unsurSkkmUser.php'); ?>">
+            <i class="nav-icon fas fa-file-alt"></i>
+            <p>SKKM</p>
           </a>
-          <ul class="nav nav-treeview" style="display: block;">
-            <li class="nav-item">
-              <a href="unsurSkkmUser.php" class="nav-link <?php echo isActive('unsurSkkmUser.php'); ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>SKKM</p>
-              </a>
-            </li>
-          </ul>
         </li>
-        <li class="nav-item <?php echo isOpen(['prePendaftaranPklUser.php', 'plotLembagaPklUser.php', 'prePendaftaranBimtekUser.php', 'listPraPropBimtekUser.php', 'prePendaftaranSemproUser.php', 'prePendaftaranUjianKompreUser.php', 'prePendaftaranUjianSkripsiUser.php', 'bookingLabUser.php']); ?>">
-          <a href="#" class="nav-link <?php echo isActive(['prePendaftaranPklUser.php', 'plotLembagaPklUser.php', 'prePendaftaranBimtekUser.php', 'listPraPropBimtekUser.php', 'prePendaftaranSemproUser.php', 'prePendaftaranUjianKompreUser.php', 'prePendaftaranUjianSkripsiUser.php', 'bookingLabUser.php']); ?>">
+
+        <!-- Pendaftaran -->
+        <li class="nav-item <?php echo isOpen([
+                              'prePendaftaranPklUser.php',
+                              'plotLembagaPklUser.php',
+                              'prePendaftaranBimtekUser.php',
+                              'listPraPropBimtekUser.php',
+                              'prePendaftaranSemproUser.php',
+                              'prePendaftaranUjianKompreUser.php',
+                              'prePendaftaranUjianSkripsiUser.php'
+                            ]); ?>">
+
+          <a href="#"
+            class="nav-link <?php echo isActive([
+                                      'prePendaftaranPklUser.php',
+                                      'plotLembagaPklUser.php',
+                                      'prePendaftaranBimtekUser.php',
+                                      'listPraPropBimtekUser.php',
+                                      'prePendaftaranSemproUser.php',
+                                      'prePendaftaranUjianKompreUser.php',
+                                      'prePendaftaranUjianSkripsiUser.php'
+                                    ]); ?>">
+
             <i class="fas fa-file-alt nav-icon"></i>
+
             <p>
               Pendaftaran
               <i class="fas fa-angle-left right"></i>
             </p>
           </a>
+
           <ul class="nav nav-treeview" style="display: block;">
-            <?php if (isFeatureEnabled('booking_lab')) { ?>
+
             <li class="nav-item">
-              <a href="bookingLabUser.php" class="nav-link <?php echo isActive('bookingLabUser.php'); ?>">
-                <i class="fas fa-flask nav-icon"></i>
-                <p>Booking Layanan Lab</p>
-              </a>
-            </li>
-            <?php } ?>
-            <li class="nav-item">
-              <a href="prePendaftaranPklUser.php" class="nav-link <?php echo isActive('prePendaftaranPklUser.php'); ?>">
+              <a href="prePendaftaranPklUser.php"
+                class="nav-link <?php echo isActive('prePendaftaranPklUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Mendaftar PKL (Reguler)</p>
               </a>
             </li>
+
             <?php if (isFeatureEnabled('plot_lembaga_pkl')) { ?>
-            <li class="nav-item">
-              <a href="plotLembagaPklUser.php" class="nav-link text-warning <?php echo isActive('plotLembagaPklUser.php'); ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Pilih Lembaga PKL</p>
-              </a>
-            </li>
+
+              <li class="nav-item">
+                <a href="plotLembagaPklUser.php"
+                  class="nav-link text-warning <?php echo isActive('plotLembagaPklUser.php'); ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Pilih Lembaga PKL</p>
+                </a>
+              </li>
+
             <?php } ?>
+
             <?php if (isFeatureEnabled('bimtek')) { ?>
-            <li class="nav-item">
-              <a href="prePendaftaranBimtekUser.php" class="nav-link <?php echo isActive('prePendaftaranBimtekUser.php'); ?>">
-                <i class="far fa-circle nav-icon"></i>
-                <p>Bimtek Penulisan Tugas Akhir</p>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="listPraPropBimtekUser.php" class="nav-link text-warning <?php echo isActive('listPraPropBimtekUser.php'); ?>">
-                <i class="fas fa-file-alt nav-icon"></i>
-                <p>Pra Proposal Bimtek</p>
-              </a>
-            </li>
+
+              <li class="nav-item">
+                <a href="prePendaftaranBimtekUser.php"
+                  class="nav-link <?php echo isActive('prePendaftaranBimtekUser.php'); ?>">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Bimtek Penulisan Tugas Akhir</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="listPraPropBimtekUser.php"
+                  class="nav-link text-warning <?php echo isActive('listPraPropBimtekUser.php'); ?>">
+                  <i class="fas fa-file-alt nav-icon"></i>
+                  <p>Pra Proposal Bimtek</p>
+                </a>
+              </li>
+
             <?php } ?>
+
             <li class="nav-item">
-              <a href="prePendaftaranSemproUser.php" class="nav-link <?php echo isActive('prePendaftaranSemproUser.php'); ?>">
+              <a href="prePendaftaranSemproUser.php"
+                class="nav-link <?php echo isActive('prePendaftaranSemproUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Seminar Proposal Skripsi</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a href="prePendaftaranUjianKompreUser.php" class="nav-link <?php echo isActive('prePendaftaranUjianKompreUser.php'); ?>">
+              <a href="prePendaftaranUjianKompreUser.php"
+                class="nav-link <?php echo isActive('prePendaftaranUjianKompreUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Ujian Komprehensif</p>
               </a>
             </li>
+
             <li class="nav-item">
-              <a href="prePendaftaranUjianSkripsiUser.php" class="nav-link <?php echo isActive('prePendaftaranUjianSkripsiUser.php'); ?>">
+              <a href="prePendaftaranUjianSkripsiUser.php"
+                class="nav-link <?php echo isActive('prePendaftaranUjianSkripsiUser.php'); ?>">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Ujian Skripsi</p>
               </a>
             </li>
+
           </ul>
         </li>
-        <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>
-        <li class="nav-item">
-          <a href="peminjamanRuangUmum.php" class="nav-link <?php echo isActive(['peminjamanRuangUmum.php','peminjamanRuangForm.php','peminjamanRuangDetail.php']); ?>">
-            <i class="nav-icon fas fa-calendar-check"></i>
-            <p>Peminjaman Ruangan</p>
-          </a>
-        </li>
-        <?php } ?>
-        <li class="nav-item">
-          <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
-            <i class="nav-icon fas fa-calendar-alt"></i>
-            <p>Kalender Kegiatan</p>
-          </a>
-        </li>
+
       </ul>
     </nav>
   </div>

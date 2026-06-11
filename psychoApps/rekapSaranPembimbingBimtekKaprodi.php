@@ -6,7 +6,7 @@ $username = $_SESSION['username'];
 // Validasi: hanya Kaprodi (jabatan_instansi = 47)
 $q_me = mysqli_query($con, "SELECT * FROM dt_pegawai WHERE id='$username'");
 $dMe = mysqli_fetch_assoc($q_me);
-if ($dMe['jabatan_instansi'] != '47') {
+if ($dMe['jabatan_instansi'] != '47' && $dMe['jabatan_instansi'] != '46') {
   header("location:dashboardAdm.php");
   exit();
 }
@@ -71,13 +71,13 @@ if ($dMe['jabatan_instansi'] != '47') {
                     <?php
                     $current_status = isset($_GET['status_filter']) ? $_GET['status_filter'] : 'all';
                     $status_options = [
-                        'all' => 'Semua Status',
-                        'pending' => 'Belum Diproses',
-                        'approved' => 'Sudah Terdata'
+                      'all' => 'Semua Status',
+                      'pending' => 'Belum Diproses',
+                      'approved' => 'Sudah Terdata'
                     ];
                     foreach ($status_options as $val => $lab) {
-                        $sel = ($current_status == $val) ? 'selected' : '';
-                        echo "<option value='$val' $sel>$lab</option>";
+                      $sel = ($current_status == $val) ? 'selected' : '';
+                      echo "<option value='$val' $sel>$lab</option>";
                     }
                     ?>
                   </select>
@@ -101,10 +101,15 @@ if ($dMe['jabatan_instansi'] != '47') {
 
           <!-- Tabel -->
           <div class="card card-outline card-warning">
-            <div class="card-header">
-              <h5 class="card-title"><i class="fas fa-user-friends"></i> Rekap Saran Dosen Pembimbing Mahasiswa</h5>
-              <div class="card-tools">
-                <span class="badge badge-info">Menampilkan seluruh progres mahasiswa Bimtek</span>
+            <div class="card-header bg-white">
+              <div class="d-flex justify-content-between align-items-center">
+                <h5 class="card-title font-weight-bold mb-0"><i class="fas fa-list-alt text-warning mr-2"></i> Rekap Saran Dosen Pembimbing Mahasiswa</h5>
+                <div>
+                  <button type="button" class="btn btn-sm btn-danger mr-2" id="btnResetAll" data-idbimtek="<?php echo htmlspecialchars($current_id_bimtek); ?>">
+                    <i class="fas fa-trash-restore-alt mr-1"></i> Batalkan Semua Persetujuan
+                  </button>
+                  <span class="badge badge-info">Menampilkan seluruh progres mahasiswa Bimtek</span>
+                </div>
               </div>
             </div>
             <div class="card-body p-0">
@@ -133,12 +138,12 @@ if ($dMe['jabatan_instansi'] != '47') {
 
                     $where = ["1=1"]; // Mulai dengan kondisi selalu benar
                     if (!empty($current_id_bimtek)) $where[] = "pp.id_bimtek='" . mysqli_real_escape_string($con, $current_id_bimtek) . "'";
-                    
+
                     // Filter Status Registrasi Dospem (Approved/Pending)
                     if ($current_status == 'pending') {
-                        $where[] = "pp.nim NOT IN (SELECT nim FROM pengelompokan_dospem_skripsi WHERE id_periode = '$active_period_id' AND status IN ('2','3'))";
+                      $where[] = "pp.nim NOT IN (SELECT nim FROM pengelompokan_dospem_skripsi WHERE id_periode = '$active_period_id' AND status IN ('2','3'))";
                     } elseif ($current_status == 'approved') {
-                        $where[] = "pp.nim IN (SELECT nim FROM pengelompokan_dospem_skripsi WHERE id_periode = '$active_period_id' AND status IN ('2','3'))";
+                      $where[] = "pp.nim IN (SELECT nim FROM pengelompokan_dospem_skripsi WHERE id_periode = '$active_period_id' AND status IN ('2','3'))";
                     }
 
                     $where_sql = "WHERE " . implode(' AND ', $where);
@@ -165,11 +170,11 @@ if ($dMe['jabatan_instansi'] != '47') {
                       $s1_real = 0;
                       $s1_full = false;
                       $s1_zero = false;
-                      if($d['pembimbing_saran_1']) {
+                      if ($d['pembimbing_saran_1']) {
                         $q_r1 = mysqli_query($con, "SELECT COUNT(*) as total FROM pengelompokan_dospem_skripsi WHERE (dospem_skripsi1='$d[pembimbing_saran_1]' OR dospem_skripsi2='$d[pembimbing_saran_1]') AND id_periode='$active_period_id' AND status IN ('2','3')");
                         $dr1 = mysqli_fetch_assoc($q_r1);
                         $s1_real = $dr1['total'];
-                        
+
                         $s1_total_k = (int)$d['s1_k1'] + (int)$d['s1_k2'];
                         if ($s1_total_k == 0) $s1_zero = true;
                         if ($s1_total_k > 0 && $s1_real >= $s1_total_k) $s1_full = true;
@@ -178,7 +183,7 @@ if ($dMe['jabatan_instansi'] != '47') {
                       $s2_real = 0;
                       $s2_full = false;
                       $s2_zero = false;
-                      if($d['pembimbing_saran_2']) {
+                      if ($d['pembimbing_saran_2']) {
                         $q_r2 = mysqli_query($con, "SELECT COUNT(*) as total FROM pengelompokan_dospem_skripsi WHERE (dospem_skripsi1='$d[pembimbing_saran_2]' OR dospem_skripsi2='$d[pembimbing_saran_2]') AND id_periode='$active_period_id' AND status IN ('2','3')");
                         $dr2 = mysqli_fetch_assoc($q_r2);
                         $s2_real = $dr2['total'];
@@ -195,37 +200,37 @@ if ($dMe['jabatan_instansi'] != '47') {
                         <td class="nim-col"><?php echo htmlspecialchars($d['nim']); ?></td>
                         <td class="text-left font-weight-bold nama-col">
                           <?php echo htmlspecialchars($d['mhs_nama']); ?>
-                          <?php if($row_class): ?>
+                          <?php if ($row_class): ?>
                             <br><small class="text-danger font-italic"><i class="fas fa-exclamation-triangle"></i> Kuota Pembimbing Bermasalah</small>
                           <?php endif; ?>
                         </td>
                         <td><?php echo htmlspecialchars($d['nm_pem']); ?></td>
                         <td>
-                            <?php
-                            $st_class = ['proses' => 'badge-warning', 'revisi' => 'badge-danger', 'diterima' => 'badge-success'];
-                            $st_label = ['proses' => 'Review', 'revisi' => 'Revisi', 'diterima' => 'Diterima'];
-                            $cls = $st_class[$d['status_bimtek']] ?? 'badge-secondary';
-                            $lab = $st_label[$d['status_bimtek']] ?? $d['status_bimtek'];
-                            echo "<span class='badge $cls px-2 py-1'>$lab</span>";
-                            ?>
-                            <div class="xsmall text-muted mt-1"><?php echo htmlspecialchars($d['nama_bimtek']); ?></div>
+                          <?php
+                          $st_class = ['proses' => 'badge-warning', 'revisi' => 'badge-danger', 'diterima' => 'badge-success'];
+                          $st_label = ['proses' => 'Review', 'revisi' => 'Revisi', 'diterima' => 'Diterima'];
+                          $cls = $st_class[$d['status_bimtek']] ?? 'badge-secondary';
+                          $lab = $st_label[$d['status_bimtek']] ?? $d['status_bimtek'];
+                          echo "<span class='badge $cls px-2 py-1'>$lab</span>";
+                          ?>
+                          <div class="xsmall text-muted mt-1"><?php echo htmlspecialchars($d['nama_bimtek']); ?></div>
                         </td>
                         <td class="text-left" style="min-width: 180px;">
                           <?php if ($d['saran1_nama']): ?>
                             <div class="mb-1"><i class="fas fa-user-tie text-primary mr-1"></i><b><?php echo htmlspecialchars($d['saran1_nama']); ?></b></div>
-                            <?php 
-                                $s1_total_k = (int)$d['s1_k1'] + (int)$d['s1_k2'];
-                                $s1_perc = ($s1_total_k > 0) ? round(($s1_real / $s1_total_k) * 100) : 0;
-                                $s1_bar_class = 'bg-success';
-                                if ($s1_perc >= 100) $s1_bar_class = 'bg-danger';
-                                elseif ($s1_perc >= 80) $s1_bar_class = 'bg-warning';
+                            <?php
+                            $s1_total_k = (int)$d['s1_k1'] + (int)$d['s1_k2'];
+                            $s1_perc = ($s1_total_k > 0) ? round(($s1_real / $s1_total_k) * 100) : 0;
+                            $s1_bar_class = 'bg-success';
+                            if ($s1_perc >= 100) $s1_bar_class = 'bg-danger';
+                            elseif ($s1_perc >= 80) $s1_bar_class = 'bg-warning';
                             ?>
                             <div class="progress mb-1" style="height: 12px; border-radius: 6px;" title="Terisi: <?php echo $s1_real; ?> / <?php echo $s1_total_k; ?>">
-                                <div class="progress-bar <?php echo $s1_bar_class; ?>" role="progressbar" style="width: <?php echo min(100, $s1_perc); ?>%" aria-valuenow="<?php echo $s1_perc; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              <div class="progress-bar <?php echo $s1_bar_class; ?>" role="progressbar" style="width: <?php echo min(100, $s1_perc); ?>%" aria-valuenow="<?php echo $s1_perc; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="d-flex justify-content-between small px-1">
-                                <span class="text-muted">K: <?php echo (int)$d['s1_k1'] + (int)$d['s1_k2']; ?></span>
-                                <span class="font-weight-bold <?php echo ($s1_perc >= 100) ? 'text-danger' : 'text-primary'; ?>">T: <?php echo $s1_real; ?></span>
+                              <span class="text-muted">K: <?php echo (int)$d['s1_k1'] + (int)$d['s1_k2']; ?></span>
+                              <a href="javascript:void(0)" class="font-weight-bold btn-lihat-bimbingan <?php echo ($s1_perc >= 100) ? 'text-danger' : 'text-primary'; ?>" data-nip="<?php echo $d['pembimbing_saran_1']; ?>" data-nama="<?php echo htmlspecialchars($d['saran1_nama']); ?>" style="text-decoration: underline;" title="Klik untuk melihat mahasiswa">T: <?php echo $s1_real; ?></a>
                             </div>
                           <?php else: ?>
                             <span class="text-muted">-</span>
@@ -234,19 +239,19 @@ if ($dMe['jabatan_instansi'] != '47') {
                         <td class="text-left" style="min-width: 180px;">
                           <?php if ($d['saran2_nama']): ?>
                             <div class="mb-1"><i class="fas fa-user-tie text-secondary mr-1"></i><b><?php echo htmlspecialchars($d['saran2_nama']); ?></b></div>
-                            <?php 
-                                $s2_total_k = (int)$d['s2_k1'] + (int)$d['s2_k2'];
-                                $s2_perc = ($s2_total_k > 0) ? round(($s2_real / $s2_total_k) * 100) : 0;
-                                $s2_bar_class = 'bg-success';
-                                if ($s2_perc >= 100) $s2_bar_class = 'bg-danger';
-                                elseif ($s2_perc >= 80) $s2_bar_class = 'bg-warning';
+                            <?php
+                            $s2_total_k = (int)$d['s2_k1'] + (int)$d['s2_k2'];
+                            $s2_perc = ($s2_total_k > 0) ? round(($s2_real / $s2_total_k) * 100) : 0;
+                            $s2_bar_class = 'bg-success';
+                            if ($s2_perc >= 100) $s2_bar_class = 'bg-danger';
+                            elseif ($s2_perc >= 80) $s2_bar_class = 'bg-warning';
                             ?>
                             <div class="progress mb-1" style="height: 12px; border-radius: 6px;" title="Terisi: <?php echo $s2_real; ?> / <?php echo $s2_total_k; ?>">
-                                <div class="progress-bar <?php echo $s2_bar_class; ?>" role="progressbar" style="width: <?php echo min(100, $s2_perc); ?>%" aria-valuenow="<?php echo $s2_perc; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                              <div class="progress-bar <?php echo $s2_bar_class; ?>" role="progressbar" style="width: <?php echo min(100, $s2_perc); ?>%" aria-valuenow="<?php echo $s2_perc; ?>" aria-valuemin="0" aria-valuemax="100"></div>
                             </div>
                             <div class="d-flex justify-content-between small px-1">
-                                <span class="text-muted">K: <?php echo (int)$d['s2_k1'] + (int)$d['s2_k2']; ?></span>
-                                <span class="font-weight-bold <?php echo ($s2_perc >= 100) ? 'text-danger' : 'text-primary'; ?>">T: <?php echo $s2_real; ?></span>
+                              <span class="text-muted">K: <?php echo (int)$d['s2_k1'] + (int)$d['s2_k2']; ?></span>
+                              <a href="javascript:void(0)" class="font-weight-bold btn-lihat-bimbingan <?php echo ($s2_perc >= 100) ? 'text-danger' : 'text-primary'; ?>" data-nip="<?php echo $d['pembimbing_saran_2']; ?>" data-nama="<?php echo htmlspecialchars($d['saran2_nama']); ?>" style="text-decoration: underline;" title="Klik untuk melihat mahasiswa">T: <?php echo $s2_real; ?></a>
                             </div>
                           <?php else: ?>
                             <span class="text-muted">-</span>
@@ -257,51 +262,51 @@ if ($dMe['jabatan_instansi'] != '47') {
                           // Cek apakah sudah terdata di pengelompokan_dospem_skripsi
                           $cek_exists = mysqli_query($con, "SELECT id FROM pengelompokan_dospem_skripsi WHERE nim='$d[nim]' AND (status='2' OR status='3') LIMIT 1");
                           if (mysqli_num_rows($cek_exists) > 0) {
-                              echo '<span class="badge badge-success mb-1 d-block"><i class="fas fa-check-circle"></i> Sudah Terdata</span>';
-                              echo '<button type="button" class="btn btn-xs btn-outline-danger btn-cancel-approve" 
-                                      data-nim="'.$d['nim'].'" 
-                                      data-nama="'.htmlspecialchars($d['mhs_nama']).'">
+                            echo '<span class="badge badge-success mb-1 d-block"><i class="fas fa-check-circle"></i> Sudah Terdata</span>';
+                            echo '<button type="button" class="btn btn-xs btn-outline-danger btn-cancel-approve" 
+                                      data-nim="' . $d['nim'] . '" 
+                                      data-nama="' . htmlspecialchars($d['mhs_nama']) . '">
                                       <i class="fas fa-undo"></i> Batalkan
                                     </button>';
                           } else {
-                              if ($d['status_bimtek'] == 'diterima') {
-                                  // Selalu tampilkan tombol Detail/Tentukan agar Kaprodi bisa memilihkan
-                                  $btn_label = ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) ? 'Detail & Edit' : 'Tentukan Pembimbing';
-                                  $btn_class = ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) ? 'btn-info' : 'btn-warning';
-                                  
-                                  echo '<button type="button" class="btn btn-xs '.$btn_class.' btn-detail mr-1" 
-                                          data-nim="'.$d['nim'].'" 
-                                          data-nama="'.htmlspecialchars($d['mhs_nama']).'"
-                                          data-idbimtek="'.$current_id_bimtek.'">
-                                          <i class="fas fa-user-edit"></i> '.$btn_label.'
+                            if ($d['status_bimtek'] == 'diterima') {
+                              // Selalu tampilkan tombol Detail/Tentukan agar Kaprodi bisa memilihkan
+                              $btn_label = ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) ? 'Detail & Edit' : 'Tentukan Pembimbing';
+                              $btn_class = ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) ? 'btn-info' : 'btn-warning';
+
+                              echo '<button type="button" class="btn btn-xs ' . $btn_class . ' btn-detail mr-1" 
+                                          data-nim="' . $d['nim'] . '" 
+                                          data-nama="' . htmlspecialchars($d['mhs_nama']) . '"
+                                          data-idbimtek="' . $current_id_bimtek . '">
+                                          <i class="fas fa-user-edit"></i> ' . $btn_label . '
                                         </button>';
-                                        
-                                  if ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) {
-                                      echo '<button type="button" class="btn btn-xs btn-success btn-approve" 
-                                              data-nim="'.$d['nim'].'" 
-                                              data-nama="'.htmlspecialchars($d['mhs_nama']).'"
-                                              data-saran1="'.$d['pembimbing_saran_1'].'" 
-                                              data-s1nama="'.htmlspecialchars($d['saran1_nama']).'"
-                                              data-s1k1="'.(int)$d['s1_k1'].'" 
-                                              data-s1k2="'.(int)$d['s1_k2'].'" 
-                                              data-s1real="'.$s1_real.'"
-                                              data-saran2="'.$d['pembimbing_saran_2'].'" 
-                                              data-s2nama="'.htmlspecialchars($d['saran2_nama']).'"
-                                              data-s2k1="'.(int)$d['s2_k1'].'" 
-                                              data-s2k2="'.(int)$d['s2_k2'].'" 
-                                              data-s2real="'.$s2_real.'"
-                                              data-idbimtek="'.$current_id_bimtek.'">
+
+                              if ($d['pembimbing_saran_1'] || $d['pembimbing_saran_2']) {
+                                echo '<button type="button" class="btn btn-xs btn-success btn-approve" 
+                                              data-nim="' . $d['nim'] . '" 
+                                              data-nama="' . htmlspecialchars($d['mhs_nama']) . '"
+                                              data-saran1="' . $d['pembimbing_saran_1'] . '" 
+                                              data-s1nama="' . htmlspecialchars($d['saran1_nama']) . '"
+                                              data-s1k1="' . (int)$d['s1_k1'] . '" 
+                                              data-s1k2="' . (int)$d['s1_k2'] . '" 
+                                              data-s1real="' . $s1_real . '"
+                                              data-saran2="' . $d['pembimbing_saran_2'] . '" 
+                                              data-s2nama="' . htmlspecialchars($d['saran2_nama']) . '"
+                                              data-s2k1="' . (int)$d['s2_k1'] . '" 
+                                              data-s2k2="' . (int)$d['s2_k2'] . '" 
+                                              data-s2real="' . $s2_real . '"
+                                              data-idbimtek="' . $current_id_bimtek . '">
                                               <i class="fas fa-check"></i> Setujui & Data
                                             </button>';
-                                  }
-                              } else {
-                                  echo '<button type="button" class="btn btn-xs btn-outline-info btn-detail" 
-                                          data-nim="'.$d['nim'].'" 
-                                          data-nama="'.htmlspecialchars($d['mhs_nama']).'"
-                                          data-idbimtek="'.$current_id_bimtek.'">
+                              }
+                            } else {
+                              echo '<button type="button" class="btn btn-xs btn-outline-info btn-detail" 
+                                          data-nim="' . $d['nim'] . '" 
+                                          data-nama="' . htmlspecialchars($d['mhs_nama']) . '"
+                                          data-idbimtek="' . $current_id_bimtek . '">
                                           <i class="fas fa-search"></i> Cek Progres
                                         </button>';
-                              }
+                            }
                           }
                           ?>
                         </td>
@@ -323,6 +328,100 @@ if ($dMe['jabatan_instansi'] != '47') {
     </div>
   </div>
 
+  <!-- Modal Jurnal Dosen -->
+  <div class="modal fade" id="modalJurnalDosen" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+      <div class="modal-content">
+        <div class="modal-header bg-primary">
+          <h5 class="modal-title text-white"><i class="fas fa-book mr-1"></i> Rekam Jejak Dosen (Publikasi & Penelitian)</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body p-0">
+          <div class="p-2 bg-light border-bottom">
+            <input type="text" id="searchJurnalDosen" class="form-control form-control-sm" placeholder="Cari nama dosen, NIP, penelitian, atau publikasi...">
+          </div>
+          <div class="p-2" style="max-height: 70vh; overflow-y: auto;">
+            <div class="accordion" id="accordionJurnalDosen">
+                <?php
+                $csvFile = 'assets/jurnaldosen.csv';
+                if (file_exists($csvFile)) {
+                  $handle = fopen($csvFile, "r");
+                  if ($handle !== FALSE) {
+                    $row = 0;
+                    while (($data = fgetcsv($handle, 10000, ",")) !== FALSE) {
+                      if ($row == 0) { // Skip header
+                        $row++;
+                        continue;
+                      }
+                      $nama = htmlspecialchars($data[0] ?? '-');
+                      $nip = htmlspecialchars($data[1] ?? '-');
+
+                      $publikasi_raw = htmlspecialchars($data[2] ?? '-');
+                      $publikasi_list = array_filter(array_map('trim', explode(';', $publikasi_raw)));
+                      $publikasi = '<ul class="pl-3 mb-0 small">';
+                      foreach ($publikasi_list as $pub) {
+                        $publikasi .= '<li class="mb-1" style="border-bottom: 1px dashed #eee; padding-bottom: 4px;">' . $pub . '</li>';
+                      }
+                      $publikasi .= '</ul>';
+
+                      $penelitian_raw = htmlspecialchars($data[3] ?? '-');
+                      $penelitian_list = array_filter(array_map('trim', explode(';', $penelitian_raw)));
+                      $penelitian = '<ul class="pl-3 mb-0 small">';
+                      foreach ($penelitian_list as $pen) {
+                        $penelitian .= '<li class="mb-1" style="border-bottom: 1px dashed #eee; padding-bottom: 4px;">' . $pen . '</li>';
+                      }
+                      $penelitian .= '</ul>';
+
+                      echo '
+                      <div class="card mb-1 jurnal-row">
+                        <div class="card-header p-1 bg-white" id="headingDosen'.$row.'">
+                          <h6 class="mb-0">
+                            <button class="btn btn-link btn-block text-left text-dark font-weight-bold text-decoration-none" type="button" data-toggle="collapse" data-target="#collapseDosen'.$row.'" aria-expanded="false" aria-controls="collapseDosen'.$row.'">
+                              <i class="fas fa-user-tie mr-2 text-primary"></i>'.$nama.' <small class="text-muted ml-1">(NIP: '.$nip.')</small>
+                            </button>
+                          </h6>
+                        </div>
+
+                        <div id="collapseDosen'.$row.'" class="collapse" aria-labelledby="headingDosen'.$row.'" data-parent="#accordionJurnalDosen">
+                          <div class="card-body p-3 bg-light">
+                            <div class="row">
+                              <div class="col-md-6 border-right">
+                                <h6 class="text-info font-weight-bold border-bottom pb-1 mb-2"><i class="fas fa-book-open mr-1"></i>Publikasi</h6>
+                                '.$publikasi.'
+                              </div>
+                              <div class="col-md-6">
+                                <h6 class="text-success font-weight-bold border-bottom pb-1 mb-2"><i class="fas fa-flask mr-1"></i>Penelitian</h6>
+                                '.$penelitian.'
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>';
+                      $row++;
+                    }
+                    fclose($handle);
+                    if ($row == 1) {
+                      echo "<div class='alert alert-warning text-center m-3'>Data kosong</div>";
+                    }
+                  } else {
+                    echo "<div class='alert alert-danger text-center m-3'>Gagal membaca file CSV</div>";
+                  }
+                } else {
+                  echo "<div class='alert alert-danger text-center m-3'>File CSV tidak ditemukan</div>";
+                }
+                ?>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal Detail -->
   <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
@@ -335,8 +434,8 @@ if ($dMe['jabatan_instansi'] != '47') {
         </div>
         <div class="modal-body" id="detailContent">
           <div class="text-center py-4">
-             <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
-             <p class="mt-2 text-muted">Memuat data...</p>
+            <i class="fas fa-spinner fa-spin fa-2x text-muted"></i>
+            <p class="mt-2 text-muted">Memuat data...</p>
           </div>
         </div>
         <div class="modal-footer">
@@ -361,7 +460,7 @@ if ($dMe['jabatan_instansi'] != '47') {
           '>': '&gt;',
           '"': '&quot;',
           "'": '&#39;'
-        }[m];
+        } [m];
       });
     }
 
@@ -373,14 +472,19 @@ if ($dMe['jabatan_instansi'] != '47') {
       const s1k1 = parseInt($(this).data('s1k1') || 0);
       const s1k2 = parseInt($(this).data('s1k2') || 0);
       const s1real = parseInt($(this).data('s1real') || 0);
-      
+
       const saran2 = $(this).data('saran2');
       const s2nama = $(this).data('s2nama');
       const s2k1 = parseInt($(this).data('s2k1') || 0);
       const s2k2 = parseInt($(this).data('s2k2') || 0);
       const s2real = parseInt($(this).data('s2real') || 0);
-      
+
       const idBimtek = $(this).data('idbimtek');
+
+      if (saran1 && saran2 && saran1 == saran2) {
+        Swal.fire('Peringatan!', 'Dosen Pembimbing 1 dan Dosen Pembimbing 2 tidak boleh sama.', 'warning');
+        return;
+      }
 
       // Cek Kuota Penuh
       let warningMsg = "";
@@ -420,7 +524,7 @@ if ($dMe['jabatan_instansi'] != '47') {
           cancelButtonText: 'Batalkan'
         }).then((result) => {
           if (result.isConfirmed) {
-            proceedApproval();
+            executeApprove(nim, saran1, saran2, idBimtek);
           }
         });
       } else {
@@ -467,11 +571,15 @@ if ($dMe['jabatan_instansi'] != '47') {
       $('#modalDetail').modal('show');
       $('#detailContent').html('<div class="text-center py-4"><i class="fas fa-spinner fa-spin fa-2x text-muted"></i><p class="mt-2 text-muted">Memuat data...</p></div>');
       $('#btnSaveDetail, #btnApproveDetail').prop('disabled', true);
+      $('#btnApproveDetail').show(); // Reset visibility
 
       $.ajax({
         url: 'getBimtekDetail.php',
         type: 'GET',
-        data: { nim: nim, id_bimtek: idBimtek },
+        data: {
+          nim: nim,
+          id_bimtek: idBimtek
+        },
         dataType: 'json',
         success: function(response) {
           if (response.status === 'success') {
@@ -479,10 +587,10 @@ if ($dMe['jabatan_instansi'] != '47') {
             const advisors = response.advisors;
             // Simpan data dospem ke global atau data attribute modal untuk dicheck nanti
             $('#modalDetail').data('advisors', advisors);
-            
+
             let advOptions1 = '<option value="">- Pilih Dospem 1 -</option>';
             let advOptions2 = '<option value="">- Pilih Dospem 2 -</option>';
-            
+
             advisors.forEach(adv => {
               const sel1 = (adv.nip == d.pembimbing_saran_1) ? 'selected' : '';
               const sel2 = (adv.nip == d.pembimbing_saran_2) ? 'selected' : '';
@@ -573,25 +681,37 @@ if ($dMe['jabatan_instansi'] != '47') {
                       <div id="quota-info-2" class="mt-1"></div>
                     </div>
                     <p class="small text-muted mt-3"><i class="fas fa-info-circle mr-1"></i> Perubahan di sini akan memperbarui data Bimtek mahasiswa.</p>
+                    <button type="button" class="btn btn-sm btn-primary mr-2" data-toggle="modal" data-target="#modalJurnalDosen">
+                  <i class="fas fa-book"></i> Rekam Jejak Dosen
+                </button>
                   </form>
                 </div>
               </div>
             `;
             $('#detailContent').html(html);
-            
+
             // Isi catatan reviewer secara aman jika ada
             if (d.catatan) {
-                let catatanHtml = `
+              let catatanHtml = `
                   <div class="mt-3 small border-top pt-2">
                     <label class="font-weight-bold mb-0 text-danger"><i class="fas fa-comment-dots mr-1"></i> Catatan Reviewer:</label>
                     <div id="catatan-content-inner" class="p-2 bg-light border rounded mt-1" style="max-height: 80px; overflow-y: auto;"></div>
                   </div>
                 `;
-                $('#catatan-reviewer-placeholder').html(catatanHtml);
-                $('#catatan-content-inner').html(d.catatan);
+              $('#catatan-reviewer-placeholder').html(catatanHtml);
+              $('#catatan-content-inner').html(d.catatan);
             }
-            
-            $('#btnSaveDetail, #btnApproveDetail').prop('disabled', false);
+
+            if (d.status === 'diterima') {
+              $('#btnSaveDetail').show().prop('disabled', false);
+              $('#btnApproveDetail').show().prop('disabled', false);
+              $('select[name="saran1"], select[name="saran2"]').prop('disabled', false);
+            } else {
+              $('#btnSaveDetail').hide();
+              $('#btnApproveDetail').hide();
+              $('select[name="saran1"], select[name="saran2"]').prop('disabled', true);
+              $('#formUpdateSaran').append('<div class="alert alert-warning mt-3 small p-2 mb-0"><i class="fas fa-exclamation-triangle mr-1"></i> Penentuan dospem hanya bisa dilakukan jika status mahasiswa sudah <b>Diterima</b>.</div>');
+            }
 
             // Inisialisasi Select2 untuk dropdown di dalam modal
             $('.select2-adv').select2({
@@ -604,13 +724,13 @@ if ($dMe['jabatan_instansi'] != '47') {
               const nip = $(`select[name="${selectName}"]`).val();
               const adv = advisors.find(a => a.nip == nip);
               const target = $(`#${targetId}`);
-              
+
               if (adv) {
                 const totalQuota = adv.kuota1 + adv.kuota2;
                 const isFull = adv.real >= totalQuota;
                 const badgeClass = isFull ? 'badge-danger' : 'badge-light border';
                 const textClass = isFull ? 'text-white' : 'text-dark';
-                
+
                 target.html(`
                   <div class="small">
                     <span class="badge ${badgeClass} ${textClass}">Kuota (I/II): ${adv.kuota1} / ${adv.kuota2}</span>
@@ -628,9 +748,13 @@ if ($dMe['jabatan_instansi'] != '47') {
             updateQuotaBadge('saran2', 'quota-info-2');
 
             // Update saat ganti pilihan
-            $('select[name="saran1"]').on('change', function() { updateQuotaBadge('saran1', 'quota-info-1'); });
-            $('select[name="saran2"]').on('change', function() { updateQuotaBadge('saran2', 'quota-info-2'); });
-            
+            $('select[name="saran1"]').on('change', function() {
+              updateQuotaBadge('saran1', 'quota-info-1');
+            });
+            $('select[name="saran2"]').on('change', function() {
+              updateQuotaBadge('saran2', 'quota-info-2');
+            });
+
             // Set data properties for buttons
             $('#btnApproveDetail').data('nim', nim);
             $('#btnApproveDetail').data('nama', nama);
@@ -647,6 +771,13 @@ if ($dMe['jabatan_instansi'] != '47') {
 
     // Save Detail Changes
     $('#btnSaveDetail').on('click', function() {
+      const saran1 = $('select[name="saran1"]').val();
+      const saran2 = $('select[name="saran2"]').val();
+      if (saran1 && saran2 && saran1 === saran2) {
+        Swal.fire('Peringatan!', 'Dosen Pembimbing 1 dan Dosen Pembimbing 2 tidak boleh sama.', 'warning');
+        return;
+      }
+
       const formData = $('#formUpdateSaran').serialize();
       $(this).prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Menyimpan...');
 
@@ -686,13 +817,18 @@ if ($dMe['jabatan_instansi'] != '47') {
         return;
       }
 
+      if (saran2 && saran1 === saran2) {
+        Swal.fire('Peringatan!', 'Dosen Pembimbing 1 dan Dosen Pembimbing 2 tidak boleh sama.', 'warning');
+        return;
+      }
+
       // Cek Kuota
       let warningMsg = "";
       const d1 = advisors.find(a => a.nip == saran1);
       if (d1 && d1.real >= (d1.kuota1 + d1.kuota2)) {
         warningMsg += `<li><b>${d1.nama}</b> (Saran 1) sudah mencapai batas kuota (${d1.real}/${d1.kuota1 + d1.kuota2}).</li>`;
       }
-      
+
       const d2 = advisors.find(a => a.nip == saran2);
       if (saran2 && d2 && d2.real >= (d2.kuota1 + d2.kuota2)) {
         warningMsg += `<li><b>${d2.nama}</b> (Saran 2) sudah mencapai batas kuota (${d2.real}/${d2.kuota1 + d2.kuota2}).</li>`;
@@ -700,12 +836,13 @@ if ($dMe['jabatan_instansi'] != '47') {
 
       const proceedApprovalModal = () => {
         Swal.fire({
-          title: 'Setujui & Daftarkan?',
-          html: `Apakah Anda yakin ingin menyetujui dan mendaftarkan <b>${nama}</b> ke sistem Skripsi dengan pembimbing yang dipilih?`,
+          title: 'Setujui Saran Pembimbing?',
+          html: `Apakah Anda yakin ingin menyetujui saran pembimbing untuk <b>${nama}</b> (${nim})?<br><br>Mahasiswa akan langsung terdaftar di sistem Skripsi dengan pembimbing tersebut.`,
           icon: 'question',
           showCancelButton: true,
           confirmButtonColor: '#28a745',
-          confirmButtonText: 'Ya, Daftarkan!',
+          cancelButtonColor: '#6c757d',
+          confirmButtonText: 'Ya, Setujui!',
           cancelButtonText: 'Batal'
         }).then((result) => {
           if (result.isConfirmed) {
@@ -726,7 +863,7 @@ if ($dMe['jabatan_instansi'] != '47') {
           cancelButtonText: 'Batalkan'
         }).then((result) => {
           if (result.isConfirmed) {
-            proceedApprovalModal();
+            executeApprove(nim, saran1, saran2, idBimtek);
           }
         });
       } else {
@@ -753,7 +890,9 @@ if ($dMe['jabatan_instansi'] != '47') {
           $.ajax({
             url: 'sCancelApproveSaranPembimbingBimtek.php',
             type: 'POST',
-            data: { nim: nim },
+            data: {
+              nim: nim
+            },
             dataType: 'json',
             success: function(response) {
               if (response.status === 'success') {
@@ -779,6 +918,167 @@ if ($dMe['jabatan_instansi'] != '47') {
         var nim = $(this).find(".nim-col").text().toLowerCase();
         var nama = $(this).find(".nama-col").text().toLowerCase();
         $(this).toggle(nim.indexOf(value) > -1 || nama.indexOf(value) > -1)
+      });
+    });
+
+    // Real-time Search Jurnal Dosen
+    $("#searchJurnalDosen").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#accordionJurnalDosen .jurnal-row").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+
+    // Fix multiple modals overlap z-index issue
+    $(document).on('show.bs.modal', '.modal', function () {
+      var zIndex = 1040 + (10 * $('.modal:visible').length);
+      $(this).css('z-index', zIndex);
+      setTimeout(function() {
+        $('.modal-backdrop').not('.modal-stack').css('z-index', zIndex - 1).addClass('modal-stack');
+      }, 0);
+    });
+
+    // Fix body scroll when inner modal is closed but outer modal is still open
+    $(document).on('hidden.bs.modal', '.modal', function () {
+      if ($('.modal:visible').length) {
+        $(document.body).addClass('modal-open');
+      }
+    });
+
+    // Lihat Daftar Bimbingan Dosen
+    $(document).on('click', '.btn-lihat-bimbingan', function(e) {
+      e.preventDefault();
+      const nip = $(this).data('nip');
+      const nama = $(this).data('nama');
+      
+      Swal.fire({
+        title: 'Memuat Data...',
+        allowOutsideClick: false,
+        didOpen: () => { Swal.showLoading(); }
+      });
+
+      $.ajax({
+        url: 'sGetDaftarBimbingan.php',
+        type: 'GET',
+        data: { nip: nip },
+        dataType: 'json',
+        success: function(res) {
+          if (res.status === 'success') {
+            let html = `<h6 class="text-left font-weight-bold mb-3">${nama}</h6>`;
+            if (res.data.length === 0) {
+              html += `<div class="alert alert-info">Belum ada mahasiswa bimbingan di periode ini.</div>`;
+            } else {
+              html += `<div class="table-responsive"><table class="table table-bordered table-sm text-left small">
+                        <thead class="bg-light"><tr><th width="5%">No</th><th width="20%">NIM</th><th>Nama Mahasiswa</th><th width="30%">Jalur / Catatan</th><th width="10%">Aksi</th></tr></thead><tbody>`;
+              res.data.forEach((m, i) => {
+                const catatan = m.catatan ? m.catatan : 'Reguler/Lainnya';
+                const nama = m.nama ? m.nama : '<i class="text-danger">Kosong / null</i>';
+                const nim_val = m.nim ? m.nim : '<i class="text-danger">Kosong</i>';
+                html += `<tr>
+                          <td>${i+1}</td>
+                          <td>${nim_val}</td>
+                          <td>${nama}</td>
+                          <td>${catatan}</td>
+                          <td class="text-center">
+                            <button class="btn btn-xs btn-danger btn-hapus-bimbingan" data-id="${m.id}" title="Hapus Mahasiswa Ini"><i class="fas fa-trash-alt"></i></button>
+                          </td>
+                         </tr>`;
+              });
+              html += `</tbody></table></div>`;
+            }
+            Swal.fire({
+              title: 'Daftar Mahasiswa Bimbingan',
+              html: html,
+              width: '800px',
+              confirmButtonText: 'Tutup'
+            });
+          } else {
+            Swal.fire('Gagal!', res.message, 'error');
+          }
+        },
+        error: function() {
+          Swal.fire('Error!', 'Terjadi kesalahan sistem.', 'error');
+        }
+      });
+    });
+
+    // Aksi hapus mahasiswa spesifik dari modal Daftar Bimbingan
+    $(document).on('click', '.btn-hapus-bimbingan', function() {
+      const id = $(this).data('id');
+      Swal.fire({
+        title: 'Hapus Data Bimbingan?',
+        html: 'Data mahasiswa ini akan dihapus dari sistem Skripsi dan beban dosen.<br>Aksi ini tidak dapat dibatalkan.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Hapus!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          $.ajax({
+            url: 'sDeleteBimbingan.php',
+            type: 'POST',
+            data: { id: id },
+            dataType: 'json',
+            success: function(response) {
+              if (response.status === 'success') {
+                Swal.fire('Terhapus!', response.message, 'success').then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire('Gagal!', response.message, 'error');
+              }
+            },
+            error: function() {
+              Swal.fire('Error!', 'Terjadi kesalahan sistem.', 'error');
+            }
+          });
+        }
+      });
+    });
+
+    // Mass Reset / Batalkan Semua Persetujuan
+    $('#btnResetAll').on('click', function() {
+      const idBimtek = $(this).data('idbimtek');
+      Swal.fire({
+        title: 'Batalkan Semua Persetujuan?',
+        html: `Apakah Anda yakin ingin membatalkan persetujuan Dospem untuk <b>SELURUH</b> mahasiswa pada Bimtek ini?<br><br><span class="text-danger font-weight-bold">Perhatian: Seluruh mahasiswa yang sudah di Setujui akan dihapus kembali dari sistem Skripsi. Aksi ini tidak dapat dibatalkan.</span>`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Ya, Batalkan Semua!',
+        cancelButtonText: 'Kembali'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Memproses...',
+            text: 'Mohon tunggu sebentar',
+            allowOutsideClick: false,
+            didOpen: () => {
+              Swal.showLoading();
+            }
+          });
+
+          $.ajax({
+            url: 'sResetAllSaranPembimbingBimtek.php',
+            type: 'POST',
+            data: { id_bimtek: idBimtek },
+            dataType: 'json',
+            success: function(response) {
+              if (response.status === 'success') {
+                Swal.fire('Berhasil!', response.message, 'success').then(() => {
+                  location.reload();
+                });
+              } else {
+                Swal.fire('Gagal!', response.message, 'error');
+              }
+            },
+            error: function() {
+              Swal.fire('Error!', 'Terjadi kesalahan sistem.', 'error');
+            }
+          });
+        }
       });
     });
   </script>

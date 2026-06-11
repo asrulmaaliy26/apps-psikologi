@@ -6,6 +6,10 @@
   $res_dpl = mysqli_query($con, $qry_dpl);
   $dt_dpl = mysqli_fetch_assoc($res_dpl);
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Rekap DPL PKL '.$dt_dpl['nama'].'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -28,10 +32,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Rekap DPL PKL '.$dt_dpl['nama'].'.xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">

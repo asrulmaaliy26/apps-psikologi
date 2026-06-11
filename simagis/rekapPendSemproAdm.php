@@ -126,11 +126,14 @@
           <div class="panel-body">
             <div class="row">
               <div class="col-md-12" style="margin-bottom:10px;">
-                <ul class="nav nav-tabs">
-                  <li role="presentation" class="active"><a>Periode Pendaftaran</a></li>
+                <ul class="nav nav-tabs" role="tablist">
+                  <li role="presentation" class="active"><a href="#periode" aria-controls="periode" role="tab" data-toggle="tab">Periode Pendaftaran</a></li>
+                  <li role="presentation"><a href="#semuadata" aria-controls="semuadata" role="tab" data-toggle="tab">Semua Data Mahasiswa</a></li>
                   <button role="presentation" class="btn btn-primary pull-right" title="Input periode baru" data-toggle="modal" data-target="#modalInput"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> Input Periode Baru</button>
                 </ul>
               </div>
+              <div class="tab-content">
+              <div role="tabpanel" class="tab-pane active" id="periode">
               <div class="col-md-12">
                 <div class="table-responsive">
                   <table class="table-condensed table table-bordered table-striped custom" style="margin-bottom:0px; font-size:12px;">
@@ -242,6 +245,57 @@
                   </table>
                 </div>
                 <div class="text-center"><?php echo paginate_one($reload, $page, $tpages); ?></div>
+              </div>
+              </div>
+              
+              <!-- TAB SEMUA DATA -->
+              <div role="tabpanel" class="tab-pane" id="semuadata">
+                <div class="col-md-12">
+                  <div class="table-responsive">
+                    <table class="table-condensed table table-bordered table-striped custom" style="margin-bottom:0px; font-size:12px;">
+                      <thead>
+                        <tr>
+                          <th class="text-center" width="3%">No.</th>
+                          <th class="text-center" width="20%">Nama | NIM</th>
+                          <th class="text-center" width="15%">Tgl. Daftar</th>
+                          <th class="text-center" width="15%">Tgl. Seminar</th>
+                          <th class="text-center" width="15%">Batas Revisi</th>
+                          <th class="text-center" width="10%">Opsi</th>
+                        </tr>
+                      </thead>
+                      <tbody class="text-muted">
+                        <?php
+                          $qs = "SELECT a.id, a.nim, a.tgl_pendaftaran, b.nama, c.batas_revisi, c.tgl_seminar, c.id_pendaftaran AS id_jadwal 
+                                 FROM mag_peserta_sempro a
+                                 LEFT JOIN mag_dt_mhssw_pasca b ON a.nim = b.nim
+                                 LEFT JOIN mag_jadwal_sempro c ON a.id = c.id_pendaftaran
+                                 ORDER BY a.tgl_pendaftaran DESC LIMIT 200";
+                          $rs = mysqli_query($GLOBALS["___mysqli_ston"], $qs);
+                          $nos = 1;
+                          while($ds = mysqli_fetch_array($rs)) {
+                        ?>
+                        <tr>
+                          <td class="text-center"><?php echo $nos++;?></td>
+                          <td><?php echo $ds['nama'].' | '.$ds['nim'];?></td>
+                          <td class="text-center"><?php echo $ds['tgl_pendaftaran'];?></td>
+                          <td class="text-center"><?php echo !empty($ds['tgl_seminar']) && $ds['tgl_seminar'] != '0000-00-00' ? date('d-m-Y', strtotime($ds['tgl_seminar'])) : '-';?></td>
+                          <td class="text-center"><?php echo !empty($ds['batas_revisi']) && $ds['batas_revisi'] != '0000-00-00' ? date('d-m-Y', strtotime($ds['batas_revisi'])) : '-';?></td>
+                          <td class="text-center">
+                            <?php if(!empty($ds['id_jadwal'])) { ?>
+                              <button class="btn btn-sm btn-warning" title="Edit Batas Revisi" data-toggle="modal" data-target="#modalEditBatas" data-whatever="<?php echo $ds['id'];?>"><span class="glyphicon glyphicon-edit"></span> Edit Batas</button>
+                            <?php } else { ?>
+                              <span class="label label-default">Belum Dijadwalkan</span>
+                            <?php } ?>
+                          </td>
+                        </tr>
+                        <?php } ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <!-- END TAB SEMUA DATA -->
+              
               </div>
             </div>
           </div>
@@ -374,6 +428,21 @@
           </div>
         </div>
       </div>
+      <div class="modal fade" tabindex="-1" role="dialog" id="modalEditBatas" aria-labelledby="labelModalEditBatas" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title" id="modalEditBatas">Edit Batas Upload Revisi</h4>
+            </div>
+            <div class="modal-body">
+              <div class="isiModalEditBatas"></div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <?php include "footerAdm.php";?>
     <?php include "jsSourceAdm.php";?>
@@ -458,6 +527,26 @@
       success: function (data) {
        console.log(data);
        modal.find('.isiModalRekapPenguji').html(data);
+      },
+      error: function (err) {
+       console.log(err);
+      }
+      });
+      });   
+      
+      $('#modalEditBatas').on('show.bs.modal', function (event) {
+      var button = $(event.relatedTarget)
+      var recipient = button.data('whatever')
+      var modal = $(this);
+      var dataString = 'id=' + recipient;
+      $.ajax({
+      type: "GET",
+      url: "editBatasRevisiSemproAdm.php",
+      data: dataString,
+      cache: false,
+      success: function (data) {
+       console.log(data);
+       modal.find('.isiModalEditBatas').html(data);
       },
       error: function (err) {
        console.log(err);

@@ -54,8 +54,12 @@
   
   $qry_grade = "SELECT * FROM grade_sempro WHERE id_sempro='$id'";
   $res_grade = mysqli_query($con, $qry_grade);
-  $dt_grade = mysqli_fetch_assoc($res_grade);
+  $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Data Pendaftar Seminar Proposal Tahap '.$dthp['tahap'].' '.$dsemester['nama'].' '.$dnta['ta'].'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -79,10 +83,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Data Pendaftar Seminar Proposal Tahap '.$dthp['tahap'].' '.$dsemester['nama'].' '.$dnta['ta'].'.xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">
@@ -147,27 +148,27 @@
                             
           $qry_jdwl = "SELECT * FROM jadwal_sempro WHERE id_sempro='$id' AND id='$data[id_jdwl]'";
           $res_jdwl = mysqli_query($con, $qry_jdwl);
-          $dt_jdwl = mysqli_fetch_assoc($res_jdwl);
+          $dt_jdwl = mysqli_fetch_assoc($res_jdwl) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_p1 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji1]'";
           $res_p1 = mysqli_query($con, $qry_p1);
-          $dt_p1 = mysqli_fetch_assoc($res_p1);
+          $dt_p1 = mysqli_fetch_assoc($res_p1) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_p2 = "SELECT * FROM dt_pegawai WHERE id='$dt_jdwl[penguji2]'";
           $res_p2 = mysqli_query($con, $qry_p2);
-          $dt_p2 = mysqli_fetch_assoc($res_p2);
+          $dt_p2 = mysqli_fetch_assoc($res_p2) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_ruang = "SELECT * FROM dt_ruang WHERE id='$dt_jdwl[ruang]'";
           $res_ruang = mysqli_query($con, $qry_ruang);
-          $dt_ruang = mysqli_fetch_assoc($res_ruang);
+          $dt_ruang = mysqli_fetch_assoc($res_ruang) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_nilai = "SELECT * FROM nilai_sempro WHERE id_pendaftaran='$data[id]'";
           $res_nilai = mysqli_query($con, $qry_nilai);
-          $dt_nilai = mysqli_fetch_assoc($res_nilai);
+          $dt_nilai = mysqli_fetch_assoc($res_nilai) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
 
           $qry_grade = "SELECT * FROM grade_sempro WHERE id_sempro='$id'";
           $res_grade = mysqli_query($con, $qry_grade);
-          $dt_grade = mysqli_fetch_assoc($res_grade);
+          $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
           $qdt_cek = "SELECT * FROM opsi_validasi WHERE id='$data[val_adm]'";
           $hdt_cek = mysqli_query($con, $qdt_cek);

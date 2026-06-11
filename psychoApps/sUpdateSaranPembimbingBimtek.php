@@ -7,10 +7,15 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit();
 }
 
-$nim = mysqli_real_escape_string($con, $_POST['nim']);
-$id_bimtek = mysqli_real_escape_string($con, $_POST['id_bimtek']);
-$saran1 = mysqli_real_escape_string($con, $_POST['saran1']);
-$saran2 = mysqli_real_escape_string($con, $_POST['saran2']);
+$nim = mysqli_real_escape_string($con, $_POST['nim'] ?? '');
+$id_bimtek = mysqli_real_escape_string($con, $_POST['id_bimtek'] ?? '');
+$saran1 = mysqli_real_escape_string($con, $_POST['saran1'] ?? '');
+$saran2 = mysqli_real_escape_string($con, $_POST['saran2'] ?? '');
+
+if (!empty($saran1) && !empty($saran2) && $saran1 == $saran2) {
+    echo json_encode(['status' => 'error', 'message' => 'Dosen Pembimbing 1 dan Dosen Pembimbing 2 tidak boleh sama.']);
+    exit();
+}
 
 $sql = "UPDATE bimtek_pra_proposal SET 
         pembimbing_saran_1 = '$saran1', 

@@ -22,6 +22,10 @@
   $res_ket = mysqli_query($con, $qry_ket);
   $dt_ket = mysqli_fetch_assoc($res_ket);
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Rekap DPL PKL Tahap '.$dthp['tahap'].' Semester '.$dsemester['nama'].' '.$dnta['ta'].'.xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -44,10 +48,7 @@
       }
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Rekap DPL PKL Tahap '.$dthp['tahap'].' Semester '.$dsemester['nama'].' '.$dnta['ta'].'.xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">

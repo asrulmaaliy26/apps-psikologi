@@ -41,6 +41,12 @@
           </a>
         </li>
         <li class="nav-item">
+          <a href="dtRuangKampus3.php" class="nav-link <?php echo isActive('dtRuangKampus3.php'); ?>">
+            <i class="fas fa-home nav-icon"></i>
+            <p>Data Ruang Kampus 3</p>
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="dtDir.php" class="nav-link <?php echo isActive('dtDir.php'); ?>">
             <i class="fas fa-laptop-house nav-icon"></i>
             <p>Daftar Inventaris Ruangan (DIR)</p>

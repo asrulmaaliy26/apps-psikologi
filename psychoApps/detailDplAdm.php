@@ -54,7 +54,7 @@
                       </div>
                       <dl>
                         <dt><i class="fas fa-user-graduate mr-1"></i> Kepakaran Mayor</dt>
-                        <dd><?php echo $dr['nm'];?></dd>
+                        <dd><?php echo $dr['nm'] ?? '';?></dd>
                         <dt><i class="fas fa-user-graduate mr-1"></i> Kepakaran Minor</dt>
                         <dd><?php echo $dt_dpl['kepakaran_minor'];?></dd>
                         <dt><i class="fas fa-user-graduate mr-1"></i> Tren Riset</dt>

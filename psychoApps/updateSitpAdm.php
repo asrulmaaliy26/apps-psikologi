@@ -18,10 +18,14 @@
    $no_agenda_surat=mysqli_real_escape_string($con, $_POST['no_agenda_surat']);
    $lembaga_tujuan_surat=mysqli_real_escape_string($con, $_POST['lembaga_tujuan_surat']);
    $alamat_lengkap_lts=mysqli_real_escape_string($con, $_POST['alamat_lengkap_lts']);
+   $lokasi=mysqli_real_escape_string($con, $_POST['lokasi']);
    $sebutan_pimpinan=mysqli_real_escape_string($con, $_POST['sebutan_pimpinan']);  
    $kota_lts=mysqli_real_escape_string($con, $_POST['kota_lts']);
    $jenis_pkl=mysqli_real_escape_string($con, $_POST['jenis_pkl']);
    $tgl_dikeluarkan=mysqli_real_escape_string($con, $_POST['tgl_dikeluarkan']);
+   if(empty($tgl_dikeluarkan) || $tgl_dikeluarkan == '0000-00-00') {
+       $tgl_dikeluarkan = date('Y-m-d');
+   }
    $tgl_proses=date('d-m-Y');
    $tembusan=mysqli_real_escape_string($con, $_POST['tembusan']);
    $statusform=mysqli_real_escape_string($con, '2');
@@ -30,7 +34,7 @@
    $tgl_mulai_pkl=mysqli_real_escape_string($con, $_POST['tgl_mulai_pkl']);
    $tgl_selesai_pkl=mysqli_real_escape_string($con, $_POST['tgl_selesai_pkl']);
    
-   mysqli_query($con, "UPDATE sitp SET no_agenda_surat='$no_agenda_surat',lembaga_tujuan_surat='$lembaga_tujuan_surat',alamat_lengkap_lts='$alamat_lengkap_lts',sebutan_pimpinan='$sebutan_pimpinan',kota_lts='$kota_lts',jenis_pkl='$jenis_pkl',ta='$ta',tgl_mulai_pkl='$tgl_mulai_pkl',tgl_selesai_pkl='$tgl_selesai_pkl',tgl_proses='$tgl_proses',tgl_dikeluarkan='$tgl_dikeluarkan',tembusan='$tembusan',statusform='$statusform',executor='$executor' WHERE id='$id' LIMIT 1")  or die(mysqli_error($con)); 
+   mysqli_query($con, "UPDATE sitp SET no_agenda_surat='$no_agenda_surat',lembaga_tujuan_surat='$lembaga_tujuan_surat',lokasi='$lokasi',alamat_lengkap_lts='$alamat_lengkap_lts',sebutan_pimpinan='$sebutan_pimpinan',kota_lts='$kota_lts',jenis_pkl='$jenis_pkl',ta='$ta',tgl_mulai_pkl='$tgl_mulai_pkl',tgl_selesai_pkl='$tgl_selesai_pkl',tgl_proses='$tgl_proses',tgl_dikeluarkan='$tgl_dikeluarkan',tembusan='$tembusan',statusform='$statusform',executor='$executor' WHERE id='$id' LIMIT 1")  or die(mysqli_error($con)); 
    
    $sql="UPDATE draf_anggota_pkl SET nim_anggota = '$anggota1' WHERE id_sitp = '$id' AND urutan='1'";
    $result = mysqli_query($con, $sql) or die(mysqli_error($con));

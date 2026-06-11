@@ -37,8 +37,8 @@ if (mysqli_num_rows($cek) > 0) {
 
 mysqli_begin_transaction($con);
 try {
-   $q1 = "INSERT INTO peserta_pkl(id_pkl,nim,angkatan,riwayat_penyakit,sks_diambil,jenis_pkl,kontak_lain,tgl_pengajuan,thn_pengajuan,val_adm,statusform)
-           VALUES('$id_pkl','$nim','$angkatan','$riwayat_penyakit','$sks_diambil','$jenis_pkl','$kontak_lain','$tgl_pengajuan','$thn_pengajuan','$val_adm','$statusform')";
+   $q1 = "INSERT INTO peserta_pkl(id_pkl,nim,angkatan,riwayat_penyakit,sks_diambil,jenis_pkl,kontak_lain,tgl_pengajuan,thn_pengajuan,val_adm,statusform,file_transkrip,dpl,id_dpl,tgl_validasi,catatan,nilai,id_reg)
+           VALUES('$id_pkl','$nim','$angkatan','$riwayat_penyakit','$sks_diambil','$jenis_pkl','$kontak_lain','$tgl_pengajuan','$thn_pengajuan','$val_adm','$statusform','','','0','','','0','')";
    if (!mysqli_query($con, $q1)) throw new Exception(mysqli_error($con));
 
    $id = mysqli_insert_id($con);

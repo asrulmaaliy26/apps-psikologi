@@ -35,7 +35,7 @@
               <dt class="col-sm-5">Tanggal Pendaftaran</dt>
               <dd class="col-sm-7"><?php echo $data['tgl_pengajuan'];?></dd>
               <dt class="col-sm-5">Periode Pendaftaran</dt>
-              <dd class="col-sm-7"><?php echo 'Tahap '.$dthp['tahap'].' <span class="small text-secondary">'.$djp['nm'].'</span> '.$dsemester['nama'].' '.$dnta['ta'].'';?></dd>
+              <dd class="col-sm-7"><?php echo 'Tahap '.$dthp['tahap'].' <span class="small text-secondary">'.($djp['nm'] ?? '').'</span> '.$dsemester['nama'].' '.$dnta['ta'].'';?></dd>
               <dt class="col-sm-5">Lampiran File</dt>
               <dd class="col-sm-7"><?php if(empty($data['file_prop'])) { echo '<a class="btn btn-outline-secondary btn-flat btn-xs" title="Tidak ada file" disabled><i class="fas fa-download"></i> Kosong</a>';} else { echo '<a class="btn btn-outline-primary btn-flat btn-xs" title="Lihat/download" href="'.$data['file_prop'].'" target="_blank"><i class="fas fa-download"></i> Proposal</a>';}?></dd>
               <dt class="col-sm-5">Status Verifikasi</dt>
@@ -50,7 +50,7 @@
               <br/>Pukul: $dt_jdwl[jam_mulai] - $dt_jdwl[jam_selesai]
               <br/>Ruang: $dt_ruang[nm]";}?></dd>
               <dt class="col-sm-5">Nilai</dt>
-              <dd class="col-sm-7"><?php include "nilaiPesSemproAdm.php";?></dd>
+              <dd class="col-sm-7"><?php include "nilaiPesSemproUser.php";?></dd>
             </dl>
           </div>
         </div>

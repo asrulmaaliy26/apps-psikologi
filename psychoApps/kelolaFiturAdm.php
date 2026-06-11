@@ -1,5 +1,6 @@
 <?php
 include("contentsConAdm.php");
+// catatan: $con didefinisikan di contentsConAdm.php / conAdm.php
 
 // Proteksi level (hanya Admin Utama)
 if (empty($_SESSION['level']) || $_SESSION['level'] !== 'adminutama') {
@@ -123,5 +124,32 @@ if (isset($_GET['act']) && $_GET['act'] == 'toggle' && isset($_GET['id'])) {
       </section>
     </div>
     <?php include("footerAdm.php"); ?>
+
     <?php include("jsAdm.php"); ?>
+
+    <script>
+      // Fallback untuk halaman Manajemen Fitur: jika confirmToggle belum didefinisikan di jsAdm.php
+      // (kelolaFiturAdm.php menggunakan onclick="confirmToggle(...)".)
+      if (typeof window.confirmToggle !== 'function') {
+        window.confirmToggle = function(id, label, act) {
+          const actionText = (act === 'nonaktifkan') ? 'nonaktifkan' : 'aktifkan';
+
+          Swal.fire({
+            title: 'Konfirmasi',
+            text: `Apakah Anda yakin ingin ${actionText} fitur: ${label}?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: act === 'nonaktifkan' ? '#f59e0b' : '#22c55e',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: `Ya, ${actionText}`,
+            cancelButtonText: 'Batal'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              window.location.href = `kelolaFiturAdm.php?act=toggle&id=${id}`;
+            }
+          });
+        };
+      }
+    </script>
+
   </div>

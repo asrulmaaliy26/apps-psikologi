@@ -63,7 +63,7 @@
                 <div class="card-header">
                   <div class="clearfix">
                     <h4 class="card-title float-left">Peserta Per DPL</h4>
-                    <span class="badge badge-info float-right"><?php echo $dt_dpl['nama'];?></span>
+                    <span class="badge badge-info float-right"><?php echo $dt_dpl['nama'] ?? '';?></span>
                   </div>
                 </div>
                 <div class="card-body pt-2 pb-2 pl-0 pr-0">

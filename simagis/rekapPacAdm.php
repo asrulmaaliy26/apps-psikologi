@@ -27,7 +27,7 @@
             
           include 'pagination.php';                 
           $reload = "rekapPacAdm.php?pagination=true";
-          $sql =  "SELECT * FROM mag_periode_pengajuan_ac GROUP BY ta ORDER BY start_datetime DESC";
+          $sql =  "SELECT * FROM mag_periode_pengajuan_ac ORDER BY start_datetime DESC";
           $result = mysqli_query($GLOBALS["___mysqli_ston"], $sql);
       
            $rpp = 10;

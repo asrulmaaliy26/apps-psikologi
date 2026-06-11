@@ -168,6 +168,7 @@ if (!function_exists('isActive')) {
             <p>Layanan / Pengaduan</p>
           </a>
         </li>
+        <?php if (isFeatureEnabled('kalender_kegiatan')) { ?>
 <li class="nav-header">KALENDAR</li>
 <li class="nav-item">
   <a href="adminKalender.php" class="nav-link <?php echo isActive('adminKalender.php'); ?>">
@@ -175,6 +176,7 @@ if (!function_exists('isActive')) {
     <p>Kalender Kegiatan</p>
   </a>
 </li>
+<?php } ?>
       </ul>
     </nav>
   </div>

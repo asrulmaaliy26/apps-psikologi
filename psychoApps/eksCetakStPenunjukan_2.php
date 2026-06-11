@@ -33,7 +33,7 @@ $qkodesrt = "select * from dekanat WHERE id='1'";
 $reskodesrt = mysqli_query($con, $qkodesrt) or die(mysqli_error($con));
 $dkodesrt = mysqli_fetch_assoc($reskodesrt);
 
-$qdekanat = "select * from dt_pegawai WHERE id='$dataku[dekan]'";
+$qdekanat = "select * from dt_pegawai WHERE jabatan_instansi='1'";
 $resdekanat = mysqli_query($con, $qdekanat) or die(mysqli_error($con));
 $ddekanat = mysqli_fetch_assoc($resdekanat);
 

@@ -245,7 +245,12 @@ if ($hasSession && !empty($_SESSION['username'])) {
                         </div>
                         <p class="mb-1 text-muted font-italic" style="font-size: 0.75rem;">"<?php echo htmlspecialchars($mb['kegiatan']); ?>"</p>
                         <small class="text-info font-weight-bold" style="font-size: 0.7rem;">
-                          <i class="far fa-calendar-alt mr-1"></i><?php echo date('d/m/y', strtotime($mb['tanggal'])); ?> &bull; 
+                          <?php
+                            $bookingDate = !empty($mb['tanggal_akhir']) && $mb['tanggal_akhir'] !== '0000-00-00' && $mb['tanggal_akhir'] !== $mb['tanggal']
+                                ? date('d/m/y', strtotime($mb['tanggal'])) . ' s.d. ' . date('d/m/y', strtotime($mb['tanggal_akhir']))
+                                : date('d/m/y', strtotime($mb['tanggal']));
+                          ?>
+                          <i class="far fa-calendar-alt mr-1"></i><?php echo $bookingDate; ?> &bull; 
                           <i class="far fa-clock mr-1"></i><?php echo substr($mb['jam_mulai'], 0, 5); ?>
                         </small>
                       </a>
@@ -329,11 +334,15 @@ if ($hasSession && !empty($_SESSION['username'])) {
                 <?php
                 $ruang_id = $d['id'];
                 $q_sched = mysqli_query($con, "
-                    SELECT nama_organisasi, unit, tanggal, jam_mulai, jam_selesai, status, kegiatan 
+                    SELECT nama_organisasi, unit, tanggal, tanggal_akhir, jam_mulai, jam_selesai, status, kegiatan 
                     FROM bmn_peminjaman_ruangan 
                     WHERE ruangan_id = $ruang_id 
                       AND status IN ('pending', 'approved', 'accepted_change', 'proposed') 
-                      AND tanggal >= CURDATE()
+                      AND (
+                          tanggal >= CURDATE()
+                          OR tanggal_akhir >= CURDATE()
+                          OR (tanggal <= CURDATE() AND tanggal_akhir >= CURDATE())
+                      )
                     ORDER BY tanggal ASC, jam_mulai ASC
                 ");
                 $sched_count = mysqli_num_rows($q_sched);
@@ -357,7 +366,11 @@ if ($hasSession && !empty($_SESSION['username'])) {
                                         $status_badge = '<span class="badge badge-success float-right px-2 py-1">Disetujui</span>';
                                     }
                                     
-                                    $date_formatted = date('d M Y', strtotime($s['tanggal']));
+                                    if (!empty($s['tanggal_akhir']) && $s['tanggal_akhir'] !== '0000-00-00' && $s['tanggal_akhir'] !== $s['tanggal']) {
+                                        $date_formatted = date('d M Y', strtotime($s['tanggal'])) . ' s.d. ' . date('d M Y', strtotime($s['tanggal_akhir']));
+                                    } else {
+                                        $date_formatted = date('d M Y', strtotime($s['tanggal']));
+                                    }
                                     $time_formatted = substr($s['jam_mulai'], 0, 5) . ' - ' . substr($s['jam_selesai'], 0, 5);
                                 ?>
                                     <li class="border-bottom pb-2 mb-2">

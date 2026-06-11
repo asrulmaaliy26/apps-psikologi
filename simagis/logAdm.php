@@ -23,7 +23,7 @@ include "koneksiAdm.php";
           $_SESSION['nama'] = $c['nama'];
           $_SESSION['status'] = $c['status'];
       if($_SESSION['username']=="$username" && $_SESSION['password']=="$password" && $_SESSION['status']=="1"){
-              header("location:dashboardAdm.php");
+              header("location:homeUser.php");
           }
       }else{
            header("location:admin.php?message=notifLogin");

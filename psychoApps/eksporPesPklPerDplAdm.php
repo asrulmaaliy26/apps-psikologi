@@ -33,6 +33,10 @@
   $h = mysqli_query($con, $qry_nm_smt);
   $dsemester = mysqli_fetch_assoc($h);
   ?>
+<?php
+      header("Content-type: application/vnd-ms-excel");
+      header('Content-Disposition: attachment; filename=Peserta PKL Per DPL ['.$dt_dpl['nama'].'] [Tahap '.$dthp['tahap'].' Semester '.$dsemester['nama'].' '.$dnta['ta'].'].xls');
+      ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -58,10 +62,7 @@
       .tg-sort-desc:after{border-bottom:none;border-width:5px 5px 0}
     </style>
   <body>
-    <?php
-      header("Content-type: application/vnd-ms-excel");
-      header('Content-Disposition: attachment; filename=Peserta PKL Per DPL ['.$dt_dpl['nama'].'] [Tahap '.$dthp['tahap'].' Semester '.$dsemester['nama'].' '.$dnta['ta'].'].xls');
-      ?>
+    
     <table style="border:none;">
       <thead>
         <tr style="border:none;">

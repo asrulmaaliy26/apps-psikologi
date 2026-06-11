@@ -25,7 +25,7 @@
 
   $qry_grade = "SELECT * FROM grade_pkl WHERE id_pkl='$id'";
   $res_grade = mysqli_query($con, $qry_grade);
-  $dt_grade = mysqli_fetch_assoc($res_grade);
+  $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
   ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -118,7 +118,7 @@
 
                             $qry_grade = "SELECT * FROM grade_pkl WHERE id_pkl='$id'";
                             $res_grade = mysqli_query($con, $qry_grade);
-                            $dt_grade = mysqli_fetch_assoc($res_grade);
+                            $dt_grade = mysqli_fetch_assoc($res_grade) ?: array_fill_keys(['sekretaris_penguji','ketua_penguji','penguji_utama','penguji1','penguji2','penguji3','penguji4','narsum1','narsum2','ruang','tgl_ujian','jam_mulai','jam_selesai','nip','nama','niy','nidn','id_pegawai','nilai','grade','keterangan','tgl_validasi','catatan','file_prop'], '');
                             
                             $qdt_cek = "SELECT * FROM opsi_validasi WHERE id='$data[val_adm]'";
                             $hdt_cek = mysqli_query($con, $qdt_cek);
