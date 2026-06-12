@@ -77,21 +77,15 @@
                   </div>
                 </div>
                 <div class="card-body pt-2 pb-2 pl-0 pr-0">
-                  <form name="update" method="post" action="updateNilaiPesertaPklAdm.php" onSubmit="return confirm('Yakin untuk menyimpan nilai?')">
-                    <input type="text" name="id_dpl" class="sr-only" value="<?php echo $id;?>" required readonly>
-                    <input type="text" name="dpl" class="sr-only" value="<?php echo $data['nip'];?>" required readonly>
-                    <input type="text" name="id_pkl" class="sr-only" value="<?php echo $id_pkl;?>" required readonly>
-                    <input type="text" name="page" class="sr-only" value="<?php echo $page;?>" required readonly>
-                    <div class="form-group">
-                      <button name="submit" type="submit" class="btn btn-outline-danger btn-flat btn-xs float-right mr-3"> <i class="fas fa-save"></i> Simpan Nilai </button>
                       <div class="table-responsive pt-2 pb-2">
                         <table class="table table-hover m-0 table-bordered text-center table-sm small custom">
                           <thead>
                             <tr class="text-center bg-secondary">
                               <td width="4%" class="pl-1">No.</td>
                               <td width="80%">Nama</td>
-                              <td width="8%">Input Nilai</td>
-                              <td width="8%" class="pr-1">Nilai Huruf</td>
+                              <td width="20%">Opsi Penilaian</td>
+                              <td width="10%" class="pr-1">Total Nilai Angka</td>
+                              <td width="10%" class="pr-1">Nilai Huruf</td>
                             </tr>
                           </thead>
                           <tbody>
@@ -107,10 +101,12 @@
                               $no++;
                               ?>
                             <tr>
-                              <?php echo '<input class="sr-only" type="text" name="id[]" id="id" value="'.$data['id'].'">';?>
                               <td class="text-center pl-1"> <?php echo $no;?> </td>
                               <td class="text-left"> <?php echo $data['nama'].' / '.$data['nim'];?> </td>
-                              <td class="text-center"> <input min="0" max="100" step=".0001" class="form-control form-control-sm text-center" type="number" name="nilai[]" value="<?php echo $data['nilai'];?>" /></td>
+                              <td class="text-center"> 
+                                <a href="formNilaiDplPklAdm.php?id_peserta=<?php echo $data['id'];?>&id_dpl=<?php echo $id;?>&id_pkl=<?php echo $id_pkl;?>&page=<?php echo $page;?>" class="btn btn-outline-primary btn-xs"><i class="fas fa-edit"></i> Input Rincian Nilai</a>
+                              </td>
+                              <td class="text-center pr-1"> <?php echo (!empty($data['nilai'])) ? number_format($data['nilai'], 2) : '-'; ?> </td>
                               <td class="text-center pr-1"> <?php include "nilaiHurufPesPklAdm.php";?> </td>
                             </tr>
                             <?php
@@ -119,9 +115,8 @@
                           </tbody>
                         </table>
                       </div>
-                      <button name="submit" type="submit" class="btn btn-outline-danger btn-flat btn-xs float-right mr-3"> <i class="fas fa-save"></i> Simpan Nilai </button>
+                      </div>
                     </div>
-                  </form>
                 </div>
             </section>
             </div>

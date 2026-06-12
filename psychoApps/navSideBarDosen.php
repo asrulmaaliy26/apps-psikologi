@@ -253,6 +253,80 @@ if (!function_exists('isOpen')) {
             </ul>
           </li>
         <?php endif; ?>
+
+        <?php
+        // Cek jika dosen adalah Hilda (Ketua Panitia PKL)
+        if ($dtDosen['id'] == '199105122023212062') { ?>
+          <li class="nav-item <?php echo isOpen(['plottingPengujiPklAdm.php', 'nilaiPembekalanPklAdm.php']); ?>">
+            <a href="#" class="nav-link text-warning <?php echo isActive(['plottingPengujiPklAdm.php', 'nilaiPembekalanPklAdm.php']); ?>">
+              <i class="fas fa-tasks nav-icon"></i>
+              <p>
+                Panitia PKL
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: block;">
+              <li class="nav-item">
+                <a href="plottingPengujiPklAdm.php" class="nav-link <?php echo isActive('plottingPengujiPklAdm.php'); ?>">
+                  <i class="text-xs far fa-circle nav-icon"></i>
+                  <p>Plotting Penguji PKL</p>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="nilaiPembekalanPklAdm.php" class="nav-link <?php echo isActive('nilaiPembekalanPklAdm.php'); ?>">
+                  <i class="text-xs far fa-circle nav-icon"></i>
+                  <p>Nilai Pembekalan PKL</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        <?php } ?>
+
+        <?php
+        // Cek DPL PKL
+        $cekDplPkl = mysqli_query($con, "SELECT id FROM peserta_pkl WHERE dpl='".$dtDosen['id']."' LIMIT 1");
+        if(mysqli_num_rows($cekDplPkl) > 0) { ?>
+          <li class="nav-item <?php echo isOpen(['rekapDplPklDosen.php']); ?>">
+            <a href="#" class="nav-link text-warning <?php echo isActive(['rekapDplPklDosen.php']); ?>">
+              <i class="fas fa-user-tie nav-icon"></i>
+              <p>
+                DPL PKL
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: block;">
+              <li class="nav-item">
+                <a href="rekapDplPklDosen.php" class="nav-link <?php echo isActive('rekapDplPklDosen.php'); ?>">
+                  <i class="text-xs far fa-circle nav-icon"></i>
+                  <p>Penilaian DPL PKL</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        <?php } ?>
+
+        <?php
+        // Cek Penguji PKL
+        $cekPengujiPkl = mysqli_query($con, "SELECT id FROM peserta_pkl WHERE id_penguji='".$dtDosen['id']."' LIMIT 1");
+        if(mysqli_num_rows($cekPengujiPkl) > 0) { ?>
+          <li class="nav-item <?php echo isOpen(['rekapPengujiPklDosen.php']); ?>">
+            <a href="#" class="nav-link text-warning <?php echo isActive(['rekapPengujiPklDosen.php']); ?>">
+              <i class="fas fa-clipboard-check nav-icon"></i>
+              <p>
+                Penguji PKL
+                <i class="fas fa-angle-left right"></i>
+              </p>
+            </a>
+            <ul class="nav nav-treeview" style="display: block;">
+              <li class="nav-item">
+                <a href="rekapPengujiPklDosen.php" class="nav-link <?php echo isActive('rekapPengujiPklDosen.php'); ?>">
+                  <i class="text-xs far fa-circle nav-icon"></i>
+                  <p>Penilaian Penguji PKL</p>
+                </a>
+              </li>
+            </ul>
+          </li>
+        <?php } ?>
       </ul>
       <ul class="nav nav-pills nav-sidebar flex-column">
         <?php if (isFeatureEnabled('peminjaman_ruangan')) { ?>

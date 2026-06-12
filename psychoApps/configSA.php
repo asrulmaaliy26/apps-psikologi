@@ -122,7 +122,7 @@ function sa_roles(): array
             'label'       => 'Admin Utama',
             'icon'        => '👑',
             'module'      => 'psychoApps',
-            'redirect'    => '../simagis/homeUser.php',
+            'redirect'    => 'dashboardAdminUtama.php',
             'session_set' => [
                 'username'  => '{val}',
                 'level'     => 'adminutama',

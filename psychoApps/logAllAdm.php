@@ -11,7 +11,7 @@
       $_SESSION['level'] = 'adminutama';
       $_SESSION['nm_person'] = 'Admin Utama';
       $_SESSION['status'] = '1';
-      header("location:../simagis/homeUser.php");
+      header("location:dashboardAdminUtama.php");
       exit();
   }
 

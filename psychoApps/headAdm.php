@@ -19,26 +19,29 @@
 </head>
 <style type="text/css">
   .table.custom th {
-  vertical-align: middle;
-  font-size: 0.9em;
+    vertical-align: middle;
+    font-size: 0.9em;
   }
-  
+
   .table.custom td {
-  vertical-align: middle;
-  font-size: 0.9em;
+    vertical-align: middle;
+    font-size: 0.9em;
   }
+
   .custom-select {
-  border: none;
-  margin-right: 10px;
-  background-color: transparent;
+    border: none;
+    margin-right: 10px;
+    background-color: transparent;
   }
+
   .form-control-xs {
     height: calc(1.2em + .377rem + 4px) !important;
     padding: .125rem .25rem !important;
     font-size: .75rem !important;
     line-height: 1.5;
     border-radius: .0rem;
-    }
+  }
+
   div.alert {
     position: absolute;
     top: 66px;

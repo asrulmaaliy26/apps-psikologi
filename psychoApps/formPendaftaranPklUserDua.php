@@ -18,13 +18,13 @@
 <form action="sformPendaftaranPklUserDua.php" method="post" enctype="multipart/form-data">
   <div class="card-body pb-0">
       <div class="form-group">
-        <label for="file_transkrip">Upload file transkrip nilai (PDF) <span class="text-danger">*</span></label>
-        <input type="file" class="form-control form-control-sm" name="file_transkrip" value="<?php echo $dt['file_transkrip'];?>" required>
+        <label for="file_pembekalan">Upload Tugas Pembekalan PKL (PDF) <span class="text-danger">*</span></label>
+        <input type="file" accept="application/pdf" class="form-control form-control-sm" name="file_pembekalan" required>
       </div>
     <input type="text" name="id" class="sr-only" value="<?php echo $dt['id'];?>" required readonly>
     <input type="text" name="id_pkl" class="sr-only" value="<?php echo $dt['id_pkl'];?>" required readonly>
   </div>
   <div class="card-footer">
-    <button type="submit" class="btn btn-sm btn-danger">Selanjutnya</button>
+    <button type="submit" class="btn btn-sm btn-danger">Simpan Pendaftaran</button>
   </div>
 </form>

@@ -17,10 +17,7 @@
   $resp = mysqli_query($con,  $qjk )or die( mysqli_error($con) );
   $djk = mysqli_fetch_assoc( $resp );
   
-  $qdw = "SELECT * FROM dt_pegawai WHERE id='$dataku[dosen_wali]'";
-  $resp = mysqli_query($con,  $qdw )or die( mysqli_error($con) );
-  $ddw = mysqli_fetch_assoc( $resp );
-  
+
   $qidpkl = "SELECT * FROM pendaftaran_pkl WHERE id='$dt[id_pkl]'";
   $resp = mysqli_query($con,  $qidpkl )or die( mysqli_error($con) );
   $dipkl = mysqli_fetch_assoc( $resp );
@@ -123,19 +120,29 @@
         <td><?php echo "$dataku[kntk]";?></td>
       </tr>
       <tr>
-        <td>Kontak Orang Terdekat</td>
+        <td>Jenis PKL</td>
         <td align="center">:</td>
-        <td><?php echo "$dt[kontak_lain]";?></td>
+        <td><?php echo "$dt[jenis_pkl]";?></td>
       </tr>
       <tr>
-        <td>Dosen Wali</td>
+        <td>Peminatan</td>
         <td align="center">:</td>
-        <td><?php echo "$ddw[nama]";?></td>
+        <td><?php echo "$dt[peminatan]";?></td>
       </tr>
       <tr>
-        <td>Riwayat Penyakit</td>
+        <td>Nama Instansi</td>
         <td align="center">:</td>
-        <td><?php echo "$dt[riwayat_penyakit]";?></td>
+        <td><?php echo "$dt[nama_instansi]";?></td>
+      </tr>
+      <tr>
+        <td>Alamat Instansi</td>
+        <td align="center">:</td>
+        <td><?php echo "$dt[alamat_instansi]";?></td>
+      </tr>
+      <tr>
+        <td>Dosen Pembimbing Lapangan (DPL)</td>
+        <td align="center">:</td>
+        <td><?php echo "$dt[dpl]";?></td>
       </tr>
     </table>
     <br/>

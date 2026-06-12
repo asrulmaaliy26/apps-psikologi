@@ -38,6 +38,29 @@
   ?>x
   <div class="container">
     <div class="row">
+      <?php
+        $qKal = mysqli_query($GLOBALS["___mysqli_ston"], "SELECT kunci, nilai FROM pengaturan_informasi WHERE kunci IN ('kalender_akademik_judul', 'kalender_akademik_url')");
+        $kalenderJudul = "Kalender Akademik";
+        $kalenderUrl = "";
+        if($qKal){
+          while($rKal = mysqli_fetch_assoc($qKal)){
+            if($rKal['kunci'] == 'kalender_akademik_judul') $kalenderJudul = $rKal['nilai'];
+            if($rKal['kunci'] == 'kalender_akademik_url') $kalenderUrl = $rKal['nilai'];
+          }
+        }
+        if (!empty($kalenderUrl)) {
+      ?>
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <h4 class="text-center text-info" style="margin-top: 15px;"><span class="glyphicon glyphicon-calendar"></span> <?php echo htmlspecialchars($kalenderJudul); ?></h4>
+        <div style="margin-bottom: 20px; border: 1px solid #bce8f1; border-radius: 4px; overflow: hidden; height: 600px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+          <iframe src="<?php echo htmlspecialchars($kalenderUrl); ?>" width="100%" height="100%" style="border: none;">
+            Browser Anda tidak mendukung iframe. Silakan <a href="<?php echo htmlspecialchars($kalenderUrl); ?>" target="_blank">download file PDF-nya</a>.
+          </iframe>
+        </div>
+      </div>
+      <?php } ?>
+    </div>
+    <div class="row">
       <div class="col-md-6 col-sm-12 col-xs-12">
         <div class="panel panel-info" style="box-shadow:none; border:0px;">
           <div class="panel-heading">

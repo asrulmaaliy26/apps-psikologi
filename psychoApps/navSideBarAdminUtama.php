@@ -161,6 +161,12 @@ if (!function_exists('isActive')) {
             <p>Manajemen Fitur</p>
           </a>
         </li>
+        <li class="nav-item">
+          <a href="pengaturanSistemAdm.php" class="nav-link <?php echo isActive('pengaturanSistemAdm.php'); ?>">
+            <i class="nav-icon fas fa-cogs text-info"></i>
+            <p>Pengaturan Informasi</p>
+          </a>
+        </li>
         <li class="nav-header">LAINNYA</li>
         <li class="nav-item">
           <a href="https://docs.google.com/spreadsheets/d/1Rpct62WQy3AFAT5cNIgyP2iaIgFYxGVNPibLIB_RYpg/edit?usp=sharing" target="_blank" class="nav-link text-info">

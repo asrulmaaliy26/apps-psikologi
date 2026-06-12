@@ -38,26 +38,13 @@
               <div class="row">
                 <div class="col-sm">
                   <div class="card card-success card-outline card-outline-tabs">
-                    <div class="card-header p-0 border-bottom-0">
-                      <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-item">
-                          <a class="nav-link" href="prePendaftaranPklUser.php" role="tab" aria-selected="true">Form</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="riwayatPendaftaranPklUser.php" role="tab" aria-selected="true">Riwayat</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link" href="detailRiwayatPendaftaranPklUser.php?id=<?php echo $id;?>" role="tab" aria-selected="true">Edit Pendaftaran</a>
-                        </li>
-                        <li class="nav-item">
-                          <a class="nav-link active" href="editPendaftaranPklUserDua.php?id=<?php echo $id;?>" role="tab" aria-selected="true">Edit Lampiran Berkas</a>
-                        </li>
-                      </ul>
-                    </div>
+                      <div class="card-header">
+                        <h3 class="card-title">Edit Pendaftaran</h3>
+                      </div>
                     <div class="card-body pb-0">
                       <div class="form-group">
-                        <label for="file_transkrip">Upload file transkrip nilai (PDF)</label>
-                        <input type="file" class="form-control form-control-sm" name="file_transkrip" value="<?php echo $dataku['file_transkrip'];?>">
+                        <label for="file_pembekalan">Upload Tugas Pembekalan PKL (PDF)</label>
+                        <input type="file" accept="application/pdf" class="form-control form-control-sm" name="file_pembekalan" value="<?php echo $dataku['file_pembekalan'];?>">
                       </div>
                       <input type="text" name="id" class="sr-only" value="<?php echo $id;?>" required readonly>
                       <input type="text" name="nim" class="sr-only" value="<?php echo $nim;?>" required readonly>

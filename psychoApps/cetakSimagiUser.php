@@ -27,15 +27,9 @@
    $ressp = mysqli_query($con,  $qsp )or die( mysqli_error($con) );
    $dsp = mysqli_fetch_assoc( $ressp );
    
-   $qbln = "SELECT MONTH(tgl_dikeluarkan) AS bulan FROM sips WHERE id='$id'";
-   $resbln = mysqli_query($con,  $qbln )or die( mysqli_error($con) );
-   $dbln = mysqli_fetch_assoc( $resbln );
-   $ambilbln=$dbln['bulan'];
-   
-   $qthn = "SELECT YEAR(tgl_dikeluarkan) AS tahun FROM sips WHERE id='$id'";
-   $resthn = mysqli_query($con,  $qthn )or die( mysqli_error($con) );
-   $dthn = mysqli_fetch_assoc( $resthn );
-   $ambilthn=$dthn['tahun'];
+   $tgl_parts = explode('-', $dt['tgl_dikeluarkan']);
+   $ambilbln = $tgl_parts[1];
+   $ambilthn = $tgl_parts[0];
   
    $qdekanat1="SELECT * from dt_pegawai WHERE jabatan_instansi='2'";
    $resdekanat1=mysqli_query($con, $qdekanat1) or die (mysqli_error($con));

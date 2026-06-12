@@ -92,11 +92,11 @@ function my_ucwords($str, $is_name = false)
    }
    $prefixes = 'Mc';
    $suffixes = "'S";
-   
+
    return preg_replace_callback(
       '/\b(\w)/',
       function ($matches) {
-          return strtoupper($matches[1]);
+         return strtoupper($matches[1]);
       },
       strtolower(trim($str))
    );
@@ -249,13 +249,13 @@ function my_ucwords($str, $is_name = false)
       <span>Pada Tanggal</span><span style="text-indent: -26px; margin-left: 26px;">:</span><span style="text-indent: -8px; margin-left: 8px;"><?php echo tanggalDitetapkan($dataku['tgl_ditetapkan']); ?></span>
       <br />
       <br />
-      Plt. Dekan,
+      Dekan,
       <br />
       <br />
       <span>&nbsp;&nbsp;&nbsp;&nbsp;*</span>
       <br />
       <br />
-      Elok Halimatus Sa'diyah
+      Siti Mahmudah
    </div>
    <br />
    <table width="100%">
